@@ -89,7 +89,7 @@ void Platform::getPlatformInfo( cl_platform_id id, cl_platform_info name, const 
 	std::cout << "\t" << str << ":\t" << info << std::endl;
 }
 	
-std::vector<cl_device_id> Platform::getDeviceIds()
+std::vector<cl_device_id> Platform::getDeviceIds() const
 {
 	auto devices = getDevices();
 	std::vector<cl_device_id> deviceIds;
@@ -97,6 +97,26 @@ std::vector<cl_device_id> Platform::getDeviceIds()
 		deviceIds.push_back( (*deviceIdIts)->getId() );
 	}
 	return deviceIds;
+}
+	
+const DeviceRef Platform::getDeviceByType( cl_device_type type ) const
+{
+	for( auto deviceIts = mDevices.begin(); deviceIts != mDevices.end(); ++deviceIts ) {
+		if( (*deviceIts)->getType() == type ) {
+			return (*deviceIts);
+		}
+	}
+	return DeviceRef();
+}
+	
+DeviceRef Platform::getDeviceByType( cl_device_type type )
+{
+	for( auto deviceIts = mDevices.begin(); deviceIts != mDevices.end(); ++deviceIts ) {
+		if( (*deviceIts)->getType() == type ) {
+			return (*deviceIts);
+		}
+	}
+	return DeviceRef();
 }
 
 }}

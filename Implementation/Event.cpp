@@ -15,4 +15,9 @@ EventRef Event::create( cl_event event )
 	return EventRef( new Event( event ) );
 }
 	
+Event::Event( cl_event event )
+: mId( event )
+{	
+}
+	
 }}

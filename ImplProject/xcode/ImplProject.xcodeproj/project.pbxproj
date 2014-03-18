@@ -20,6 +20,9 @@
 		B379280818D672A8004726E7 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B379280618D672A8004726E7 /* Program.cpp */; };
 		B379280B18D677A3004726E7 /* CommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B379280918D677A3004726E7 /* CommandQueue.cpp */; };
 		B3AAE2AD18D7FED4006018F4 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2AB18D7FED4006018F4 /* Event.cpp */; };
+		B3AAE2B018D89194006018F4 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2AE18D89194006018F4 /* Image.cpp */; };
+		B3AAE2B318D8A84D006018F4 /* MemoryObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2B118D8A84D006018F4 /* MemoryObj.cpp */; };
+		B3AAE2B518D8AD07006018F4 /* HelloWorld.cl in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2B418D8AD07006018F4 /* HelloWorld.cl */; };
 		B3B27EDB18D0E5CA00A4F3B7 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B27EDA18D0E5CA00A4F3B7 /* OpenCL.framework */; };
 		B3B6083518CE67FC006F4464 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6083318CE67FC006F4464 /* Platform.cpp */; };
 		B3BF235C18AC0656001D9192 /* BufferObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3BF235A18AC0656001D9192 /* BufferObj.cpp */; };
@@ -51,6 +54,11 @@
 		B379280A18D677A3004726E7 /* CommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommandQueue.h; path = ../../Implementation/CommandQueue.h; sourceTree = "<group>"; };
 		B3AAE2AB18D7FED4006018F4 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = ../../Implementation/Event.cpp; sourceTree = "<group>"; };
 		B3AAE2AC18D7FED4006018F4 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Event.h; path = ../../Implementation/Event.h; sourceTree = "<group>"; };
+		B3AAE2AE18D89194006018F4 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Image.cpp; path = ../../Implementation/Image.cpp; sourceTree = "<group>"; };
+		B3AAE2AF18D89194006018F4 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = ../../Implementation/Image.h; sourceTree = "<group>"; };
+		B3AAE2B118D8A84D006018F4 /* MemoryObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MemoryObj.cpp; path = ../../Implementation/MemoryObj.cpp; sourceTree = "<group>"; };
+		B3AAE2B218D8A84D006018F4 /* MemoryObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MemoryObj.h; path = ../../Implementation/MemoryObj.h; sourceTree = "<group>"; };
+		B3AAE2B418D8AD07006018F4 /* HelloWorld.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = HelloWorld.cl; path = ../assets/HelloWorld.cl; sourceTree = "<group>"; };
 		B3B27EDA18D0E5CA00A4F3B7 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 		B3B6083318CE67FC006F4464 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Platform.cpp; path = ../../Implementation/Platform.cpp; sourceTree = "<group>"; };
 		B3B6083418CE67FC006F4464 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = ../../Implementation/Platform.h; sourceTree = "<group>"; };
@@ -157,6 +165,7 @@
 			children = (
 				34686C7839554834B6EBD5F5 /* CinderApp.icns */,
 				85E9F5D9C4664ECCB46230F9 /* Info.plist */,
+				B3AAE2B418D8AD07006018F4 /* HelloWorld.cl */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -180,15 +189,19 @@
 				B3BF235E18AC0714001D9192 /* Context.cpp */,
 				B3B6083418CE67FC006F4464 /* Platform.h */,
 				B3B6083318CE67FC006F4464 /* Platform.cpp */,
-				B379278718D3D036004726E7 /* Device.cpp */,
 				B379278818D3D036004726E7 /* Device.h */,
+				B379278718D3D036004726E7 /* Device.cpp */,
 				B379280518D64BEB004726E7 /* DeviceInfo.hpp */,
 				B379280718D672A8004726E7 /* Program.h */,
 				B379280618D672A8004726E7 /* Program.cpp */,
 				B379280A18D677A3004726E7 /* CommandQueue.h */,
 				B379280918D677A3004726E7 /* CommandQueue.cpp */,
-				B3AAE2AB18D7FED4006018F4 /* Event.cpp */,
 				B3AAE2AC18D7FED4006018F4 /* Event.h */,
+				B3AAE2AB18D7FED4006018F4 /* Event.cpp */,
+				B3AAE2AF18D89194006018F4 /* Image.h */,
+				B3AAE2AE18D89194006018F4 /* Image.cpp */,
+				B3AAE2B218D8A84D006018F4 /* MemoryObj.h */,
+				B3AAE2B118D8A84D006018F4 /* MemoryObj.cpp */,
 			);
 			name = OpenCL;
 			sourceTree = "<group>";
@@ -262,7 +275,10 @@
 				B379280B18D677A3004726E7 /* CommandQueue.cpp in Sources */,
 				B3AAE2AD18D7FED4006018F4 /* Event.cpp in Sources */,
 				EF10646F0D26497085DFA235 /* ImplProjectApp.cpp in Sources */,
+				B3AAE2B018D89194006018F4 /* Image.cpp in Sources */,
 				B3B6083518CE67FC006F4464 /* Platform.cpp in Sources */,
+				B3AAE2B318D8A84D006018F4 /* MemoryObj.cpp in Sources */,
+				B3AAE2B518D8AD07006018F4 /* HelloWorld.cl in Sources */,
 				B3BF235C18AC0656001D9192 /* BufferObj.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

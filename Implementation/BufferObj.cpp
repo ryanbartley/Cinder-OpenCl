@@ -14,7 +14,7 @@
 namespace cinder { namespace cl {
 	
 BufferObj::SubBuffer::SubBuffer( const BufferObjRef &buffer, cl_mem_flags flags, const cl_buffer_region *bufferCreateInfo )
-: mFlags( flags ), mSize( bufferCreateInfo->size ), mOrigin( bufferCreateInfo->origin )
+: mId( nullptr ), mFlags( flags ), mSize( bufferCreateInfo->size ), mOrigin( bufferCreateInfo->origin )
 {
 	cl_int errNum;
 	mId = clCreateSubBuffer( buffer->getId(), mFlags, CL_BUFFER_CREATE_TYPE_REGION, bufferCreateInfo, &errNum );
@@ -44,17 +44,17 @@ BufferObj::SubBufferRef BufferObj::SubBuffer::create( const BufferObjRef &buffer
 	
 BufferObj::SubBuffer::~SubBuffer()
 {
-	
+	clReleaseMemObject(mId);
 }
 
 BufferObj::BufferObj( cl_mem_flags flags, size_t size, void *data )
-: mSize( size ), mFlags( flags )
+: mId( nullptr ), mSize( size ), mFlags( flags )
 {
 	cl_int errNum;
 	
 	mId = clCreateBuffer( Context::context()->getId(), mFlags, mSize, data, &errNum );
 	
-	if( errNum ) {
+	if( errNum != CL_SUCCESS ) {
 		std::cout << "ERROR: Creating Buffer - " << errNum << std::endl;
 		exit(EXIT_FAILURE);
 	}

@@ -22,7 +22,9 @@ public:
 	static DeviceRef create( const PlatformRef &platform, cl_device_type type );
 	~Device();
 	
-	const cl_device_id getId() { return mId; }
+	cl_device_id getId() const { return mId; }
+	cl_device_type getType() const { return mType; }
+	
 	
 	template<typename T>
 	T getInfo( cl_device_info name );
@@ -32,6 +34,7 @@ public:
 	
 	template <typename T>
 	static void displayDeviceInfo( cl_device_id id, cl_device_info name, std::string str );
+	static bool isExtensionSupported( const char *support_str, const char *ext_string, size_t ext_buffer_size );
 	
 private:
 	Device( cl_device_id device );

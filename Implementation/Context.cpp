@@ -17,7 +17,7 @@ static Context* sClContext = nullptr;
 static bool sClContextInitialized = false;
 	
 Context::Context(const PlatformRef &platform, bool sharedGraphics, const ContextErrorCallback &errorCallback )
-: mIsGlShared( false ), mPlatform( platform )
+: mId( nullptr ), mIsGlShared( false ), mPlatform( platform )
 {
 	cl_int errNum;
 	// TODO: Need to create DirectX implementation

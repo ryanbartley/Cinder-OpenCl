@@ -15,7 +15,7 @@
 namespace cinder { namespace cl {
 	
 Program::Kernel::Kernel( const ProgramRef &program, const std::string &name  )
-: mName( name )
+: mId( nullptr ), mName( name )
 {
 	cl_int errNum;
 	
@@ -60,7 +60,7 @@ void Program::Kernel::setKernelArg( cl_int index, size_t size, void *data )
 void Program::Kernel::setKernelArg( cl_int index, const BufferObjRef &buffer )
 {
 	cl_int errNum;
-	errNum = clSetKernelArg( mId, index, buffer->getSize(), buffer->getId() );
+	errNum = clSetKernelArg( mId, index, sizeof(cl_mem), buffer->getId() );
 	if( errNum != CL_SUCCESS ) {
 		std::cerr << "Error: Set Kernel Arg with BufferObj " << errNum << std::endl;
 		exit(EXIT_FAILURE);
@@ -75,8 +75,12 @@ Program::Program( const DataSourceRef &dataSource, const PlatformRef &platform, 
 	program.resize( buffer.getDataSize() + 1 );
 	memcpy( (void*)program.data(), buffer.getData(), buffer.getDataSize() );
 	program[buffer.getDataSize()] = 0;
+	auto curContext = Context::context()->getId();
+	size_t size = program.size() - 1;
 	
-	mId = clCreateProgramWithSource( Context::context()->getId(), 0, (const char** )program.c_str(), nullptr, &errNum );
+	const char * prog[] = {program.c_str()};
+	
+	mId = clCreateProgramWithSource( curContext, 1, prog, &size, &errNum );
 	
 	if( mId == NULL ) {
 		std::cerr << "Failed to create CL program from source" << std::endl;
@@ -87,12 +91,12 @@ Program::Program( const DataSourceRef &dataSource, const PlatformRef &platform, 
 		auto deviceIds = platform->getDeviceIds();
 		const char* ccOptions = options ? (const char *)options->c_str() : nullptr;
 		
-		errNum = clBuildProgram( mId, deviceIds.size(), deviceIds.data(), ccOptions, &Program::programErrorCallback, this );
+		errNum = clBuildProgram( mId, deviceIds.size(), deviceIds.data(), ccOptions, &Program::programBuildCallback, this );
 	}
 	else {
 		const char* ccOptions = options ? (const char *)options->c_str() : nullptr;
 		
-		errNum = clBuildProgram( mId, 0, NULL, ccOptions, &Program::programErrorCallback, this );
+		errNum = clBuildProgram( mId, 0, NULL, ccOptions, &Program::programBuildCallback, this );
 	}
 	
 	if (errNum != CL_SUCCESS)
@@ -276,10 +280,14 @@ void Program::setKernelArg( const std::string &name, cl_int index, const BufferO
 	}
 }
 
-void Program::programErrorCallback( cl_program program, void *userData )
+void Program::programBuildCallback( cl_program program, void *userData )
 {
 	// TODO: Log errors
-	std::cerr << "Error using program: " << static_cast<Program*>(userData)->getId() << std::endl;
+	std::cout << "Program Build successful " << program << std::endl;
+	auto kernels = ((Program*)(userData))->getKernelMap();
+	for( auto kernelFuncIt = kernels.begin(); kernelFuncIt != kernels.end(); ++kernelFuncIt ) {
+		std::cerr << "Program Built: " << (*kernelFuncIt).first << std::endl;
+	}
 }
 	
 bool Program::saveBinaries( const std::map<std::string, DeviceRef> &fileNameDevicePair )
@@ -359,6 +367,30 @@ bool Program::saveBinaries( const std::map<std::string, DeviceRef> &fileNameDevi
 	}
 	delete [] programBinaries;
 	return true;
+}
+	
+Program::KernelRef Program::getKernelByName( const std::string &name )
+{
+	auto kernelMap = getKernelMap();
+	auto found = kernelMap.find( name );
+	if( found != kernelMap.end() ) {
+		return found->second;
+	}
+	else {
+		return Program::KernelRef();
+	}
+}
+	
+cl_kernel Program::getKernelIdByName( const std::string &name )
+{
+	auto kernelMap = getKernelMap();
+	auto found = kernelMap.find( name );
+	if( found != kernelMap.end() ) {
+		return found->second->getId();
+	}
+	else {
+		throw "ERROR: Program::getKernelIdByName - Couldn't find kernel";
+	}
 }
 	
 }}

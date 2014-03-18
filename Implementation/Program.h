@@ -59,6 +59,8 @@ public:
 	const cl_program getId() { return mId; }
 	const std::map<std::string, Program::KernelRef>& getKernelMap() const { return mKernels; }
 	std::map<std::string, Program::KernelRef>& getKernelMap() { return mKernels; }
+	KernelRef getKernelByName( const std::string &name );
+	cl_kernel getKernelIdByName( const std::string &name );
 	
 	void createKernel( const std::string &name );
 	void setKernel( const KernelRef &kernel );
@@ -78,7 +80,7 @@ private:
 	Program( const std::string &binaryFileName );
 #endif
 	
-	static void CL_CALLBACK programErrorCallback( cl_program program, void *userData );
+	static void CL_CALLBACK programBuildCallback( cl_program program, void *userData );
 	
 	cl_program mId;
 	std::map<std::string, Program::KernelRef> mKernels;

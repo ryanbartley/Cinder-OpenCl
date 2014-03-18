@@ -23,9 +23,13 @@ public:
 	
 	~Platform();
 	
-	cl_platform_id					getId() { return mId; }
-	const std::vector<DeviceRef>&	getDevices() { return mDevices; }
-	std::vector<cl_device_id>		getDeviceIds();
+	cl_platform_id					getId() const { return mId; }
+	const std::vector<DeviceRef>&	getDevices() const { return mDevices; }
+	std::vector<DeviceRef>&			getDevices() { return mDevices; }
+	std::vector<cl_device_id>		getDeviceIds() const;
+	const DeviceRef					getDeviceByType( cl_device_type type ) const;
+	DeviceRef						getDeviceByType( cl_device_type type );
+	
 	
 	static void displayPlatformInfo( cl_platform_id platformId );
 	
