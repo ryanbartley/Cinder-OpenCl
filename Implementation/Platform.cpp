@@ -88,5 +88,15 @@ void Platform::getPlatformInfo( cl_platform_id id, cl_platform_info name, const 
 	
 	std::cout << "\t" << str << ":\t" << info << std::endl;
 }
+	
+std::vector<cl_device_id> Platform::getDeviceIds()
+{
+	auto devices = getDevices();
+	std::vector<cl_device_id> deviceIds;
+	for( auto deviceIdIts = devices.begin(); deviceIdIts != devices.end(); ++deviceIdIts ) {
+		deviceIds.push_back( (*deviceIdIts)->getId() );
+	}
+	return deviceIds;
+}
 
 }}

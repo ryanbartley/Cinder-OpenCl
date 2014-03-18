@@ -2,10 +2,11 @@
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 
-//#include "BufferObj.h"
+#include "BufferObj.h"
 #include "Platform.h"
 #include "Device.h"
 #include "Context.h"
+
 
 using namespace ci;
 using namespace ci::app;
@@ -42,6 +43,7 @@ void ImplProjectApp::setup()
 	mClPlatform = cl::Platform::create( platforms[0], devices );
 	
 	mContext = cl::Context::create( mClPlatform, false );
+
 }
 
 void ImplProjectApp::mouseDown( MouseEvent event )

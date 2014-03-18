@@ -6,9 +6,21 @@
 //
 //
 
-#ifndef __ImplProject__CommandQueue__
-#define __ImplProject__CommandQueue__
+#pragma once
 
-#include <iostream>
+#include <OpenCL/OpenCL.h>
 
-#endif /* defined(__ImplProject__CommandQueue__) */
+namespace cinder { namespace cl {
+	
+	typedef std::shared_ptr<class CommandQueue> CommandQueueRef;
+
+class CommandQueue : public boost::noncopyable, public std::enable_shared_from_this<CommandQueue> {
+public:
+	
+	cl_command_queue getId() { return mId; }
+private:
+
+	cl_command_queue mId;
+};
+	
+}}

@@ -16,12 +16,12 @@ namespace cinder { namespace cl {
 static Context* sClContext = nullptr;
 static bool sClContextInitialized = false;
 	
-Context::Context(const PlatformRef &platform, bool sharedGl, const ContextErrorCallback &errorCallback )
+Context::Context(const PlatformRef &platform, bool sharedGraphics, const ContextErrorCallback &errorCallback )
 : mIsGlShared( false ), mPlatform( platform )
 {
 	cl_int errNum;
-	
-	if( ! sharedGl ) {
+	// TODO: Need to create DirectX implementation
+	if( ! sharedGraphics ) {
 		cl_context_properties contextProperties[] = {
 			CL_CONTEXT_PLATFORM, (cl_context_properties)platform->getId(), 0
 		};
@@ -43,6 +43,7 @@ Context::Context(const PlatformRef &platform, bool sharedGl, const ContextErrorC
 		}
 	}
 	else {
+		// TODO: DirectX Implementation through ifdefs
 		CGLContextObj kCGLContext = ::CGLGetCurrentContext();
 		CGLShareGroupObj kCGLShareGroup = CGLGetShareGroup( kCGLContext );
 		cl_context_properties contextProperties[] = {
@@ -96,6 +97,8 @@ ContextRef Context::create()
 Context::~Context()
 {
 	clReleaseContext(mId);
+	sClContext = nullptr;
+	sClContextInitialized = false;
 }
 	
 void Context::contextErrorCallback( const char *errInfo, const void *privateInfo, size_t cb, void *userData )
