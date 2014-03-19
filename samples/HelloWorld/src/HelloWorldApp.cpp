@@ -15,7 +15,7 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class CinderProjectApp : public AppNative {
+class HelloWorldApp : public AppNative {
   public:
 	void setup();
 	void mouseDown( MouseEvent event );	
@@ -29,7 +29,7 @@ class CinderProjectApp : public AppNative {
 	cl::BufferObjRef	mMemObjects[3];
 };
 
-void CinderProjectApp::setup()
+void HelloWorldApp::setup()
 {
 	auto platforms = cl::Platform::getAvailablePlatforms();
 	auto devices = cl::Device::getAvailableDevices( platforms[0], CL_DEVICE_TYPE_GPU );
@@ -88,15 +88,15 @@ void CinderProjectApp::setup()
     std::cout << "Executed program succesfully." << std::endl;
 }
 
-void CinderProjectApp::mouseDown( MouseEvent event )
+void HelloWorldApp::mouseDown( MouseEvent event )
 {
 }
 
-void CinderProjectApp::update()
+void HelloWorldApp::update()
 {
 }
 
-void CinderProjectApp::draw()
+void HelloWorldApp::draw()
 {
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) ); 
@@ -104,4 +104,4 @@ void CinderProjectApp::draw()
 
 
 
-CINDER_APP_NATIVE( CinderProjectApp, RendererGl )
+CINDER_APP_NATIVE( HelloWorldApp, RendererGl )

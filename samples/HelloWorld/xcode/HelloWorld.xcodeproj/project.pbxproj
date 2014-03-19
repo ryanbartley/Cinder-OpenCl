@@ -12,22 +12,22 @@
 		00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
 		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
-		2BF446A01B6A4D1F8623715B /* CinderProjectApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CE73B781B58449EAD97DAC2 /* CinderProjectApp.cpp */; };
+		2BF446A01B6A4D1F8623715B /* HelloWorldApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CE73B781B58449EAD97DAC2 /* HelloWorldApp.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		717692C9D9854BDC9F643F55 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 474766CD0AEC4AE09B02DC9A /* CinderApp.icns */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		B3AAE2D818D90A8A006018F4 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3AAE2D718D90A8A006018F4 /* OpenCL.framework */; };
-		B3AAE2ED18D90E49006018F4 /* BufferObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2DA18D90E49006018F4 /* BufferObj.cpp */; };
-		B3AAE2EE18D90E49006018F4 /* CommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2DC18D90E49006018F4 /* CommandQueue.cpp */; };
-		B3AAE2EF18D90E49006018F4 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2DE18D90E49006018F4 /* Context.cpp */; };
-		B3AAE2F018D90E49006018F4 /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2E018D90E49006018F4 /* Device.cpp */; };
-		B3AAE2F118D90E49006018F4 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2E318D90E49006018F4 /* Event.cpp */; };
-		B3AAE2F218D90E49006018F4 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2E518D90E49006018F4 /* Image.cpp */; };
-		B3AAE2F318D90E49006018F4 /* MemoryObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2E718D90E49006018F4 /* MemoryObj.cpp */; };
-		B3AAE2F418D90E49006018F4 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2E918D90E49006018F4 /* Platform.cpp */; };
-		B3AAE2F518D90E49006018F4 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2EB18D90E49006018F4 /* Program.cpp */; };
 		B3AAE2F718D917AF006018F4 /* HelloWorld.cl in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE2F618D917AF006018F4 /* HelloWorld.cl */; };
+		B3AAE30E18D92246006018F4 /* BufferObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30518D92246006018F4 /* BufferObj.cpp */; };
+		B3AAE30F18D92246006018F4 /* CommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30618D92246006018F4 /* CommandQueue.cpp */; };
+		B3AAE31018D92246006018F4 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30718D92246006018F4 /* Context.cpp */; };
+		B3AAE31118D92246006018F4 /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30818D92246006018F4 /* Device.cpp */; };
+		B3AAE31218D92246006018F4 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30918D92246006018F4 /* Event.cpp */; };
+		B3AAE31318D92246006018F4 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30A18D92246006018F4 /* Image.cpp */; };
+		B3AAE31418D92246006018F4 /* MemoryObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30B18D92246006018F4 /* MemoryObj.cpp */; };
+		B3AAE31518D92246006018F4 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30C18D92246006018F4 /* Platform.cpp */; };
+		B3AAE31618D92246006018F4 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30D18D92246006018F4 /* Program.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,34 +39,34 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		3CE73B781B58449EAD97DAC2 /* CinderProjectApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = CinderProjectApp.cpp; path = ../src/CinderProjectApp.cpp; sourceTree = "<group>"; };
+		3CE73B781B58449EAD97DAC2 /* HelloWorldApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = HelloWorldApp.cpp; path = ../src/HelloWorldApp.cpp; sourceTree = "<group>"; };
 		474766CD0AEC4AE09B02DC9A /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
-		7443EF8358874D83A65880B8 /* CinderProject_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = CinderProject_Prefix.pch; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* CinderProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CinderProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7443EF8358874D83A65880B8 /* HelloWorld_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HelloWorld_Prefix.pch; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* HelloWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90C4D9B1D3B74A8294A726A4 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 		B3AAE2D718D90A8A006018F4 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
-		B3AAE2DA18D90E49006018F4 /* BufferObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferObj.cpp; sourceTree = "<group>"; };
-		B3AAE2DB18D90E49006018F4 /* BufferObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BufferObj.h; sourceTree = "<group>"; };
-		B3AAE2DC18D90E49006018F4 /* CommandQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandQueue.cpp; sourceTree = "<group>"; };
-		B3AAE2DD18D90E49006018F4 /* CommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandQueue.h; sourceTree = "<group>"; };
-		B3AAE2DE18D90E49006018F4 /* Context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Context.cpp; sourceTree = "<group>"; };
-		B3AAE2DF18D90E49006018F4 /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Context.h; sourceTree = "<group>"; };
-		B3AAE2E018D90E49006018F4 /* Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Device.cpp; sourceTree = "<group>"; };
-		B3AAE2E118D90E49006018F4 /* Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Device.h; sourceTree = "<group>"; };
-		B3AAE2E218D90E49006018F4 /* DeviceInfo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DeviceInfo.hpp; sourceTree = "<group>"; };
-		B3AAE2E318D90E49006018F4 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
-		B3AAE2E418D90E49006018F4 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
-		B3AAE2E518D90E49006018F4 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
-		B3AAE2E618D90E49006018F4 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
-		B3AAE2E718D90E49006018F4 /* MemoryObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryObj.cpp; sourceTree = "<group>"; };
-		B3AAE2E818D90E49006018F4 /* MemoryObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryObj.h; sourceTree = "<group>"; };
-		B3AAE2E918D90E49006018F4 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform.cpp; sourceTree = "<group>"; };
-		B3AAE2EA18D90E49006018F4 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
-		B3AAE2EB18D90E49006018F4 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Program.cpp; sourceTree = "<group>"; };
-		B3AAE2EC18D90E49006018F4 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		B3AAE2F618D917AF006018F4 /* HelloWorld.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = HelloWorld.cl; path = ../assets/HelloWorld.cl; sourceTree = "<group>"; };
+		B3AAE2FA18D92246006018F4 /* BufferObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BufferObj.h; sourceTree = "<group>"; };
+		B3AAE2FB18D92246006018F4 /* CommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandQueue.h; sourceTree = "<group>"; };
+		B3AAE2FC18D92246006018F4 /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Context.h; sourceTree = "<group>"; };
+		B3AAE2FD18D92246006018F4 /* Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Device.h; sourceTree = "<group>"; };
+		B3AAE2FE18D92246006018F4 /* DeviceInfo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DeviceInfo.hpp; sourceTree = "<group>"; };
+		B3AAE2FF18D92246006018F4 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		B3AAE30018D92246006018F4 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		B3AAE30118D92246006018F4 /* MemoryObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryObj.h; sourceTree = "<group>"; };
+		B3AAE30218D92246006018F4 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
+		B3AAE30318D92246006018F4 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
+		B3AAE30518D92246006018F4 /* BufferObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferObj.cpp; sourceTree = "<group>"; };
+		B3AAE30618D92246006018F4 /* CommandQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandQueue.cpp; sourceTree = "<group>"; };
+		B3AAE30718D92246006018F4 /* Context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Context.cpp; sourceTree = "<group>"; };
+		B3AAE30818D92246006018F4 /* Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Device.cpp; sourceTree = "<group>"; };
+		B3AAE30918D92246006018F4 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
+		B3AAE30A18D92246006018F4 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
+		B3AAE30B18D92246006018F4 /* MemoryObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryObj.cpp; sourceTree = "<group>"; };
+		B3AAE30C18D92246006018F4 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform.cpp; sourceTree = "<group>"; };
+		B3AAE30D18D92246006018F4 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Program.cpp; sourceTree = "<group>"; };
 		FCA97D5C7952435EA4FD0315 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -93,7 +93,7 @@
 		01B97315FEAEA392516A2CEA /* Blocks */ = {
 			isa = PBXGroup;
 			children = (
-				B3AAE2D918D90E49006018F4 /* Implementation */,
+				B3AAE2F818D92246006018F4 /* OpenCl */,
 			);
 			name = Blocks;
 			sourceTree = "<group>";
@@ -101,7 +101,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				3CE73B781B58449EAD97DAC2 /* CinderProjectApp.cpp */,
+				3CE73B781B58449EAD97DAC2 /* HelloWorldApp.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -133,7 +133,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* CinderProject.app */,
+				8D1107320486CEB800E47090 /* HelloWorld.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -155,7 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				90C4D9B1D3B74A8294A726A4 /* Resources.h */,
-				7443EF8358874D83A65880B8 /* CinderProject_Prefix.pch */,
+				7443EF8358874D83A65880B8 /* HelloWorld_Prefix.pch */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -180,39 +180,55 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B3AAE2D918D90E49006018F4 /* Implementation */ = {
+		B3AAE2F818D92246006018F4 /* OpenCl */ = {
 			isa = PBXGroup;
 			children = (
-				B3AAE2DA18D90E49006018F4 /* BufferObj.cpp */,
-				B3AAE2DB18D90E49006018F4 /* BufferObj.h */,
-				B3AAE2DC18D90E49006018F4 /* CommandQueue.cpp */,
-				B3AAE2DD18D90E49006018F4 /* CommandQueue.h */,
-				B3AAE2DE18D90E49006018F4 /* Context.cpp */,
-				B3AAE2DF18D90E49006018F4 /* Context.h */,
-				B3AAE2E018D90E49006018F4 /* Device.cpp */,
-				B3AAE2E118D90E49006018F4 /* Device.h */,
-				B3AAE2E218D90E49006018F4 /* DeviceInfo.hpp */,
-				B3AAE2E318D90E49006018F4 /* Event.cpp */,
-				B3AAE2E418D90E49006018F4 /* Event.h */,
-				B3AAE2E518D90E49006018F4 /* Image.cpp */,
-				B3AAE2E618D90E49006018F4 /* Image.h */,
-				B3AAE2E718D90E49006018F4 /* MemoryObj.cpp */,
-				B3AAE2E818D90E49006018F4 /* MemoryObj.h */,
-				B3AAE2E918D90E49006018F4 /* Platform.cpp */,
-				B3AAE2EA18D90E49006018F4 /* Platform.h */,
-				B3AAE2EB18D90E49006018F4 /* Program.cpp */,
-				B3AAE2EC18D90E49006018F4 /* Program.h */,
+				B3AAE2F918D92246006018F4 /* include */,
+				B3AAE30418D92246006018F4 /* src */,
 			);
-			name = Implementation;
-			path = ../../Implementation;
+			name = OpenCl;
+			path = ../../../OpenCl;
+			sourceTree = "<group>";
+		};
+		B3AAE2F918D92246006018F4 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				B3AAE2FA18D92246006018F4 /* BufferObj.h */,
+				B3AAE2FB18D92246006018F4 /* CommandQueue.h */,
+				B3AAE2FC18D92246006018F4 /* Context.h */,
+				B3AAE2FD18D92246006018F4 /* Device.h */,
+				B3AAE2FE18D92246006018F4 /* DeviceInfo.hpp */,
+				B3AAE2FF18D92246006018F4 /* Event.h */,
+				B3AAE30018D92246006018F4 /* Image.h */,
+				B3AAE30118D92246006018F4 /* MemoryObj.h */,
+				B3AAE30218D92246006018F4 /* Platform.h */,
+				B3AAE30318D92246006018F4 /* Program.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		B3AAE30418D92246006018F4 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B3AAE30518D92246006018F4 /* BufferObj.cpp */,
+				B3AAE30618D92246006018F4 /* CommandQueue.cpp */,
+				B3AAE30718D92246006018F4 /* Context.cpp */,
+				B3AAE30818D92246006018F4 /* Device.cpp */,
+				B3AAE30918D92246006018F4 /* Event.cpp */,
+				B3AAE30A18D92246006018F4 /* Image.cpp */,
+				B3AAE30B18D92246006018F4 /* MemoryObj.cpp */,
+				B3AAE30C18D92246006018F4 /* Platform.cpp */,
+				B3AAE30D18D92246006018F4 /* Program.cpp */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D1107260486CEB800E47090 /* CinderProject */ = {
+		8D1107260486CEB800E47090 /* HelloWorld */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "CinderProject" */;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "HelloWorld" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
@@ -222,10 +238,10 @@
 			);
 			dependencies = (
 			);
-			name = CinderProject;
+			name = HelloWorld;
 			productInstallPath = "$(HOME)/Applications";
 			productName = CinderProject;
-			productReference = 8D1107320486CEB800E47090 /* CinderProject.app */;
+			productReference = 8D1107320486CEB800E47090 /* HelloWorld.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -235,7 +251,7 @@
 			isa = PBXProject;
 			attributes = {
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CinderProject" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "HelloWorld" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -249,7 +265,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* CinderProject */,
+				8D1107260486CEB800E47090 /* HelloWorld */,
 			);
 		};
 /* End PBXProject section */
@@ -270,17 +286,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3AAE2F518D90E49006018F4 /* Program.cpp in Sources */,
-				B3AAE2F118D90E49006018F4 /* Event.cpp in Sources */,
-				2BF446A01B6A4D1F8623715B /* CinderProjectApp.cpp in Sources */,
-				B3AAE2F318D90E49006018F4 /* MemoryObj.cpp in Sources */,
-				B3AAE2F018D90E49006018F4 /* Device.cpp in Sources */,
-				B3AAE2EF18D90E49006018F4 /* Context.cpp in Sources */,
-				B3AAE2F218D90E49006018F4 /* Image.cpp in Sources */,
-				B3AAE2ED18D90E49006018F4 /* BufferObj.cpp in Sources */,
-				B3AAE2F418D90E49006018F4 /* Platform.cpp in Sources */,
+				B3AAE30E18D92246006018F4 /* BufferObj.cpp in Sources */,
+				B3AAE31618D92246006018F4 /* Program.cpp in Sources */,
+				B3AAE31218D92246006018F4 /* Event.cpp in Sources */,
+				B3AAE31118D92246006018F4 /* Device.cpp in Sources */,
+				B3AAE30F18D92246006018F4 /* CommandQueue.cpp in Sources */,
+				B3AAE31518D92246006018F4 /* Platform.cpp in Sources */,
+				2BF446A01B6A4D1F8623715B /* HelloWorldApp.cpp in Sources */,
+				B3AAE31318D92246006018F4 /* Image.cpp in Sources */,
+				B3AAE31018D92246006018F4 /* Context.cpp in Sources */,
+				B3AAE31418D92246006018F4 /* MemoryObj.cpp in Sources */,
 				B3AAE2F718D917AF006018F4 /* HelloWorld.cl in Sources */,
-				B3AAE2EE18D90E49006018F4 /* CommandQueue.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,6 +306,7 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CINDER_PATH = ../../../../../cinder_dev;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
@@ -297,7 +314,7 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = CinderProject_Prefix.pch;
+				GCC_PREFIX_HEADER = HelloWorld_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -306,7 +323,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
-				PRODUCT_NAME = CinderProject;
+				PRODUCT_NAME = HelloWorld;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
 			};
@@ -315,6 +332,7 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CINDER_PATH = ../../../../../cinder_dev;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -323,12 +341,12 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = CinderProject_Prefix.pch;
+				GCC_PREFIX_HEADER = HelloWorld_Prefix.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
-				PRODUCT_NAME = CinderProject;
+				PRODUCT_NAME = HelloWorld;
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
@@ -372,7 +390,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "CinderProject" */ = {
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "HelloWorld" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
@@ -381,7 +399,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CinderProject" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "HelloWorld" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
