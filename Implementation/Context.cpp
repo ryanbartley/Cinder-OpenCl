@@ -22,6 +22,7 @@ Context::Context(const PlatformRef &platform, bool sharedGraphics, const Context
 	cl_int errNum;
 	// TODO: Need to create DirectX implementation
 	if( ! sharedGraphics ) {
+		
 		cl_context_properties contextProperties[] = {
 			CL_CONTEXT_PLATFORM, (cl_context_properties)platform->getId(), 0
 		};

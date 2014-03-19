@@ -60,7 +60,12 @@ void Program::Kernel::setKernelArg( cl_int index, size_t size, void *data )
 void Program::Kernel::setKernelArg( cl_int index, const BufferObjRef &buffer )
 {
 	cl_int errNum;
-	errNum = clSetKernelArg( mId, index, sizeof(cl_mem), buffer->getId() );
+	// I have to get the memory object as a pointer
+	// This was an enormous problem that I couldn't
+	// figure out for a while
+	auto memBuff = buffer->getId();
+	
+	errNum = clSetKernelArg( mId, index, sizeof(cl_mem), &memBuff );
 	if( errNum != CL_SUCCESS ) {
 		std::cerr << "Error: Set Kernel Arg with BufferObj " << errNum << std::endl;
 		exit(EXIT_FAILURE);
@@ -86,17 +91,20 @@ Program::Program( const DataSourceRef &dataSource, const PlatformRef &platform, 
 		std::cerr << "Failed to create CL program from source" << std::endl;
 		exit(EXIT_FAILURE);
 	}
+	if( errNum != CL_SUCCESS ) {
+		std::cerr << "ERROR: Creating Program from Source - " << errNum << std::endl;
+	}
 	
 	if( platform ) {
 		auto deviceIds = platform->getDeviceIds();
 		const char* ccOptions = options ? (const char *)options->c_str() : nullptr;
 		
-		errNum = clBuildProgram( mId, deviceIds.size(), deviceIds.data(), ccOptions, &Program::programBuildCallback, this );
+		errNum |= clBuildProgram( mId, deviceIds.size(), deviceIds.data(), ccOptions, &Program::programBuildCallback, this );
 	}
 	else {
 		const char* ccOptions = options ? (const char *)options->c_str() : nullptr;
 		
-		errNum = clBuildProgram( mId, 0, NULL, ccOptions, &Program::programBuildCallback, this );
+		errNum |= clBuildProgram( mId, 0, NULL, ccOptions, &Program::programBuildCallback, this );
 	}
 	
 	if (errNum != CL_SUCCESS)
