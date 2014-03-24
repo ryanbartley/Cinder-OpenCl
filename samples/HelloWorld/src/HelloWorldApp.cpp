@@ -49,6 +49,10 @@ void HelloWorldApp::setup()
 	// Create OpenCL kernel
 	mProgram->createKernel( "hello_kernel" );
 	
+	std::map<std::string, cl::DeviceRef> mDevFilePair;
+	mDevFilePair.insert( std::pair<std::string, cl::DeviceRef>( "mHelloWorld.cl.bin", mClPlatform->getDevices()[0] ) );
+	mProgram->saveBinaries( mDevFilePair );
+	
     // Create memory objects that will be used as arguments to
     // kernel.  First create host memory arrays that will be
     // used to store the arguments to the kernel
@@ -68,6 +72,8 @@ void HelloWorldApp::setup()
 	mProgram->setKernelArg( "hello_kernel", 0, mMemObjects[0] );
 	mProgram->setKernelArg( "hello_kernel", 1, mMemObjects[1] );
 	mProgram->setKernelArg( "hello_kernel", 2, mMemObjects[2] );
+	
+	
 	
     size_t globalWorkSize[1] = { ARRAY_SIZE };
     size_t localWorkSize[1] = { 1 };

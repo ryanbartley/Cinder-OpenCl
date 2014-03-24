@@ -13,16 +13,49 @@
 namespace cinder { namespace cl {
 	
 typedef std::shared_ptr<class Event> EventRef;
+typedef std::shared_ptr<class SysEvent> SysEventRef;
+typedef std::shared_ptr<class UserEvent> UserEventRef;
+typedef std::shared_ptr<class Context> ContextRef;
+typedef void(CL_CALLBACK *EventCallback)(cl_event event, cl_int event_command_exec_status, void *user_data);
+	
+enum EventType {
+	SYS_EVENT,
+	USER_EVENT
+};
 
 class Event : public boost::noncopyable, public std::enable_shared_from_this<Event> {
 public:
-	static EventRef create( cl_event event );
+	
 	cl_event getId() { return mId; }
 	
-private:
-	Event( cl_event event );
+	EventType getType() { return mType; }
 	
-	cl_event mId;
+	void setCallback( EventCallback pFunc, void *userData = nullptr );
+	
+	virtual ~Event();
+protected:
+	Event( EventType type );
+	
+	cl_event	mId;
+	EventType	mType;
+};
+	
+class SysEvent : public Event {
+public:
+	static SysEventRef create( cl_event event );
+	
+private:
+	SysEvent( cl_event event );
+};
+	
+class UserEvent : public Event {
+public:
+	static UserEventRef create( const ContextRef &context );
+	
+	void setStatus( cl_int executionStatus );
+	
+private:
+	UserEvent( const ContextRef &context );
 };
 
 // I can see that this will be a very used asset maybe

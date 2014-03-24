@@ -198,7 +198,7 @@ void BufferObj::setReturnEvent( EventRef *returnEvent, cl_event event )
 {
 	// TODO: This is so dirty have to clean up
 	if( returnEvent != nullptr && event != nullptr ) {
-		returnEvent->reset( Event::create( event ).get() );
+		returnEvent->reset( SysEvent::create( event ).get() );
 	}
 }
 	
