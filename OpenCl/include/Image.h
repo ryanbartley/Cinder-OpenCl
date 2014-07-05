@@ -24,6 +24,8 @@ private:
 	
 };
 
+typedef std::shared_ptr<class Image2d> Image2dRef;
+	
 class Image2d : public ImageBase {
 public:
 	
