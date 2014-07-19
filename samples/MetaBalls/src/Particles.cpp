@@ -27,7 +27,7 @@ Particles::Particles()
 	srand(time(NULL));
 	
 	for(int i = 0; i < particle_count; i++) {
-		cpuLifetimes[i] = 999;
+		cpuLifetimes[i] = 0;
 		cpuPositions[i] = Vec4f::zero();
 		cpuVelocities[i] = Vec4f::zero();
 	
@@ -100,7 +100,7 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	cl_int errNum = 0;
 	int random = rand();
 	auto kernel = mClProgram->getKernelByName( "particle_update" );
-	float time = App::get()->getElapsedSeconds();
+	float time = 1.0f/60.0f;
 	
 	kernel->setKernelArg( 6, sizeof(float), &time );
 	kernel->setKernelArg( 7, sizeof(int), &mShouldReset );
@@ -115,7 +115,7 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	};
 	
 	
-//	errNum = clEnqueueAcquireGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, NULL );
+	errNum = clEnqueueAcquireGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, NULL );
 	
 	if ( errNum ) {
 		std::cout << "ERROR: Aquiring gl objects" << std::endl;
@@ -129,23 +129,26 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
         std::cerr << "Error queuing kernel for execution." << std::endl;
     }
 	
-	std::cout << "I'm after the enqueue" << endl;
+//	std::cout << "I'm after the enqueue" << endl;
 	
 	// Release the GL Object
 	// Note, we should ensure OpenCL is finished with any commands that might affect the VBO
 	
 //	clFinish(commandQueue->getId());
 	
-//	errNum = clEnqueueReleaseGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, NULL );
+	errNum = clEnqueueReleaseGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, NULL );
 	
 	if ( errNum ) {
 		std::cout << "ERROR: Releasing gl objects" << std::endl;
 	}
 	
-	cout << "I'm after the release" << endl;
-	
-	
-
+//	cout << "I'm after the release" << endl;
+	cout << "________________________________________________________" << endl;
+	float* map = (float*)mGlLifetimes->map( GL_READ_ONLY );
+	for( int i = 0; i < particle_count; i++ ) {
+		std::cout << map[i] << std::endl;
+	}
+	mGlLifetimes->unmap();
 }
 
 void Particles::render()
@@ -154,6 +157,7 @@ void Particles::render()
 	ScopedGlslProg scopeGlsl( mGlProgram );
 	
 	gl::setDefaultShaderVars();
-	
-	gl::drawArrays( GL_TRIANGLES, 0, particle_count );
+	gl::enable( GL_VERTEX_PROGRAM_POINT_SIZE );
+	gl::drawArrays( GL_POINTS, 0, particle_count );
+	gl::disable( GL_VERTEX_PROGRAM_POINT_SIZE );
 }

@@ -141,8 +141,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B3445BB2197ADAFE0085228D /* Particles.cpp */,
 				CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */,
+				B3445BB2197ADAFE0085228D /* Particles.cpp */,
 				B3445BB6197ADBC90085228D /* MarchingCubes.cpp */,
 				B3445BB9197ADC040085228D /* VolumeRenderer.cpp */,
 			);

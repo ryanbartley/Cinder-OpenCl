@@ -10,4 +10,5 @@ out vec4 vColor;
 void main() {
 	gl_Position = mvp * position;
 	vColor = color;
+	gl_PointSize = 100.0;
 }

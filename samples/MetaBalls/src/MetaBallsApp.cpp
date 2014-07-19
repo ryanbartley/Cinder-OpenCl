@@ -11,6 +11,8 @@
 
 #include "Particles.h"
 
+#pragma OPENCL EXTENSION cl_khr_gl_event : enable
+
 using namespace ci;
 using namespace ci::app;
 using namespace std;
@@ -52,7 +54,7 @@ void MetaBallsApp::setup()
 	mParticles = Particles::create();
 	
 	mCam.setPerspective( 60, getWindowAspectRatio(), 0.01, 1000 );
-	mCam.lookAt( Vec3f( 0, 0, 100 ), Vec3f::zero() );
+	mCam.lookAt( Vec3f( 32, 15, 35 ), Vec3f( 32, 15, 32 ) );
 }
 
 void MetaBallsApp::mouseDown( MouseEvent event )
