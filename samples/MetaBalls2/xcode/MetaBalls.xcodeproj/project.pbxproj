@@ -1,0 +1,510 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
+		00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
+		00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
+		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
+		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		B33EE0BC1967B6C3008D4CD1 /* metaballs.fs in Resources */ = {isa = PBXBuildFile; fileRef = B33EE0B01967B6C3008D4CD1 /* metaballs.fs */; };
+		B33EE0BD1967B6C3008D4CD1 /* metaballs.mat in Resources */ = {isa = PBXBuildFile; fileRef = B33EE0B11967B6C3008D4CD1 /* metaballs.mat */; };
+		B33EE0BE1967B6C3008D4CD1 /* metaballs.vs in Resources */ = {isa = PBXBuildFile; fileRef = B33EE0B21967B6C3008D4CD1 /* metaballs.vs */; };
+		B33EE0BF1967B6C3008D4CD1 /* metaballs_def.fs in Resources */ = {isa = PBXBuildFile; fileRef = B33EE0B31967B6C3008D4CD1 /* metaballs_def.fs */; };
+		B33EE0C01967B6C3008D4CD1 /* metaballs_def.mat in Resources */ = {isa = PBXBuildFile; fileRef = B33EE0B41967B6C3008D4CD1 /* metaballs_def.mat */; };
+		B33EE0C11967B6C3008D4CD1 /* metaballs_def.vs in Resources */ = {isa = PBXBuildFile; fileRef = B33EE0B51967B6C3008D4CD1 /* metaballs_def.vs */; };
+		B3445BAD197ADAD40085228D /* kernel.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BA3197ADAD40085228D /* kernel.c */; };
+		B3445BAE197ADAD40085228D /* marching_cubes.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BA5197ADAD40085228D /* marching_cubes.c */; };
+		B3445BAF197ADAD40085228D /* metaballs.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BA7197ADAD40085228D /* metaballs.c */; };
+		B3445BB0197ADAD40085228D /* particles.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BA9197ADAD40085228D /* particles.c */; };
+		B3445BB1197ADAD40085228D /* volume_renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BAB197ADAD40085228D /* volume_renderer.c */; };
+		B3445BB3197ADAFE0085228D /* Particles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3445BB2197ADAFE0085228D /* Particles.cpp */; };
+		B3445BB7197ADBC90085228D /* MarchingCubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3445BB6197ADBC90085228D /* MarchingCubes.cpp */; };
+		B3445BBA197ADC040085228D /* VolumeRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3445BB9197ADC040085228D /* VolumeRenderer.cpp */; };
+		B3445BBC197ADEAE0085228D /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3445BBB197ADEAE0085228D /* OpenCL.framework */; };
+		B3445BBE197AFD2B0085228D /* basic.vert in Resources */ = {isa = PBXBuildFile; fileRef = B3445BBD197AFD2B0085228D /* basic.vert */; };
+		B3445BC0197AFD400085228D /* basic.frag in Resources */ = {isa = PBXBuildFile; fileRef = B3445BBF197AFD400085228D /* basic.frag */; };
+		B3445BC2197AFE8E0085228D /* particlesProg.cl in Sources */ = {isa = PBXBuildFile; fileRef = B3445BC1197AFE8E0085228D /* particlesProg.cl */; };
+		B3F46CCE197B0E3D005FD0A8 /* BufferObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CC5197B0E3D005FD0A8 /* BufferObj.cpp */; };
+		B3F46CCF197B0E3D005FD0A8 /* CommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CC6197B0E3D005FD0A8 /* CommandQueue.cpp */; };
+		B3F46CD0197B0E3D005FD0A8 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CC7197B0E3D005FD0A8 /* Context.cpp */; };
+		B3F46CD1197B0E3D005FD0A8 /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CC8197B0E3D005FD0A8 /* Device.cpp */; };
+		B3F46CD2197B0E3D005FD0A8 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CC9197B0E3D005FD0A8 /* Event.cpp */; };
+		B3F46CD3197B0E3D005FD0A8 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CCA197B0E3D005FD0A8 /* Image.cpp */; };
+		B3F46CD4197B0E3D005FD0A8 /* MemoryObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CCB197B0E3D005FD0A8 /* MemoryObj.cpp */; };
+		B3F46CD5197B0E3D005FD0A8 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CCC197B0E3D005FD0A8 /* Platform.cpp */; };
+		B3F46CD6197B0E3D005FD0A8 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CCD197B0E3D005FD0A8 /* Program.cpp */; };
+		CFE2776C0B5244C1A0273048 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 66615FBC41C84135AC3230C0 /* CinderApp.icns */; };
+		EE64BE15612548199A62E999 /* MetaBallsApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0091D8F80E81B9330029341E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		00B784AF0FF439BC000DE1D7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		00B784B10FF439BC000DE1D7 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		00B784B20FF439BC000DE1D7 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		158B6D20AAA440AD96606452 /* MetaBalls_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaBalls_Prefix.pch; sourceTree = "<group>"; };
+		27BE53E96BE34E8B8898325E /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		3ACDE57CBA1D4AB388421F06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
+		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		66615FBC41C84135AC3230C0 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* MetaBalls.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaBalls.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B33EE0B01967B6C3008D4CD1 /* metaballs.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = metaballs.fs; sourceTree = "<group>"; };
+		B33EE0B11967B6C3008D4CD1 /* metaballs.mat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = metaballs.mat; sourceTree = "<group>"; };
+		B33EE0B21967B6C3008D4CD1 /* metaballs.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = metaballs.vs; sourceTree = "<group>"; };
+		B33EE0B31967B6C3008D4CD1 /* metaballs_def.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = metaballs_def.fs; sourceTree = "<group>"; };
+		B33EE0B41967B6C3008D4CD1 /* metaballs_def.mat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = metaballs_def.mat; sourceTree = "<group>"; };
+		B33EE0B51967B6C3008D4CD1 /* metaballs_def.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = metaballs_def.vs; sourceTree = "<group>"; };
+		B3445BA3197ADAD40085228D /* kernel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel.c; sourceTree = "<group>"; };
+		B3445BA4197ADAD40085228D /* kernel.hc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = kernel.hc; sourceTree = "<group>"; };
+		B3445BA5197ADAD40085228D /* marching_cubes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = marching_cubes.c; sourceTree = "<group>"; };
+		B3445BA6197ADAD40085228D /* marching_cubes.hc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = marching_cubes.hc; sourceTree = "<group>"; };
+		B3445BA7197ADAD40085228D /* metaballs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = metaballs.c; sourceTree = "<group>"; };
+		B3445BA8197ADAD40085228D /* metaballs.hc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = metaballs.hc; sourceTree = "<group>"; };
+		B3445BA9197ADAD40085228D /* particles.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = particles.c; sourceTree = "<group>"; };
+		B3445BAA197ADAD40085228D /* particles.hc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = particles.hc; sourceTree = "<group>"; };
+		B3445BAB197ADAD40085228D /* volume_renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = volume_renderer.c; sourceTree = "<group>"; };
+		B3445BAC197ADAD40085228D /* volume_renderer.hc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = volume_renderer.hc; sourceTree = "<group>"; };
+		B3445BB2197ADAFE0085228D /* Particles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particles.cpp; path = ../src/Particles.cpp; sourceTree = "<group>"; };
+		B3445BB4197ADB1D0085228D /* Particles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Particles.h; path = ../include/Particles.h; sourceTree = "<group>"; };
+		B3445BB5197ADBB10085228D /* MarchingCubes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MarchingCubes.h; path = ../include/MarchingCubes.h; sourceTree = "<group>"; };
+		B3445BB6197ADBC90085228D /* MarchingCubes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MarchingCubes.cpp; path = ../src/MarchingCubes.cpp; sourceTree = "<group>"; };
+		B3445BB8197ADBF00085228D /* VolumeRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VolumeRenderer.h; path = ../include/VolumeRenderer.h; sourceTree = "<group>"; };
+		B3445BB9197ADC040085228D /* VolumeRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VolumeRenderer.cpp; path = ../src/VolumeRenderer.cpp; sourceTree = "<group>"; };
+		B3445BBB197ADEAE0085228D /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
+		B3445BBD197AFD2B0085228D /* basic.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.vert; path = ../assets/basic.vert; sourceTree = "<group>"; };
+		B3445BBF197AFD400085228D /* basic.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.frag; path = ../assets/basic.frag; sourceTree = "<group>"; };
+		B3445BC1197AFE8E0085228D /* particlesProg.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = particlesProg.cl; path = ../assets/particlesProg.cl; sourceTree = "<group>"; };
+		B3F46CBA197B0E3D005FD0A8 /* BufferObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BufferObj.h; sourceTree = "<group>"; };
+		B3F46CBB197B0E3D005FD0A8 /* CommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandQueue.h; sourceTree = "<group>"; };
+		B3F46CBC197B0E3D005FD0A8 /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Context.h; sourceTree = "<group>"; };
+		B3F46CBD197B0E3D005FD0A8 /* Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Device.h; sourceTree = "<group>"; };
+		B3F46CBE197B0E3D005FD0A8 /* DeviceInfo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DeviceInfo.hpp; sourceTree = "<group>"; };
+		B3F46CBF197B0E3D005FD0A8 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		B3F46CC0197B0E3D005FD0A8 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		B3F46CC1197B0E3D005FD0A8 /* MemoryObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryObj.h; sourceTree = "<group>"; };
+		B3F46CC2197B0E3D005FD0A8 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
+		B3F46CC3197B0E3D005FD0A8 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
+		B3F46CC5197B0E3D005FD0A8 /* BufferObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferObj.cpp; sourceTree = "<group>"; };
+		B3F46CC6197B0E3D005FD0A8 /* CommandQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandQueue.cpp; sourceTree = "<group>"; };
+		B3F46CC7197B0E3D005FD0A8 /* Context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Context.cpp; sourceTree = "<group>"; };
+		B3F46CC8197B0E3D005FD0A8 /* Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Device.cpp; sourceTree = "<group>"; };
+		B3F46CC9197B0E3D005FD0A8 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
+		B3F46CCA197B0E3D005FD0A8 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
+		B3F46CCB197B0E3D005FD0A8 /* MemoryObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryObj.cpp; sourceTree = "<group>"; };
+		B3F46CCC197B0E3D005FD0A8 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform.cpp; sourceTree = "<group>"; };
+		B3F46CCD197B0E3D005FD0A8 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Program.cpp; sourceTree = "<group>"; };
+		CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MetaBallsApp.cpp; path = ../src/MetaBallsApp.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3445BBC197ADEAE0085228D /* OpenCL.framework in Frameworks */,
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
+				5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */,
+				5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */,
+				00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */,
+				00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */,
+				00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */,
+				00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01B97315FEAEA392516A2CEA /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				B3F46CB8197B0E3D005FD0A8 /* OpenCl */,
+			);
+			name = Blocks;
+			sourceTree = "<group>";
+		};
+		080E96DDFE201D6D7F000001 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				B3445BB2197ADAFE0085228D /* Particles.cpp */,
+				CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */,
+				B3445BB6197ADBC90085228D /* MarchingCubes.cpp */,
+				B3445BB9197ADC040085228D /* VolumeRenderer.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				00B784AF0FF439BC000DE1D7 /* Accelerate.framework */,
+				00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */,
+				00B784B10FF439BC000DE1D7 /* AudioUnit.framework */,
+				00B784B20FF439BC000DE1D7 /* CoreAudio.framework */,
+				5323E6B50EAFCA7E003A9687 /* QTKit.framework */,
+				5323E6B10EAFCA74003A9687 /* CoreVideo.framework */,
+				0091D8F80E81B9330029341E /* OpenGL.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* MetaBalls.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* MetaBalls2 */ = {
+			isa = PBXGroup;
+			children = (
+				B3445BA2197ADAD40085228D /* Other Implementation */,
+				01B97315FEAEA392516A2CEA /* Blocks */,
+				29B97315FDCFA39411CA2CEA /* Headers */,
+				080E96DDFE201D6D7F000001 /* Source */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = MetaBalls2;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				27BE53E96BE34E8B8898325E /* Resources.h */,
+				158B6D20AAA440AD96606452 /* MetaBalls_Prefix.pch */,
+				B3445BB4197ADB1D0085228D /* Particles.h */,
+				B3445BB5197ADBB10085228D /* MarchingCubes.h */,
+				B3445BB8197ADBF00085228D /* VolumeRenderer.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B33EE0AF1967B6C3008D4CD1 /* Shaders */,
+				66615FBC41C84135AC3230C0 /* CinderApp.icns */,
+				3ACDE57CBA1D4AB388421F06 /* Info.plist */,
+				B3445BC1197AFE8E0085228D /* particlesProg.cl */,
+				B3445BBD197AFD2B0085228D /* basic.vert */,
+				B3445BBF197AFD400085228D /* basic.frag */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B3445BBB197ADEAE0085228D /* OpenCL.framework */,
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B33EE0AF1967B6C3008D4CD1 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				B33EE0B01967B6C3008D4CD1 /* metaballs.fs */,
+				B33EE0B11967B6C3008D4CD1 /* metaballs.mat */,
+				B33EE0B21967B6C3008D4CD1 /* metaballs.vs */,
+				B33EE0B31967B6C3008D4CD1 /* metaballs_def.fs */,
+				B33EE0B41967B6C3008D4CD1 /* metaballs_def.mat */,
+				B33EE0B51967B6C3008D4CD1 /* metaballs_def.vs */,
+			);
+			name = Shaders;
+			path = ../assets/Shaders;
+			sourceTree = "<group>";
+		};
+		B3445BA2197ADAD40085228D /* Other Implementation */ = {
+			isa = PBXGroup;
+			children = (
+				B3445BA3197ADAD40085228D /* kernel.c */,
+				B3445BA4197ADAD40085228D /* kernel.hc */,
+				B3445BA5197ADAD40085228D /* marching_cubes.c */,
+				B3445BA6197ADAD40085228D /* marching_cubes.hc */,
+				B3445BA7197ADAD40085228D /* metaballs.c */,
+				B3445BA8197ADAD40085228D /* metaballs.hc */,
+				B3445BA9197ADAD40085228D /* particles.c */,
+				B3445BAA197ADAD40085228D /* particles.hc */,
+				B3445BAB197ADAD40085228D /* volume_renderer.c */,
+				B3445BAC197ADAD40085228D /* volume_renderer.hc */,
+			);
+			name = "Other Implementation";
+			path = "../Other Implementation";
+			sourceTree = "<group>";
+		};
+		B3F46CB8197B0E3D005FD0A8 /* OpenCl */ = {
+			isa = PBXGroup;
+			children = (
+				B3F46CB9197B0E3D005FD0A8 /* include */,
+				B3F46CC4197B0E3D005FD0A8 /* src */,
+			);
+			name = OpenCl;
+			path = ../../../OpenCl;
+			sourceTree = "<group>";
+		};
+		B3F46CB9197B0E3D005FD0A8 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				B3F46CBA197B0E3D005FD0A8 /* BufferObj.h */,
+				B3F46CBB197B0E3D005FD0A8 /* CommandQueue.h */,
+				B3F46CBC197B0E3D005FD0A8 /* Context.h */,
+				B3F46CBD197B0E3D005FD0A8 /* Device.h */,
+				B3F46CBE197B0E3D005FD0A8 /* DeviceInfo.hpp */,
+				B3F46CBF197B0E3D005FD0A8 /* Event.h */,
+				B3F46CC0197B0E3D005FD0A8 /* Image.h */,
+				B3F46CC1197B0E3D005FD0A8 /* MemoryObj.h */,
+				B3F46CC2197B0E3D005FD0A8 /* Platform.h */,
+				B3F46CC3197B0E3D005FD0A8 /* Program.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		B3F46CC4197B0E3D005FD0A8 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B3F46CC5197B0E3D005FD0A8 /* BufferObj.cpp */,
+				B3F46CC6197B0E3D005FD0A8 /* CommandQueue.cpp */,
+				B3F46CC7197B0E3D005FD0A8 /* Context.cpp */,
+				B3F46CC8197B0E3D005FD0A8 /* Device.cpp */,
+				B3F46CC9197B0E3D005FD0A8 /* Event.cpp */,
+				B3F46CCA197B0E3D005FD0A8 /* Image.cpp */,
+				B3F46CCB197B0E3D005FD0A8 /* MemoryObj.cpp */,
+				B3F46CCC197B0E3D005FD0A8 /* Platform.cpp */,
+				B3F46CCD197B0E3D005FD0A8 /* Program.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* MetaBalls */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MetaBalls" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MetaBalls;
+			productInstallPath = "$(HOME)/Applications";
+			productName = MetaBalls2;
+			productReference = 8D1107320486CEB800E47090 /* MetaBalls.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MetaBalls" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* MetaBalls2 */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* MetaBalls */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B33EE0C01967B6C3008D4CD1 /* metaballs_def.mat in Resources */,
+				B3445BC0197AFD400085228D /* basic.frag in Resources */,
+				B33EE0BE1967B6C3008D4CD1 /* metaballs.vs in Resources */,
+				B33EE0C11967B6C3008D4CD1 /* metaballs_def.vs in Resources */,
+				B3445BBE197AFD2B0085228D /* basic.vert in Resources */,
+				B33EE0BC1967B6C3008D4CD1 /* metaballs.fs in Resources */,
+				CFE2776C0B5244C1A0273048 /* CinderApp.icns in Resources */,
+				B33EE0BD1967B6C3008D4CD1 /* metaballs.mat in Resources */,
+				B33EE0BF1967B6C3008D4CD1 /* metaballs_def.fs in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3F46CCE197B0E3D005FD0A8 /* BufferObj.cpp in Sources */,
+				B3445BBA197ADC040085228D /* VolumeRenderer.cpp in Sources */,
+				B3445BAE197ADAD40085228D /* marching_cubes.c in Sources */,
+				B3445BC2197AFE8E0085228D /* particlesProg.cl in Sources */,
+				B3445BAF197ADAD40085228D /* metaballs.c in Sources */,
+				B3F46CD1197B0E3D005FD0A8 /* Device.cpp in Sources */,
+				B3F46CD0197B0E3D005FD0A8 /* Context.cpp in Sources */,
+				B3F46CCF197B0E3D005FD0A8 /* CommandQueue.cpp in Sources */,
+				B3445BB0197ADAD40085228D /* particles.c in Sources */,
+				B3445BB7197ADBC90085228D /* MarchingCubes.cpp in Sources */,
+				B3445BB3197ADAFE0085228D /* Particles.cpp in Sources */,
+				B3F46CD6197B0E3D005FD0A8 /* Program.cpp in Sources */,
+				B3445BAD197ADAD40085228D /* kernel.c in Sources */,
+				B3F46CD2197B0E3D005FD0A8 /* Event.cpp in Sources */,
+				B3F46CD3197B0E3D005FD0A8 /* Image.cpp in Sources */,
+				B3445BB1197ADAD40085228D /* volume_renderer.c in Sources */,
+				B3F46CD4197B0E3D005FD0A8 /* MemoryObj.cpp in Sources */,
+				B3F46CD5197B0E3D005FD0A8 /* Platform.cpp in Sources */,
+				EE64BE15612548199A62E999 /* MetaBallsApp.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MetaBalls_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
+				PRODUCT_NAME = MetaBalls;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MetaBalls_Prefix.pch;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
+				PRODUCT_NAME = MetaBalls;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = i386;
+				CINDER_PATH = ../../../../../cinder;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = i386;
+				CINDER_PATH = ../../../../../cinder;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MetaBalls" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MetaBalls" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
