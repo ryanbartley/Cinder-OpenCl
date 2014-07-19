@@ -74,4 +74,4 @@ void MetaBallsApp::draw()
 	mParticles->render();
 }
 
-CINDER_APP_NATIVE( MetaBalls2App, RendererGl )
+CINDER_APP_NATIVE( MetaBallsApp, RendererGl )
