@@ -30,6 +30,7 @@ Device::Device( cl_device_id device )
 	// It needs to be like a waterfall for this option
 #if defined (__APPLE__) || defined(MACOSX)
 	static const char* CL_GL_SHARING_EXT = "cl_APPLE_gl_sharing";
+	static const char* CL_GL_EVENT_EXT = "cl_khr_gl_event";
 #else
 	static const char* CL_GL_SHARING_EXT = "cl_khr_gl_sharing";
 #endif
@@ -39,6 +40,13 @@ Device::Device( cl_device_id device )
 	errNum = clGetDeviceInfo( mId, CL_DEVICE_EXTENSIONS, ext_size, ext_string, &ext_size);
 		// Search for GL support in extension string (space delimited)
 	bool supported = isExtensionSupported( CL_GL_SHARING_EXT, ext_string, ext_size );
+	if( supported )
+	{
+		// Device supports context sharing with OpenGL
+		printf("Found GL Sharing Support!\n");
+	}
+	supported = false;
+	supported = isExtensionSupported( CL_GL_EVENT_EXT, ext_string, ext_size );
 	if( supported )
 	{
 		// Device supports context sharing with OpenGL

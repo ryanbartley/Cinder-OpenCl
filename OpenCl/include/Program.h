@@ -63,7 +63,7 @@ public:
 	KernelRef getKernelByName( const std::string &name );
 	cl_kernel getKernelIdByName( const std::string &name );
 	
-	void createKernel( const std::string &name );
+	KernelRef createKernel( const std::string &name );
 	void setKernel( const KernelRef &kernel );
 	
 	void setKernelArg( const KernelRef &kernel, cl_int index, size_t size, void *data );

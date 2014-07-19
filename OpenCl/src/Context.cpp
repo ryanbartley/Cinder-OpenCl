@@ -52,7 +52,7 @@ Context::Context(const PlatformRef &platform, bool sharedGraphics, const Context
 			(cl_context_properties)kCGLShareGroup, 0
 		};
 		
-		mId = clCreateContext( contextProperties, 0, 0, nullptr, nullptr, &errNum );
+		mId = clCreateContext( contextProperties, 0, 0, &Context::contextErrorCallback, this, &errNum );
 		
 		if( errNum != CL_SUCCESS ) {
 			std::cerr << "Context was not created successfully " << errNum << std::endl;

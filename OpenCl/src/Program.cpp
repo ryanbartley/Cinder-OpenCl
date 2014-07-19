@@ -233,14 +233,16 @@ void Program::setKernel( const KernelRef &kernel )
 	}
 }
 	
-void Program::createKernel( const std::string &name )
+KernelRef Program::createKernel( const std::string &name )
 {
 	auto found = mKernels.find( name );
 	if( found == mKernels.end() ) {
-		mKernels.insert( std::pair<std::string, KernelRef>(name, Kernel::create( shared_from_this(), name ) ) );
+		auto kernel = mKernels.insert( std::pair<std::string, KernelRef>(name, Kernel::create( shared_from_this(), name ) ) );
+		return kernel.first->second;
 	}
 	else {
 		std::cout << "Kernel: " << name << " already created." << std::endl;
+		return found->second;
 	}
 }
 	

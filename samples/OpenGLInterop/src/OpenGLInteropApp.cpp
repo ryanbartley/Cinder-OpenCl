@@ -199,6 +199,7 @@ void OpenGLInteropApp::computeVbo()
 	// Note, we should ensure GL is completed with any commands that might affect this VBO
 	// before we issue OpenCL commands
 	auto vboMem = mClVbo->getId();
+
 	errNum = clEnqueueAcquireGLObjects( mClCommandQueue->getId(), 1, &vboMem, 0, NULL, NULL );
 	
     // Queue the kernel up for execution across the array
