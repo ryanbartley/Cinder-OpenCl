@@ -13,8 +13,9 @@
 #define BINARY 0
 
 namespace cinder { namespace cl {
-	
-typedef std::shared_ptr<class Program> ProgramRef;
+
+class Program;
+typedef std::shared_ptr<Program> ProgramRef;
 typedef std::shared_ptr<class Platform> PlatformRef;
 typedef std::shared_ptr<class Device> DeviceRef;
 typedef std::shared_ptr<class BufferObj> BufferObjRef;
@@ -85,5 +86,7 @@ private:
 	cl_program mId;
 	std::map<std::string, Program::KernelRef> mKernels;
 };
+	
+typedef std::shared_ptr<typename Program::Kernel> KernelRef;
 	
 }}

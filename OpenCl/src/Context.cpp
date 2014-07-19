@@ -58,6 +58,7 @@ Context::Context(const PlatformRef &platform, bool sharedGraphics, const Context
 			std::cerr << "Context was not created successfully " << errNum << std::endl;
 			exit(EXIT_FAILURE);
 		}
+		mIsGlShared = true;
 	}
 	
 	sClContext = this;

@@ -25,6 +25,7 @@ typedef std::shared_ptr<class Event> EventRef;
 class BufferObj : public boost::noncopyable, public std::enable_shared_from_this<BufferObj> {
 public:
 	static BufferObjRef create( cl_mem_flags flags, size_t size, void *data );
+	static BufferObjRef create( const gl::BufferObjRef &glBuffer, cl_mem_flags flags );
 	
 	class SubBuffer : public boost::noncopyable, public std::enable_shared_from_this<SubBuffer> {
 	public:

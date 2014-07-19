@@ -75,6 +75,11 @@ BufferObjRef BufferObj::create( cl_mem_flags flags, size_t size, void *data )
 	return BufferObjRef( new BufferObj( flags, size, data ) );
 }
 	
+BufferObjRef BufferObj::create( const gl::BufferObjRef &glBuffer, cl_mem_flags flags )
+{
+	return BufferObjRef( new BufferObj( glBuffer, flags ) );
+}
+	
 void BufferObj::partitionBuffer( size_t origin, size_t size )
 {
 	
@@ -205,13 +210,20 @@ void BufferObj::setReturnEvent( EventRef *returnEvent, cl_event event )
 BufferObj::BufferObj( const gl::BufferObjRef &glBuffer, cl_mem_flags flags )
 {
 	//TODO: Check whether this is a shared OpenGl context
-//	cl_int errcode;
-//	
-//	mId = clCreateFromGLBuffer( Context::context()->mContext, flags, glBuffer->getId(), &errcode );
-//	
-//	if( errcode ) {
-//		std::cout << "ERROR: " << errcode << std::endl;
-//	}
+	cl_int errcode;
+	auto ctx = Context::context();
+	
+	if ( ctx->isGlShared() ) {
+		mId = clCreateFromGLBuffer( ctx->getId(), flags, glBuffer->getId(), &errcode );
+	}
+	else {
+		std::cout << "ERROR: Context is not GL" << std::endl;
+	}
+	
+	
+	if( errcode ) {
+		std::cout << "ERROR: " << errcode << std::endl;
+	}
 }
 	
 }}

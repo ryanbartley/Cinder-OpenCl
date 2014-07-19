@@ -28,7 +28,7 @@ public:
 	static Context* context();
 	
 	const cl_context	getId() { return mId; }
-	bool				getIsGlShared() { return mIsGlShared; }
+	bool				isGlShared() { return mIsGlShared; }
 	
 private:
 	Context();
@@ -38,7 +38,8 @@ private:
 	PlatformRef mPlatform;
 	cl_context	mId;
 	bool		mIsGlShared;
-	friend class BufferObj;
+	
+	
 };
 	
 }}
