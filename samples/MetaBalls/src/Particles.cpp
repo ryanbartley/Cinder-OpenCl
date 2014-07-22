@@ -121,6 +121,7 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 		std::cout << "ERROR: Aquiring gl objects" << std::endl;
 	}
 	glFinish();
+	glFinish();
     // Queue the kernel up for execution across the array
     errNum = clEnqueueNDRangeKernel( commandQueue->getId(), kernel->getId(), 1, NULL,
                                     globalWorkSize, 0, 0, NULL, NULL);
@@ -141,7 +142,7 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	if ( errNum ) {
 		std::cout << "ERROR: Releasing gl objects" << std::endl;
 	}
-//	clFinish( commandQueue->getId() );
+	clFinish( commandQueue->getId() );
 	cout << "I'm after the release" << endl;
 	cout << "________________________________________________________" << endl;
 	float* map = (float*)mGlLifetimes->map( GL_READ_ONLY );

@@ -169,6 +169,16 @@ std::vector<cl_device_id> Platform::getDeviceIds() const
 	return deviceIds;
 }
 	
+DeviceRef Platform::getDeviceById( cl_device_id deviceId )
+{
+	for ( auto deviceIts = getDevices().begin(); deviceIts != getDevices().end(); ++deviceIts ) {
+		if ( deviceId == (*deviceIts)->getId() ) {
+			return (*deviceIts);
+		}
+	}
+	return DeviceRef();
+}
+	
 const DeviceRef Platform::getDeviceByType( cl_device_type type ) const
 {
 	for( auto deviceIts = mDevices.begin(); deviceIts != mDevices.end(); ++deviceIts ) {

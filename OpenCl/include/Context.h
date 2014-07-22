@@ -27,15 +27,16 @@ public:
 	
 	static Context* context();
 	
-	const cl_context	getId() { return mId; }
-	bool				isGlShared() { return mIsGlShared; }
+	cl_context				getId() const { return mId; }
+	bool					isGlShared() const { return mIsGlShared; }
+	std::vector<DeviceRef>& getAssociatedDevices() { return mDevices; }
 	
 private:
 	Context( bool sharedGl, const ContextErrorCallback &errorCallback );
 	Context( const PlatformRef &platform, bool sharedGl, const ContextErrorCallback &errorCallback );
 	static void CL_CALLBACK contextErrorCallback( const char * errInfo, const void * privateInfo, size_t cb, void * userData );
 	
-	void initialize();
+	void initialize( const PlatformRef &platform );
 	static cl_context_properties* getDefaultSharedGraphicsContextProperties();
 	static cl_context_properties* getDefaultPlatformContextProperties( const PlatformRef &platform );
 	

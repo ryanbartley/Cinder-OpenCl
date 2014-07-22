@@ -50,13 +50,12 @@ void MetaBallsApp::setup()
 	
     // Create a command-queue on the first device available
     // on the created context
-    mClCommandQueue = cl::CommandQueue::create( mClPlatform->getDevices()[0] );
+    mClCommandQueue = cl::CommandQueue::create( mClContext->getAssociatedDevices()[0] );
 	
 	mParticles = Particles::create();
 	
 	mCam.setPerspective( 60, getWindowAspectRatio(), 0.01, 1000 );
 	mCam.lookAt( Vec3f( 32, 15, 35 ), Vec3f( 32, 15, 32 ) );
-//	quit();
 }
 
 void MetaBallsApp::mouseDown( MouseEvent event )

@@ -16,13 +16,13 @@ namespace cinder { namespace cl {
 static Context* sClContext = nullptr;
 static bool sClContextInitialized = false;
 	
-Context::Context(const PlatformRef &platform, bool sharedGraphics, const ContextErrorCallback &errorCallback )
+Context::Context( const PlatformRef &platform, bool sharedGraphics, const ContextErrorCallback &errorCallback )
 : mId( nullptr ), mIsGlShared( false ), mDevices( platform->getDevices() )
 {
 	mIsGlShared = sharedGraphics && platform->isExtensionSupported( "cl_APPLE_gl_sharing" );
 	mErrorCallback =  errorCallback ? errorCallback : &Context::contextErrorCallback;
 	
-	initialize();
+	initialize(platform);
 }
 
 // This was made just to test something. The above should be used in all cases
@@ -40,7 +40,7 @@ Context::Context( bool sharedGl, const ContextErrorCallback &errorCallback )
 	mIsGlShared = sharedGl && platform->isExtensionSupported( "cl_APPLE_gl_sharing" );
 	mErrorCallback =  errorCallback ? errorCallback : &Context::contextErrorCallback;
 
-	initialize();
+	initialize(platform);
 }
 	
 cl_context_properties* Context::getDefaultSharedGraphicsContextProperties()
@@ -66,7 +66,7 @@ cl_context_properties* Context::getDefaultPlatformContextProperties( const Platf
 	return contextProperties;
 }
 	
-void Context::initialize()
+void Context::initialize( const PlatformRef &platform )
 {
 	cl_int errNum = CL_SUCCESS;
 	
@@ -78,7 +78,30 @@ void Context::initialize()
 	}
 	
 	if ( mIsGlShared ) {
-		mId = clCreateContext( getDefaultSharedGraphicsContextProperties(), 0, 0, mErrorCallback, this, &errNum );
+		// TODO: Figure out how to also associate the device from platform.
+//		for ( size_t i = 0; i < deviceIds.size(); ++i )
+//		{
+//			cl_device_id lDeviceIdToTry = deviceIds[ i ];
+//			cl_context lContextToTry = 0;
+//			
+//			lContextToTry = clCreateContext( getDefaultSharedGraphicsContextProperties(),
+//											1, &lDeviceIdToTry,
+//											mErrorCallback, this,
+//											&errNum );
+//			std::cout << "I'm trying to get the context" << std::endl;
+//			if ( errNum == CL_SUCCESS )
+//			{
+//				// We found the context.
+//				std::cout << "I found one!" << std::endl;
+//				mDevices.clear();
+//				mDevices.push_back( platform->getDeviceById( lDeviceIdToTry ) );
+//				mId = lContextToTry;
+//				break;
+//			}
+//		}
+		//TODO: Figure out why it doesn't matter if we set device or not. Really need to look at this section
+		auto id = mDevices.front()->getId();
+		mId = clCreateContext( getDefaultSharedGraphicsContextProperties(), 1, &id, mErrorCallback, this, &errNum );
 	}
 	else {
 		mId = clCreateContext( getDefaultPlatformContextProperties( mDevices[0]->getPlatform() ), deviceIds.size(), deviceIds.data(), mErrorCallback, this, &errNum );

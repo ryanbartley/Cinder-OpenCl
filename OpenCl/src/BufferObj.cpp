@@ -210,7 +210,7 @@ void BufferObj::setReturnEvent( EventRef *returnEvent, cl_event event )
 BufferObj::BufferObj( const gl::BufferObjRef &glBuffer, cl_mem_flags flags )
 {
 	//TODO: Check whether this is a shared OpenGl context
-	cl_int errcode;
+	cl_int errcode = CL_SUCCESS;
 	auto ctx = Context::context();
 	
 	if ( ctx->isGlShared() ) {

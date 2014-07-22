@@ -44,6 +44,7 @@ public:
 	const DeviceRef					getDeviceByType( cl_device_type type ) const;
 	//! Returns a DeviceRef for attached devices by type. The first one.
 	DeviceRef						getDeviceByType( cl_device_type type );
+	DeviceRef						getDeviceById( cl_device_id deviceId );
 	
 	//! Returns whether an extension is supported on this platform.
 	bool isExtensionSupported( const std::string &support_str );
