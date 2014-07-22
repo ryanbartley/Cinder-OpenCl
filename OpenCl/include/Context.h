@@ -16,12 +16,12 @@ namespace cinder { namespace cl {
 typedef std::shared_ptr<class Context> ContextRef;
 typedef std::shared_ptr<class Platform> PlatformRef;
 typedef std::shared_ptr<class Device> DeviceRef;
-typedef std::function<void(const char * errInfo, const void * privateInfo, size_t cb, void * userData)> ContextErrorCallback;
+typedef void(*ContextErrorCallback)(const char * errInfo, const void * privateInfo, size_t cb, void * userData);
 	
 class Context : public boost::noncopyable, public std::enable_shared_from_this<Context> {
 public:
 	static ContextRef create( const PlatformRef &platform, bool sharedGl, const ContextErrorCallback &errorCallBack = nullptr );
-	static ContextRef create();
+	static ContextRef create( bool sharedGl, const ContextErrorCallback &errorCallback = nullptr );
 	
 	~Context();
 	
@@ -31,14 +31,18 @@ public:
 	bool				isGlShared() { return mIsGlShared; }
 	
 private:
-	Context();
+	Context( bool sharedGl, const ContextErrorCallback &errorCallback );
 	Context( const PlatformRef &platform, bool sharedGl, const ContextErrorCallback &errorCallback );
 	static void CL_CALLBACK contextErrorCallback( const char * errInfo, const void * privateInfo, size_t cb, void * userData );
 	
-	PlatformRef mPlatform;
-	cl_context	mId;
-	bool		mIsGlShared;
+	void initialize();
+	static cl_context_properties* getDefaultSharedGraphicsContextProperties();
+	static cl_context_properties* getDefaultPlatformContextProperties( const PlatformRef &platform );
 	
+	cl_context				mId;
+	bool					mIsGlShared;
+	std::vector<DeviceRef>	mDevices;
+	ContextErrorCallback	mErrorCallback;
 	
 };
 	

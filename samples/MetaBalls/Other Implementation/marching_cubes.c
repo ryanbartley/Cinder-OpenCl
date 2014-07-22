@@ -45,7 +45,7 @@
 //  
 //  if(point_data == NULL) {
 //    error("Not enough memory!");
-//  }
+//  ;}
 //
 //  int x, y, z;
 //  for(x = 0; x < width; x++)

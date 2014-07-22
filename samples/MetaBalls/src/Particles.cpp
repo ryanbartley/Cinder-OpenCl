@@ -27,7 +27,7 @@ Particles::Particles()
 	srand(time(NULL));
 	
 	for(int i = 0; i < particle_count; i++) {
-		cpuLifetimes[i] = 0;
+		cpuLifetimes[i] = 999;
 		cpuPositions[i] = Vec4f::zero();
 		cpuVelocities[i] = Vec4f::zero();
 	
@@ -120,7 +120,7 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	if ( errNum ) {
 		std::cout << "ERROR: Aquiring gl objects" << std::endl;
 	}
-	
+	glFinish();
     // Queue the kernel up for execution across the array
     errNum = clEnqueueNDRangeKernel( commandQueue->getId(), kernel->getId(), 1, NULL,
                                     globalWorkSize, 0, 0, NULL, NULL);
@@ -134,15 +134,15 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	// Release the GL Object
 	// Note, we should ensure OpenCL is finished with any commands that might affect the VBO
 	
-//	clFinish(commandQueue->getId());
+	clFinish(commandQueue->getId());
 	
 	errNum = clEnqueueReleaseGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, NULL );
 	
 	if ( errNum ) {
 		std::cout << "ERROR: Releasing gl objects" << std::endl;
 	}
-	
-//	cout << "I'm after the release" << endl;
+//	clFinish( commandQueue->getId() );
+	cout << "I'm after the release" << endl;
 	cout << "________________________________________________________" << endl;
 	float* map = (float*)mGlLifetimes->map( GL_READ_ONLY );
 	for( int i = 0; i < particle_count; i++ ) {

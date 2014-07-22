@@ -33,6 +33,7 @@
 		B3445BBE197AFD2B0085228D /* basic.vert in Resources */ = {isa = PBXBuildFile; fileRef = B3445BBD197AFD2B0085228D /* basic.vert */; };
 		B3445BC0197AFD400085228D /* basic.frag in Resources */ = {isa = PBXBuildFile; fileRef = B3445BBF197AFD400085228D /* basic.frag */; };
 		B3445BC2197AFE8E0085228D /* particlesProg.cl in Sources */ = {isa = PBXBuildFile; fileRef = B3445BC1197AFE8E0085228D /* particlesProg.cl */; };
+		B3F3BC50197DC119008A3347 /* Cl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F3BC4F197DC119008A3347 /* Cl.cpp */; };
 		B3F46CCE197B0E3D005FD0A8 /* BufferObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CC5197B0E3D005FD0A8 /* BufferObj.cpp */; };
 		B3F46CCF197B0E3D005FD0A8 /* CommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CC6197B0E3D005FD0A8 /* CommandQueue.cpp */; };
 		B3F46CD0197B0E3D005FD0A8 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F46CC7197B0E3D005FD0A8 /* Context.cpp */; };
@@ -88,6 +89,8 @@
 		B3445BBD197AFD2B0085228D /* basic.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.vert; path = ../assets/basic.vert; sourceTree = "<group>"; };
 		B3445BBF197AFD400085228D /* basic.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.frag; path = ../assets/basic.frag; sourceTree = "<group>"; };
 		B3445BC1197AFE8E0085228D /* particlesProg.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = particlesProg.cl; path = ../assets/particlesProg.cl; sourceTree = "<group>"; };
+		B3F3BC4D197DC0F3008A3347 /* Cl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cl.h; sourceTree = "<group>"; };
+		B3F3BC4F197DC119008A3347 /* Cl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cl.cpp; sourceTree = "<group>"; };
 		B3F46CBA197B0E3D005FD0A8 /* BufferObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BufferObj.h; sourceTree = "<group>"; };
 		B3F46CBB197B0E3D005FD0A8 /* CommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandQueue.h; sourceTree = "<group>"; };
 		B3F46CBC197B0E3D005FD0A8 /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Context.h; sourceTree = "<group>"; };
@@ -276,6 +279,7 @@
 			isa = PBXGroup;
 			children = (
 				B3F46CBA197B0E3D005FD0A8 /* BufferObj.h */,
+				B3F3BC4D197DC0F3008A3347 /* Cl.h */,
 				B3F46CBB197B0E3D005FD0A8 /* CommandQueue.h */,
 				B3F46CBC197B0E3D005FD0A8 /* Context.h */,
 				B3F46CBD197B0E3D005FD0A8 /* Device.h */,
@@ -293,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				B3F46CC5197B0E3D005FD0A8 /* BufferObj.cpp */,
+				B3F3BC4F197DC119008A3347 /* Cl.cpp */,
 				B3F46CC6197B0E3D005FD0A8 /* CommandQueue.cpp */,
 				B3F46CC7197B0E3D005FD0A8 /* Context.cpp */,
 				B3F46CC8197B0E3D005FD0A8 /* Device.cpp */,
@@ -386,6 +391,7 @@
 				B3F46CCF197B0E3D005FD0A8 /* CommandQueue.cpp in Sources */,
 				B3445BB0197ADAD40085228D /* particles.c in Sources */,
 				B3445BB7197ADBC90085228D /* MarchingCubes.cpp in Sources */,
+				B3F3BC50197DC119008A3347 /* Cl.cpp in Sources */,
 				B3445BB3197ADAFE0085228D /* Particles.cpp in Sources */,
 				B3F46CD6197B0E3D005FD0A8 /* Program.cpp in Sources */,
 				B3445BAD197ADAD40085228D /* kernel.c in Sources */,

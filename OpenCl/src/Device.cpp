@@ -17,15 +17,19 @@ Device::Device( const PlatformRef &platform, cl_device_type type )
 	
 }
 	
-Device::Device( cl_device_id device )
-: mId( device )
+Device::Device( const PlatformRef &platform, cl_device_id device )
+: mId( device ), mParentPlatform( platform )
 {
 	cl_int errNum;
 	errNum = clGetDeviceInfo( device, CL_DEVICE_TYPE, sizeof(cl_device_type), &mType, nullptr);
+	
+	// TODO: Add errnum check and Throw DeviceExc
+	
 	if( errNum != CL_SUCCESS ) {
 		std::cout << "Problem finding the Device Type " << errNum << std::endl;
 		exit(EXIT_FAILURE);
 	}
+	
 	// Figure out what to do with this
 	// It needs to be like a waterfall for this option
 #if defined (__APPLE__) || defined(MACOSX)
@@ -33,30 +37,42 @@ Device::Device( cl_device_id device )
 	static const char* CL_GL_EVENT_EXT = "cl_khr_gl_event";
 #else
 	static const char* CL_GL_SHARING_EXT = "cl_khr_gl_sharing";
+	static const char* CL_GL_EVENT_EXT = "cl_khr_gl_event";
 #endif
-	// Get string containing supported device extensions
-	size_t ext_size = 1024;
-	char* ext_string = new char[ext_size];
-	errNum = clGetDeviceInfo( mId, CL_DEVICE_EXTENSIONS, ext_size, ext_string, &ext_size);
-		// Search for GL support in extension string (space delimited)
-	bool supported = isExtensionSupported( CL_GL_SHARING_EXT, ext_string, ext_size );
-	if( supported )
-	{
-		// Device supports context sharing with OpenGL
-		printf("Found GL Sharing Support!\n");
-	}
-	supported = false;
-	supported = isExtensionSupported( CL_GL_EVENT_EXT, ext_string, ext_size );
-	if( supported )
-	{
-		// Device supports context sharing with OpenGL
-		printf("Found GL Sharing Support!\n");
-	}
+	isExtensionSupported( CL_GL_SHARING_EXT );
+	isExtensionSupported( CL_GL_EVENT_EXT );
 }
 	
-DeviceRef Device::create( cl_device_id device )
+std::string Device::getSupportedExtensions( cl_device_id device )
 {
-	return DeviceRef( new Device( device ) );
+	std::string extensions;
+	if( extensions.empty() ) {
+		size_t ext_size = 1024;
+		extensions.resize( 1024 );
+		cl_int errNum = clGetDeviceInfo( device, CL_DEVICE_EXTENSIONS, ext_size, &extensions[0], &ext_size);
+		// TODO: Add errnum check and Throw DeviceExc
+		if( errNum != CL_SUCCESS ) {
+			std::string error( "Error: getSupportedExtensions: errNum = " );
+			error += Platform::getErrorString( errNum );
+			std::cout << "Error: getSupportedExtensions" << std::endl;
+		}
+	}
+	return extensions;
+}
+	
+void Device::displayDeviceSupportedExtensions( const DeviceRef &device )
+{
+	displayDeviceSupportedExtensions( device->getId() );
+}
+	
+void Device::displayDeviceSupportedExtensions( cl_device_id deviceId )
+{
+	InfoDevice<ArrayType<char>>::display( deviceId, CL_DEVICE_EXTENSIONS, "Current Device extensions" );
+}
+	
+DeviceRef Device::create( const PlatformRef &platform, cl_device_id device )
+{
+	return DeviceRef( new Device( platform, device ) );
 }
 
 Device::~Device()
@@ -64,51 +80,69 @@ Device::~Device()
 	clReleaseDevice(mId);
 }
 
-bool Device::isExtensionSupported( const char* support_str, const char* ext_string, size_t ext_buffer_size )
+bool Device::isExtensionSupported( const std::string &support_str )
 {
-	size_t offset = 0;
-	const char* space_substr = strnstr(ext_string + offset, " ", ext_buffer_size - offset);
-	size_t space_pos = space_substr ? space_substr - ext_string : 0;
-	while (space_pos < ext_buffer_size)
-	{
-		if( strncmp(support_str, ext_string + offset, space_pos) == 0 )
-		{
-			// Device supports requested extension!
-			printf("Info: Found extension support ‘%s’!\n", support_str);
-			return 1;
+	static std::map<std::string, bool> extensionSupport;
+	static std::string ext_string;
+	if ( ext_string.empty() ) {
+		ext_string = getSupportedExtensions( mId ).c_str();
+	}
+	
+	auto found = extensionSupport.find( support_str );
+	
+	if( found == extensionSupport.end() ) {
+		size_t offset = 0;
+		const char* space_substr = strnstr(ext_string.c_str() + offset, " ", ext_string.size() - offset);
+		size_t space_pos = space_substr ? space_substr - ext_string.c_str() : 0;
+		bool supported = false;
+		while (space_pos < ext_string.size()) {
+			if( strncmp(support_str.c_str(), ext_string.c_str() + offset, space_pos) == 0 ) {
+				// Device supports requested extension!
+				printf("Info: Found extension support ‘%s’!\n", support_str.c_str());
+				supported = true;
+				break;
+			}
+			// Keep searching -- skip to next token string
+			offset = space_pos + 1;
+			space_substr = strnstr(ext_string.c_str() + offset, " ", ext_string.size() - offset);
+			space_pos = space_substr ? space_substr - ext_string.c_str() : 0;
 		}
-		// Keep searching -- skip to next token string
-		offset = space_pos + 1;
-		space_substr = strnstr(ext_string + offset, " ", ext_buffer_size - offset);
-		space_pos = space_substr ? space_substr - ext_string : 0;
+		if( !supported ) {
+			printf("Warning: Extension not supported ‘%s’!\n", support_str.c_str());
+		}
+		auto newExtension = extensionSupport.insert( std::pair<std::string, bool>( support_str, supported ) );
+		return newExtension.first->second;
 	}
-	printf("Warning: Extension not supported ‘%s’!\n", support_str);
-	return 0;
+	else {
+		return found->second;
+	}
 }
 	
-std::vector<cl_device_id> Device::getAvailableDevices( cl_platform_id platform, cl_device_type type )
+const char* Device::getDeviceTypeString( cl_device_type type )
 {
-	cl_int errNum;
-	cl_uint numDevices;
-	
-	errNum = clGetDeviceIDs( platform, type, 0, NULL, &numDevices);
-	
-	if (numDevices < 1)
-	{
-		std::cout << "No GPU device found for platform " << platform << std::endl;
-		exit(1);
+	switch (type) {
+		case CL_DEVICE_TYPE_ACCELERATOR:
+			return "CL_DEVICE_TYPE_ACCELERATOR";
+			break;
+		case CL_DEVICE_TYPE_ALL:
+			return "CL_DEVICE_TYPE_ALL";
+			break;
+		case CL_DEVICE_TYPE_CPU:
+			return "CL_DEVICE_TYPE_CPU";
+			break;
+		case CL_DEVICE_TYPE_CUSTOM:
+			return "CL_DEVICE_TYPE_CUSTOM";
+			break;
+		case CL_DEVICE_TYPE_DEFAULT:
+			return "CL_DEVICE_TYPE_DEFAULT";
+			break;
+		case CL_DEVICE_TYPE_GPU:
+			return "CL_DEVICE_TYPE_GPU";
+			break;
+		default:
+			return "UNKNOWN DEVICE TYPE";
+			break;
 	}
-	
-	std::vector<cl_device_id> devices( numDevices );
-	
-	errNum = clGetDeviceIDs( platform, type, numDevices, devices.data(), NULL);
-	
-	return devices;
-}
-
-std::vector<cl_device_id> Device::getAvailableDevices( const PlatformRef &platform, cl_device_type type )
-{
-	return getAvailableDevices(platform->getId(), type);
 }
 	
 }}
