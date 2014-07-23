@@ -25,8 +25,8 @@ public:
 	void update( const ci::cl::CommandQueueRef &commandQueue );
 	void render();
 	
-	int count();
-	void reset();
+	void reset() { mShouldReset = 1; }
+	int count() { return particle_count; }
 	
 	ci::cl::BufferObjRef& getClPositions() { return mClPositions; }
 	

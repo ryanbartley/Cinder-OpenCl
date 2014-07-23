@@ -34,6 +34,8 @@ class MetaBallsApp : public AppNative {
 
 void MetaBallsApp::setup()
 {
+//	cl_event event;
+//	cout << event << endl;
 	// First, select an OpenCL platform to run on.
 	mClPlatform = cl::Platform::create( cl::Platform::getAvailablePlatforms()[0] );
 	

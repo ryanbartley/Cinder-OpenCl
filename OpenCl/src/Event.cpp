@@ -10,47 +10,70 @@
 #include "Context.h"
 
 namespace cinder { namespace cl {
-	
-Event::Event( EventType type )
-: mType( type )
-{	
-}
-	
+		
 Event::~Event()
 {
-	clReleaseEvent( mId );
+	if( mId != nullptr )
+		clReleaseEvent( mId );
 }
 	
-void Event::setCallback( EventCallback pFunc, void *userData )
+void Event::setCompletedCallback( EventCallback pFunc, void *userData )
 {
 	cl_int errNum;
 	errNum = clSetEventCallback( mId, CL_COMPLETE, pFunc, userData );
 }
 	
-SysEvent::SysEvent( cl_event event )
-: Event( SYS_EVENT )
+Event::Event()
+: mId( nullptr ), mType( SYS_EVENT )
+{
+}
+	
+Event::Event( cl_event event, EventType type )
+: mId( event ), mType( type )
 {
 	mId = event;
 	clRetainEvent( mId );
 }
 	
-SysEventRef SysEvent::create( cl_event event )
+Event::Event( const Event &rhs )
+: mId( rhs.mId ), mType( rhs.mType )
 {
-	return SysEventRef( new SysEvent( event ) );
+	std::cout << "Using Event::Event Copy Constructor" << std::endl;
+	clRetainEvent( mId );
 }
 	
-SysEvent& SysEvent::operator=( const SysEvent &rhs )
+Event::Event( const ContextRef &context )
+: mType( USER_EVENT )
 {
+	cl_int errNum = CL_SUCCESS;
+	mId = clCreateUserEvent( context->getId(), &errNum);
+	
+	//! TODO: Throw event error
+	if ( errNum ) {
+		std::cout << "ERROR: creating user event" << std::endl;
+	}
+}
+	
+EventRef Event::create( cl_event event, EventType type )
+{
+	return EventRef( new Event( event, type ) );
+}
+	
+Event& Event::operator=( const Event &rhs )
+{
+	std::cout << "Using Event::operator= Copy Assignment" << std::endl;
 	if (this != &rhs) {
 		mId = rhs.mId;
-		clRetainEvent( mId );
+		if( mId )
+			clRetainEvent( mId );
 		mType = rhs.mType;
 	}
 	return *this;
 }
 	
-SysEvent& SysEvent::operator=( SysEvent &&rhs )
+Event& Event::operator=( Event &&rhs )
 {
+	std::cout << "Using Event::operator= Move Assignment" << std::endl;
 	if (this != &rhs) {
 		mId = rhs.mId;
 		mType = rhs.mType;
@@ -60,79 +83,12 @@ SysEvent& SysEvent::operator=( SysEvent &&rhs )
 	return *this;
 }
 
-SysEvent::SysEvent( SysEvent &&rhs )
-: Event( rhs.mType )
+Event::Event( Event &&rhs )
+: mId( rhs.mId ), mType( rhs.mType )
 {
-	mId = rhs.mId;
+	std::cout << "Using Event::Event Move Constructor" << std::endl;
 	rhs.mId = nullptr;
 	rhs.mType = (EventType)-1;
-}
-
-SysEvent::SysEvent( const SysEvent &rhs )
-: Event( rhs.mType )
-{
-	mId = rhs.mId;
-	clRetainEvent( mId );
-}
-
-SysEvent::~SysEvent()
-{
-}
-	
-UserEvent::UserEvent( const ContextRef &context )
-: Event( USER_EVENT )
-{
-	cl_int errNum;
-	mId = clCreateUserEvent( context->getId(), &errNum );
-}
-	
-UserEvent& UserEvent::operator=( const UserEvent &rhs )
-{
-	if (this != &rhs) {
-		mId = rhs.mId;
-		clRetainEvent( mId );
-		mType = rhs.mType;
-	}
-	return *this;
-}
-
-UserEvent& UserEvent::operator=( UserEvent &&rhs )
-{
-	if (this != &rhs) {
-		mId = rhs.mId;
-		mType = rhs.mType;
-		rhs.mId = nullptr;
-		rhs.mType = (EventType)-1;
-	}
-	return *this;
-}
-
-UserEvent::UserEvent( UserEvent &&rhs )
-: Event( rhs.mType )
-{
-	mId = rhs.mId;
-	rhs.mId = nullptr;
-	rhs.mType = (EventType)-1;
-}
-
-UserEvent::UserEvent( const UserEvent &rhs )
-: Event( rhs.mType )
-{
-	mId = rhs.mId;
-	clRetainEvent( mId );
-}
-
-UserEvent::~UserEvent()
-{
-}
-	
-void UserEvent::setStatus( cl_int executionStatus )
-{
-	cl_int errNum;
-	errNum = clSetUserEventStatus( mId, executionStatus );
-	if( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: Set user status failed with " << errNum << std::endl;
-	}
 }
 	
 }}

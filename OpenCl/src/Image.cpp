@@ -10,9 +10,5 @@
 
 namespace cinder { namespace cl {
 
-	ImageBase::~ImageBase()
-	{
-		clReleaseMemObject(mId);
-	}
 	
 }}

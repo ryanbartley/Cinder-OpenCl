@@ -14,10 +14,10 @@
 namespace cinder { namespace cl {
 	
 BufferObj::SubBuffer::SubBuffer( const BufferObjRef &buffer, cl_mem_flags flags, const cl_buffer_region *bufferCreateInfo )
-: mId( nullptr ), mFlags( flags ), mSize( bufferCreateInfo->size ), mOrigin( bufferCreateInfo->origin )
+: MemoryObj( buffer->getContext() ), mSize( bufferCreateInfo->size ), mOrigin( bufferCreateInfo->origin ), mParent( buffer )
 {
 	cl_int errNum;
-	mId = clCreateSubBuffer( buffer->getId(), mFlags, CL_BUFFER_CREATE_TYPE_REGION, bufferCreateInfo, &errNum );
+	mId = clCreateSubBuffer( mParent->getId(), mFlags, CL_BUFFER_CREATE_TYPE_REGION, bufferCreateInfo, &errNum );
 	
 	if( errNum != CL_SUCCESS ) {
 		std::cout << "ERROR: Creating SubBuffer - " << errNum << std::endl;
@@ -41,19 +41,16 @@ BufferObj::SubBufferRef BufferObj::SubBuffer::create( const BufferObjRef &buffer
 	bufferOrigin.size = size;
 	return BufferObj::SubBufferRef( new BufferObj::SubBuffer( buffer, flags, &bufferOrigin ) );
 }
-	
-BufferObj::SubBuffer::~SubBuffer()
-{
-	clReleaseMemObject(mId);
-}
 
 BufferObj::BufferObj( cl_mem_flags flags, size_t size, void *data )
-: mId( nullptr ), mSize( size ), mFlags( flags )
+: MemoryObj( Context::context() ), mSize( size )
 {
 	cl_int errNum;
 	
-	mId = clCreateBuffer( Context::context()->getId(), mFlags, mSize, data, &errNum );
+	mFlags = flags;
+	mId = clCreateBuffer( getContext()->getId(), mFlags, mSize, data, &errNum );
 	
+	// Todo: Throw
 	if( errNum != CL_SUCCESS ) {
 		std::cout << "ERROR: Creating Buffer - " << errNum << std::endl;
 		exit(EXIT_FAILURE);
@@ -65,9 +62,24 @@ BufferObj::BufferObj( cl_mem_flags flags, size_t size, void *data )
 	
 }
 	
-BufferObj::~BufferObj()
+BufferObj::BufferObj( const gl::BufferObjRef &glBuffer, cl_mem_flags flags )
+: MemoryObj( Context::context() )
 {
-	clReleaseMemObject( mId );
+	cl_int errcode = CL_SUCCESS;
+	mFlags = flags;
+	
+	//TODO: Throw ContextGl Error
+	if ( getContext()->isGlShared() ) {
+		mId = clCreateFromGLBuffer( getContext()->getId(), mFlags, glBuffer->getId(), &errcode );
+	}
+	else {
+		std::cout << "ERROR: Context is not GL" << std::endl;
+	}
+	
+	// TODO: Throw Buffer error
+	if( errcode ) {
+		std::cout << "ERROR: " << errcode << std::endl;
+	}
 }
 	
 BufferObjRef BufferObj::create( cl_mem_flags flags, size_t size, void *data )
@@ -88,142 +100,6 @@ void BufferObj::partitionBuffer( size_t origin, size_t size )
 void BufferObj::partitionBuffer( size_t divisor )
 {
 	
-}
-	
-void BufferObj::enqueueWrite( const CommandQueueRef &commandQueue, cl_bool blockWrite, size_t offset, size_t size, void *data, const std::vector<EventRef> *eventWaitList, EventRef *writeEvent )
-{
-	cl_int errNum;
-	
-	if( eventWaitList ) {
-		if( writeEvent ) {
-			cl_event event;
-			
-			auto eventIdList = EventList::createEventIdList( *eventWaitList );
-				
-			errNum = clEnqueueWriteBuffer( commandQueue->getId(), mId, blockWrite, offset, size, data, eventIdList.size(), eventIdList.data(), &event );
-			
-			if( errNum != CL_SUCCESS ) {
-				std::cout << "ERROR: Write to buffer Failed " << errNum << std::endl;
-				exit(EXIT_FAILURE);
-			}
-			setReturnEvent( writeEvent, event );
-			
-		}
-		else {
-			auto eventIdList = EventList::createEventIdList( *eventWaitList );
-			
-			errNum = clEnqueueWriteBuffer( commandQueue->getId(), mId, blockWrite, offset, size, data, eventIdList.size(), eventIdList.data(), nullptr );
-			
-			if( errNum != CL_SUCCESS ) {
-				std::cout << "ERROR: Write to buffer Failed " << errNum << std::endl;
-				exit(EXIT_FAILURE);
-			}
-		}
-	}
-	else {
-		if( writeEvent ) {
-			cl_event event;
-			
-			errNum = clEnqueueWriteBuffer( commandQueue->getId(), mId, blockWrite, offset, size, data, 0, nullptr, &event );
-			
-			if( errNum != CL_SUCCESS ) {
-				std::cout << "ERROR: Write to buffer Failed " << errNum << std::endl;
-				exit(EXIT_FAILURE);
-			}
-			setReturnEvent( writeEvent, event );
-		}
-		else {
-			
-			errNum = clEnqueueWriteBuffer( commandQueue->getId(), mId, blockWrite, offset, size, data, 0, nullptr, nullptr );
-			
-			if( errNum != CL_SUCCESS ) {
-				std::cout << "ERROR: Write to buffer Failed " << errNum << std::endl;
-				exit(EXIT_FAILURE);
-			}
-		}
-	}
-}
-	
-void BufferObj::enqueueRead( const CommandQueueRef &commandQueue, cl_bool blockRead, size_t offset, size_t size, void *data, const std::vector<EventRef> *eventWaitList, EventRef *readEvent )
-{
-	cl_int errNum;
-	
-	if( eventWaitList ) {
-		if( readEvent ) {
-			cl_event event;
-			
-			auto eventIdList = EventList::createEventIdList( *eventWaitList );
-			
-			errNum = clEnqueueReadBuffer( commandQueue->getId(), mId, blockRead, offset, size, data, eventIdList.size(), eventIdList.data(), &event );
-			
-			if( errNum != CL_SUCCESS ) {
-				std::cout << "ERROR: Write to buffer Failed " << errNum << std::endl;
-				exit(EXIT_FAILURE);
-			}
-			setReturnEvent( readEvent, event );
-			
-		}
-		else {
-			auto eventIdList = EventList::createEventIdList( *eventWaitList );
-			
-			errNum = clEnqueueReadBuffer( commandQueue->getId(), mId, blockRead, offset, size, data, eventIdList.size(), eventIdList.data(), nullptr );
-			
-			if( errNum != CL_SUCCESS ) {
-				std::cout << "ERROR: Write to buffer Failed " << errNum << std::endl;
-				exit(EXIT_FAILURE);
-			}
-		}
-	}
-	else {
-		if( readEvent ) {
-			cl_event event;
-			
-			errNum = clEnqueueReadBuffer( commandQueue->getId(), mId, blockRead, offset, size, data, 0, nullptr, &event );
-			
-			if( errNum != CL_SUCCESS ) {
-				std::cout << "ERROR: Write to buffer Failed " << errNum << std::endl;
-				exit(EXIT_FAILURE);
-			}
-			setReturnEvent( readEvent, event );
-		}
-		else {
-			
-			errNum = clEnqueueReadBuffer( commandQueue->getId(), mId, blockRead, offset, size, data, 0, nullptr, nullptr );
-			
-			if( errNum != CL_SUCCESS ) {
-				std::cout << "ERROR: Write to buffer Failed " << errNum << std::endl;
-				exit(EXIT_FAILURE);
-			}
-		}
-	}
-
-}
-	
-void BufferObj::setReturnEvent( EventRef *returnEvent, cl_event event )
-{
-	// TODO: This is so dirty have to clean up
-	if( returnEvent != nullptr && event != nullptr ) {
-		returnEvent->reset( SysEvent::create( event ).get() );
-	}
-}
-	
-BufferObj::BufferObj( const gl::BufferObjRef &glBuffer, cl_mem_flags flags )
-{
-	//TODO: Check whether this is a shared OpenGl context
-	cl_int errcode = CL_SUCCESS;
-	auto ctx = Context::context();
-	
-	if ( ctx->isGlShared() ) {
-		mId = clCreateFromGLBuffer( ctx->getId(), flags, glBuffer->getId(), &errcode );
-	}
-	else {
-		std::cout << "ERROR: Context is not GL" << std::endl;
-	}
-	
-	
-	if( errcode ) {
-		std::cout << "ERROR: " << errcode << std::endl;
-	}
 }
 	
 }}

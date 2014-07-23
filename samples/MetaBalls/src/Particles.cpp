@@ -109,47 +109,48 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	kernel->setKernelArg( 8, sizeof(int), &random );
 	size_t globalWorkSize[1] = { static_cast<size_t>(particle_count) };
 	
-	const cl_mem vboMem[4] = {
-		mClPositions->getId(),
-		mClVelocities->getId(),
-		mClLifetimes->getId(),
-		mClRandoms->getId()
+	mShouldReset = 0;
+	
+	std::vector<cl::MemoryObjRef> vboMem = {
+		mClPositions,
+		mClVelocities,
+		mClLifetimes,
+		mClRandoms
 	};
 	
 	glFinish();
 	
-	cl_event event;
+	cl::Event event;
 	
-	errNum = clEnqueueAcquireGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, &event );
+//	errNum = clEnqueueAcquireGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, &event );
+	commandQueue->acquireGlObjects( vboMem, {}, &event );
 	
 	if ( errNum ) {
 		std::cout << "ERROR: Aquiring gl objects" << std::endl;
 	}
 	
-	cl_event events[1] = { event };
-	cl_event nextEvent;
+	EventList waitList({ event });
+	cl::Event kernelEvent;
     // Queue the kernel up for execution across the array
-    errNum = clEnqueueNDRangeKernel( commandQueue->getId(), kernel->getId(), 1, NULL,
-                                    globalWorkSize, 0, 1, events, &nextEvent);
+    commandQueue->NDRangeKernel( kernel, 1, nullptr, globalWorkSize, nullptr, waitList, &kernelEvent );
     if (errNum != CL_SUCCESS)
     {
         std::cerr << "Error queuing kernel for execution." << std::endl;
     }
 	
-//	std::cout << "I'm after the enqueue" << endl;
 	
 	// Release the GL Object
 	// Note, we should ensure OpenCL is finished with any commands that might affect the VBO
-	
-	clFinish(commandQueue->getId());
-	
-	events[0] = nextEvent;
-	errNum = clEnqueueReleaseGLObjects( commandQueue->getId(), 4, vboMem, 1, events, NULL );
+	waitList.getList().push_back( kernelEvent );
+	commandQueue->finish();
+	commandQueue->releaseGlObjects( vboMem, waitList );
 	
 	if ( errNum ) {
 		std::cout << "ERROR: Releasing gl objects" << std::endl;
 	}
 }
+
+
 
 void Particles::render()
 {

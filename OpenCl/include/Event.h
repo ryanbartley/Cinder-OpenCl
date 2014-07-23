@@ -19,103 +19,85 @@ typedef std::shared_ptr<class Context> ContextRef;
 typedef void(CL_CALLBACK *EventCallback)(cl_event event, cl_int event_command_exec_status, void *user_data);
 	
 enum EventType {
+	UNDEFINED_EVENT,
 	SYS_EVENT,
 	USER_EVENT
 };
 
-class Event : public boost::noncopyable, public std::enable_shared_from_this<Event> {
+class Event {
 public:
+	//! Constructor for Event as wrapper
+	explicit Event( cl_event event, EventType type = SYS_EVENT );
+	//! Default constructor for a sys_event, sets mId = nullptr and mType = SYS_EVENT
+	explicit Event();
+	//! This is to use the c functions to initialize a retained event.
+	operator cl_event*() { return &mId; }
+	//! Constructor for UserEvent
+	explicit Event( const ContextRef &context );
+	//! copy assignment operator
+	Event& operator=( const Event &rhs );
+	//! move assignment operator
+	Event& operator=( Event &&rhs );
+	//! move constructor
+	Event( Event &&rhs );
+	//! copy constructor
+	Event( const Event &rhs );
 	
-	cl_event getId() { return mId; }
+	~Event();
 	
-	EventType getType() { return mType; }
+	cl_event getId() const { return mId; }
+	EventType getType() const { return mType; }
 	
-	void setCallback( EventCallback pFunc, void *userData = nullptr );
+	void setCompletedCallback( EventCallback pFunc, void *userData = nullptr );
 	
-	virtual ~Event();
+	static EventRef create( cl_event event, EventType type );
+	
 protected:
-	Event( EventType type );
 	
 	cl_event	mId;
 	EventType	mType;
-};
-	
-class SysEvent : public Event {
-public:
-	//! constructor
-	SysEvent( cl_event event );
-	//! copy assignment operator
-	SysEvent& operator=( const SysEvent &rhs );
-	//! move assignment operator
-	SysEvent& operator=( SysEvent &&rhs );
-	//! move constructor
-	SysEvent( SysEvent &&rhs );
-	//! copy constructor
-	SysEvent( const SysEvent &rhs );
-	
-	virtual ~SysEvent();
-	
-	static SysEventRef create( cl_event event );
-	
-private:
-	
-};
-	
-class UserEvent : public Event {
-public:
-	UserEvent( const ContextRef &context );
-	
-	UserEvent& operator=( const UserEvent &rhs );
-	
-	UserEvent& operator=( UserEvent &&rhs );
-	
-	UserEvent( UserEvent &&rhs );
-	
-	UserEvent( const UserEvent &rhs );
-	
-	virtual ~UserEvent();
-	
-	static UserEventRef create( const ContextRef &context );
-	
-	void setStatus( cl_int executionStatus );
-	
-private:
-	
 };
 
 // I can see that this will be a very used asset maybe
 class EventList {
 public:
-	EventList();
-	EventList( const std::vector<EventRef> &list );
+	EventList( int numEvents = 0 ) : mList(numEvents) {}
+	EventList( const std::vector<Event> &list ) : mList(list.begin(), list.end()) {}
+	EventList& operator=( const EventList &eventList )
+	{
+		mList = eventList.mList;
+		return *this;
+	}
+	EventList& operator=( EventList &&eventList )
+	{
+		mList = std::move( eventList.mList );
+		return *this;
+	}
+	EventList( const EventList &eventList ) : mList(eventList.mList) {}
+	EventList( EventList &&eventList ) : mList( std::move(eventList.mList) ) {}
 	
-	inline void push_back( const EventRef event ) { mList.push_back( event ); }
+	inline void push_back( const Event event ) { mList.push_back( event ); }
 	inline void pop_back() { mList.pop_back(); }
-	inline EventRef* data() { return mList.data(); }
+	
+	inline std::list<Event>& getList() { return mList; }
 	
 	inline size_t size() { return mList.size(); }
 	
 	inline void clear() { mList.clear(); }
 	
-	inline std::vector<cl_event> getEventIdList()
+	inline std::vector<cl_event> getEventIdList() const
 	{
-		std::vector<cl_event> eventIdList;
-		for( auto eventIdIt = mList.begin(); eventIdIt != mList.end(); ++eventIdIt ) {
-			eventIdList.push_back( (*eventIdIt)->getId() );
-		}
-		return eventIdList;
-	}
-	inline static std::vector<cl_event> createEventIdList( const std::vector<EventRef> &eventList )
-	{
-		std::vector<cl_event> eventIdList;
-		for( auto eventIdIt = eventList.begin(); eventIdIt != eventList.end(); ++eventIdIt ) {
-			eventIdList.push_back( (*eventIdIt)->getId() );
-		}
+		std::vector<cl_event> eventIdList(mList.size());
+		std::transform( mList.begin(), mList.end(), eventIdList.begin(),
+					   [&]( const Event &event ) {
+						   return event.getId();
+					   });
+		std::cout << "mList Size " << mList.size() << " eventIdList size: " << eventIdList.size() << std::endl;
 		return eventIdList;
 	}
 	
 private:
-	std::vector<EventRef> mList;
+	std::list<Event> mList;
 };
 	
 }}

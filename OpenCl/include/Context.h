@@ -25,7 +25,7 @@ public:
 	
 	~Context();
 	
-	static Context* context();
+	static ContextRef& context();
 	
 	cl_context				getId() const { return mId; }
 	bool					isGlShared() const { return mIsGlShared; }

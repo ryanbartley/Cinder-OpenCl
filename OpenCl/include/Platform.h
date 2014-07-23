@@ -49,9 +49,9 @@ public:
 	//! Returns whether an extension is supported on this platform.
 	bool isExtensionSupported( const std::string &support_str );
 	
-	//! Returns a vector of available devices on this platform of this \a type and size of \a maxNumEntries. If \a maxNumEntries is 0 it will query and return all devices associated with this type. Normal options for type are CL_
+	//! Returns a vector of available devices on this platform of this \a type and size of \a maxNumEntries. If \a maxNumEntries is 0 it will query and return all devices associated with this type. Normal options for type are CL_DEVICE_TYPE_GPU, CL_DEVICE_TYPE_CPU.
 	std::vector<cl_device_id> getAvailableDevices( cl_device_type type, cl_uint maxNumEntries = 0 );
-	
+		
 	//! Prints out information on \a platformId, specifically, PROFILE, VERSION, VENDOR, EXTENSIONS. Uses getPlatformInfo to print out the most needed info on a platform
 	static void displayPlatformInfo( cl_platform_id platformId );
 	//! Prints out information on \a platform, specifically, PROFILE, VERSION, VENDOR, EXTENSIONS. Uses getPlatformInfo to print out the most needed info on a platform

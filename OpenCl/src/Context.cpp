@@ -13,7 +13,7 @@
 
 namespace cinder { namespace cl {
 
-static Context* sClContext = nullptr;
+static ContextRef sClContext = nullptr;
 static bool sClContextInitialized = false;
 	
 Context::Context( const PlatformRef &platform, bool sharedGraphics, const ContextErrorCallback &errorCallback )
@@ -41,6 +41,7 @@ Context::Context( bool sharedGl, const ContextErrorCallback &errorCallback )
 	mErrorCallback =  errorCallback ? errorCallback : &Context::contextErrorCallback;
 
 	initialize(platform);
+	
 }
 	
 cl_context_properties* Context::getDefaultSharedGraphicsContextProperties()
@@ -91,19 +92,21 @@ void Context::initialize( const PlatformRef &platform )
 		std::cerr << "Context was not created successfully " << errNum << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	
-	sClContext = this;
-	sClContextInitialized = true;
 }
 	
 ContextRef Context::create( const PlatformRef &platform, bool sharedGl, const ContextErrorCallback &errorCallBack )
 {
-	return ContextRef( new Context( platform, sharedGl, errorCallBack ) );
+	sClContext = ContextRef( new Context( platform, sharedGl, errorCallBack ) );
+	sClContextInitialized = true;
+	return sClContext;
 }
 	
 ContextRef Context::create( bool sharedGl, const ContextErrorCallback &errorCallback  )
 {
-	return ContextRef( new Context( sharedGl, errorCallback ) );
+	sClContext = ContextRef( new Context( sharedGl, errorCallback ) );
+	sClContextInitialized = true;
+	return sClContext;
+
 }
 
 Context::~Context()
@@ -119,10 +122,11 @@ void Context::contextErrorCallback( const char *errInfo, const void *privateInfo
 	exit(EXIT_FAILURE);
 }
 
-Context* Context::context()
+ContextRef& Context::context()
 {
 	if ( ! sClContextInitialized ) {
-		return nullptr;
+		static ContextRef empty;
+		return empty;
 	}
 	return sClContext;
 }

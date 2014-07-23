@@ -9,19 +9,30 @@
 #pragma once
 
 #include <OpenCl/OpenCl.h>
+#include "Context.h"
 
-// Possible Base class for BufferObj and Image, Need more research to figure out if it is needed
 namespace cinder { namespace cl {
 	
-	class MemoryObj {
-	public:
-		~MemoryObj();
-		
-	protected:
-		MemoryObj();
-		
-		cl_mem			mId;
-		cl_mem_flags	mFlags;
-	};
+typedef std::shared_ptr<class MemoryObj> MemoryObjRef;
+	
+class MemoryObj {
+public:
+	~MemoryObj()
+	{
+		clReleaseMemObject( mId );
+	}
+	
+	cl_mem				getId() const { return mId; }
+	cl_mem_flags		getFlags() const { return mFlags; }
+	ContextRef&			getContext() { return mContext; }
+	const ContextRef&	getContext() const { return mContext; }
+	
+protected:
+	MemoryObj( const ContextRef& context ) : mContext( context ) {}
+	
+	cl_mem			mId;
+	cl_mem_flags	mFlags;
+	ContextRef		mContext;
+};
 }
 }

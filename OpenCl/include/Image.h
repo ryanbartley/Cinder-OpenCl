@@ -9,18 +9,18 @@
 #pragma once
 
 #include <OpenCL/OpenCL.h>
+#include "MemoryObj.h"
 
 namespace cinder { namespace cl {
 
 // need to make this an abstract class to forgoe needing a virtual destructor
-class ImageBase {
+class ImageBase : public MemoryObj {
 public:
-	~ImageBase();
+	virtual ~ImageBase();
 private:
 	ImageBase();
 	
 	cl_int width, height;
-	cl_mem mId;
 	
 };
 

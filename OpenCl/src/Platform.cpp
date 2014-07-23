@@ -132,25 +132,8 @@ bool Platform::isExtensionSupported( const std::string &support_str )
 	auto found = extensionSupport.find( support_str );
 	
 	if( found == extensionSupport.end() ) {
-		size_t offset = 0;
-		const char* space_substr = strnstr(ext_string.c_str() + offset, " ", ext_string.size() - offset);
-		size_t space_pos = space_substr ? space_substr - ext_string.c_str() : 0;
-		bool supported = false;
-		while (space_pos < ext_string.size()) {
-			if( strncmp(support_str.c_str(), ext_string.c_str() + offset, space_pos) == 0 ) {
-				// Device supports requested extension!
-				printf("Info: Found extension support ‘%s’!\n", support_str.c_str());
-				supported = true;
-				break;
-			}
-			// Keep searching -- skip to next token string
-			offset = space_pos + 1;
-			space_substr = strnstr(ext_string.c_str() + offset, " ", ext_string.size() - offset);
-			space_pos = space_substr ? space_substr - ext_string.c_str() : 0;
-		}
-		if( !supported ) {
-			printf("Warning: Extension not supported ‘%s’!\n", support_str.c_str());
-		}
+		size_t pos = ext_string.find( support_str );
+		bool supported = ( pos != std::string::npos );
 		auto newExtension = extensionSupport.insert( std::pair<std::string, bool>( support_str, supported ) );
 		return newExtension.first->second;
 	}
@@ -171,7 +154,8 @@ std::vector<cl_device_id> Platform::getDeviceIds() const
 	
 DeviceRef Platform::getDeviceById( cl_device_id deviceId )
 {
-	for ( auto deviceIts = getDevices().begin(); deviceIts != getDevices().end(); ++deviceIts ) {
+	auto devices = getDevices();
+	for ( auto deviceIts = devices.begin(); deviceIts != devices.end(); ++deviceIts ) {
 		if ( deviceId == (*deviceIts)->getId() ) {
 			return (*deviceIts);
 		}
