@@ -52,33 +52,78 @@ SysEvent& SysEvent::operator=( const SysEvent &rhs )
 SysEvent& SysEvent::operator=( SysEvent &&rhs )
 {
 	if (this != &rhs) {
-		
+		mId = rhs.mId;
+		mType = rhs.mType;
+		rhs.mId = nullptr;
+		rhs.mType = (EventType)-1;
 	}
 	return *this;
 }
 
 SysEvent::SysEvent( SysEvent &&rhs )
-: Event( std::move(rhs.mType) )
+: Event( rhs.mType )
 {
 	mId = rhs.mId;
-	clRetainEvent( mId );
-	rhs.mId = 0;
+	rhs.mId = nullptr;
 	rhs.mType = (EventType)-1;
 }
 
 SysEvent::SysEvent( const SysEvent &rhs )
-: Event( std::move(rhs.mType) )
+: Event( rhs.mType )
 {
-
+	mId = rhs.mId;
+	clRetainEvent( mId );
 }
 
-SysEvent::~SysEvent(){}
+SysEvent::~SysEvent()
+{
+}
 	
 UserEvent::UserEvent( const ContextRef &context )
 : Event( USER_EVENT )
 {
 	cl_int errNum;
 	mId = clCreateUserEvent( context->getId(), &errNum );
+}
+	
+UserEvent& UserEvent::operator=( const UserEvent &rhs )
+{
+	if (this != &rhs) {
+		mId = rhs.mId;
+		clRetainEvent( mId );
+		mType = rhs.mType;
+	}
+	return *this;
+}
+
+UserEvent& UserEvent::operator=( UserEvent &&rhs )
+{
+	if (this != &rhs) {
+		mId = rhs.mId;
+		mType = rhs.mType;
+		rhs.mId = nullptr;
+		rhs.mType = (EventType)-1;
+	}
+	return *this;
+}
+
+UserEvent::UserEvent( UserEvent &&rhs )
+: Event( rhs.mType )
+{
+	mId = rhs.mId;
+	rhs.mId = nullptr;
+	rhs.mType = (EventType)-1;
+}
+
+UserEvent::UserEvent( const UserEvent &rhs )
+: Event( rhs.mType )
+{
+	mId = rhs.mId;
+	clRetainEvent( mId );
+}
+
+UserEvent::~UserEvent()
+{
 }
 	
 void UserEvent::setStatus( cl_int executionStatus )

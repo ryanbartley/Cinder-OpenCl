@@ -26,6 +26,8 @@ Particles::Particles()
 	
 	srand(time(NULL));
 	
+	mShouldReset = 0;
+	
 	for(int i = 0; i < particle_count; i++) {
 		cpuLifetimes[i] = 999;
 		cpuPositions[i] = Vec4f::zero();
@@ -115,7 +117,6 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	};
 	
 	glFinish();
-	glFinish();
 	
 	cl_event event;
 	
@@ -126,9 +127,10 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	}
 	
 	cl_event events[1] = { event };
+	cl_event nextEvent;
     // Queue the kernel up for execution across the array
     errNum = clEnqueueNDRangeKernel( commandQueue->getId(), kernel->getId(), 1, NULL,
-                                    globalWorkSize, 0, 1, events, NULL);
+                                    globalWorkSize, 0, 1, events, &nextEvent);
     if (errNum != CL_SUCCESS)
     {
         std::cerr << "Error queuing kernel for execution." << std::endl;
@@ -141,19 +143,12 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	
 	clFinish(commandQueue->getId());
 	
-	errNum = clEnqueueReleaseGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, NULL );
+	events[0] = nextEvent;
+	errNum = clEnqueueReleaseGLObjects( commandQueue->getId(), 4, vboMem, 1, events, NULL );
 	
 	if ( errNum ) {
 		std::cout << "ERROR: Releasing gl objects" << std::endl;
 	}
-	clFinish( commandQueue->getId() );
-	cout << "I'm after the release" << endl;
-	cout << "________________________________________________________" << endl;
-	float* map = (float*)mGlLifetimes->map( GL_READ_ONLY );
-	for( int i = 0; i < particle_count; i++ ) {
-		std::cout << map[i] << std::endl;
-	}
-	mGlLifetimes->unmap();
 }
 
 void Particles::render()

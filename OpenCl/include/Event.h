@@ -75,7 +75,6 @@ public:
 	
 	virtual ~UserEvent();
 	
-	
 	static UserEventRef create( const ContextRef &context );
 	
 	void setStatus( cl_int executionStatus );
