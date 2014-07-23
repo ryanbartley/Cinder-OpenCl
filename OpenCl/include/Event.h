@@ -42,20 +42,46 @@ protected:
 	
 class SysEvent : public Event {
 public:
+	//! constructor
+	SysEvent( cl_event event );
+	//! copy assignment operator
+	SysEvent& operator=( const SysEvent &rhs );
+	//! move assignment operator
+	SysEvent& operator=( SysEvent &&rhs );
+	//! move constructor
+	SysEvent( SysEvent &&rhs );
+	//! copy constructor
+	SysEvent( const SysEvent &rhs );
+	
+	virtual ~SysEvent();
+	
 	static SysEventRef create( cl_event event );
 	
 private:
-	SysEvent( cl_event event );
+	
 };
 	
 class UserEvent : public Event {
 public:
+	UserEvent( const ContextRef &context );
+	
+	UserEvent& operator=( const UserEvent &rhs );
+	
+	UserEvent& operator=( UserEvent &&rhs );
+	
+	UserEvent( UserEvent &&rhs );
+	
+	UserEvent( const UserEvent &rhs );
+	
+	virtual ~UserEvent();
+	
+	
 	static UserEventRef create( const ContextRef &context );
 	
 	void setStatus( cl_int executionStatus );
 	
 private:
-	UserEvent( const ContextRef &context );
+	
 };
 
 // I can see that this will be a very used asset maybe

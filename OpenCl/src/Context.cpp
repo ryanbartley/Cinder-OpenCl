@@ -78,28 +78,7 @@ void Context::initialize( const PlatformRef &platform )
 	}
 	
 	if ( mIsGlShared ) {
-		// TODO: Figure out how to also associate the device from platform.
-//		for ( size_t i = 0; i < deviceIds.size(); ++i )
-//		{
-//			cl_device_id lDeviceIdToTry = deviceIds[ i ];
-//			cl_context lContextToTry = 0;
-//			
-//			lContextToTry = clCreateContext( getDefaultSharedGraphicsContextProperties(),
-//											1, &lDeviceIdToTry,
-//											mErrorCallback, this,
-//											&errNum );
-//			std::cout << "I'm trying to get the context" << std::endl;
-//			if ( errNum == CL_SUCCESS )
-//			{
-//				// We found the context.
-//				std::cout << "I found one!" << std::endl;
-//				mDevices.clear();
-//				mDevices.push_back( platform->getDeviceById( lDeviceIdToTry ) );
-//				mId = lContextToTry;
-//				break;
-//			}
-//		}
-		//TODO: Figure out why it doesn't matter if we set device or not. Really need to look at this section
+		
 		auto id = mDevices.front()->getId();
 		mId = clCreateContext( getDefaultSharedGraphicsContextProperties(), 1, &id, mErrorCallback, this, &errNum );
 	}

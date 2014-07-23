@@ -257,28 +257,6 @@ void Program::setKernelArg( const std::string &name, cl_int index, size_t size, 
 	}
 }
 	
-void Program::setKernelArg( const KernelRef &kernel, cl_int index, size_t size, void *data )
-{
-	auto found = mKernels.find( kernel->getName() );
-	if( found != mKernels.end() ) {
-		found->second->setKernelArg( index, size, data );
-	}
-	else {
-		std::cout << "Error: Couldn't find kernel - " << kernel->getName() << " on this program " << std::endl;
-	}
-}
-	
-void Program::setKernelArg( const KernelRef &kernel, cl_int index, const BufferObjRef &buffer )
-{
-	auto found = mKernels.find( kernel->getName() );
-	if( found != mKernels.end() ) {
-		found->second->setKernelArg( index, buffer );
-	}
-	else {
-		std::cout << "Error: Couldn't find kernel - " << kernel->getName() << " on this program " << std::endl;
-	}
-}
-	
 void Program::setKernelArg( const std::string &name, cl_int index, const BufferObjRef &buffer )
 {
 	auto found = mKernels.find( name );

@@ -26,9 +26,9 @@ public:
 	
 	cl_command_queue getId() { return mId; }
 	
-	void enqueueBarrier() { clEnqueueBarrier( mId ); }
-	void enqueueMarker( const EventRef &event );
-	void enqueueWaitForEvents( const EventListRef &list );
+	void barrier() { clEnqueueBarrier( mId ); }
+	void marker( const EventRef &event );
+	void waitForEvents( const EventListRef &list );
 	void finish() { clFinish(mId); }
 	
 private:

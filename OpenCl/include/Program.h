@@ -66,8 +66,6 @@ public:
 	KernelRef createKernel( const std::string &name );
 	void setKernel( const KernelRef &kernel );
 	
-	void setKernelArg( const KernelRef &kernel, cl_int index, size_t size, void *data );
-	void setKernelArg( const KernelRef &kernel, cl_int index, const BufferObjRef &buffer );
 	void setKernelArg( const std::string &name, cl_int index, size_t size, void *data );
 	void setKernelArg( const std::string &name, cl_int index, const BufferObjRef &buffer );
 	

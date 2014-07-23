@@ -114,17 +114,21 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 		mClRandoms->getId()
 	};
 	
+	glFinish();
+	glFinish();
 	
-	errNum = clEnqueueAcquireGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, NULL );
+	cl_event event;
+	
+	errNum = clEnqueueAcquireGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, &event );
 	
 	if ( errNum ) {
 		std::cout << "ERROR: Aquiring gl objects" << std::endl;
 	}
-	glFinish();
-	glFinish();
+	
+	cl_event events[1] = { event };
     // Queue the kernel up for execution across the array
     errNum = clEnqueueNDRangeKernel( commandQueue->getId(), kernel->getId(), 1, NULL,
-                                    globalWorkSize, 0, 0, NULL, NULL);
+                                    globalWorkSize, 0, 1, events, NULL);
     if (errNum != CL_SUCCESS)
     {
         std::cerr << "Error queuing kernel for execution." << std::endl;
