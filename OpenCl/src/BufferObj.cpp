@@ -19,6 +19,8 @@ BufferObj::SubBuffer::SubBuffer( const BufferObjRef &buffer, cl_mem_flags flags,
 	cl_int errNum;
 	mId = clCreateSubBuffer( mParent->getId(), mFlags, CL_BUFFER_CREATE_TYPE_REGION, bufferCreateInfo, &errNum );
 	
+	setDestructorCallback( MemoryObj::destructionCallback, this );
+	
 	if( errNum != CL_SUCCESS ) {
 		std::cout << "ERROR: Creating SubBuffer - " << errNum << std::endl;
 		exit(EXIT_FAILURE);

@@ -17,6 +17,7 @@ namespace cinder { namespace cl {
 typedef std::shared_ptr<class BufferObj> BufferObjRef;
 typedef std::shared_ptr<class CommandQueue> CommandQueueRef;
 typedef std::shared_ptr<class Event> EventRef;
+typedef void(*BufferDestructorCallback)( cl_mem, void *);
 	
 //typedef struct _cl_buffer_region {
 //	size_t origin;

@@ -96,7 +96,7 @@ Program::Program( const DataSourceRef &dataSource, const PlatformRef &platform, 
 	}
 	
 	if( platform ) {
-		auto deviceIds = platform->getDeviceIds();
+		auto deviceIds = platform->getDeviceIds( CL_DEVICE_TYPE_ALL );
 		const char* ccOptions = options ? (const char *)options->c_str() : nullptr;
 		
 		errNum |= clBuildProgram( mId, deviceIds.size(), deviceIds.data(), ccOptions, &Program::programBuildCallback, this );

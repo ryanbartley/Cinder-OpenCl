@@ -23,6 +23,13 @@ void Event::setCompletedCallback( EventCallback pFunc, void *userData )
 	errNum = clSetEventCallback( mId, CL_COMPLETE, pFunc, userData );
 }
 	
+void Event::setUserEventStatus( cl_int status )
+{
+	if( mType == SYS_EVENT ) {
+		clSetUserEventStatus( mId, status);
+	}
+}
+	
 Event::Event()
 : mId( nullptr ), mType( SYS_EVENT )
 {
@@ -54,9 +61,9 @@ Event::Event( const ContextRef &context )
 	}
 }
 	
-EventRef Event::create( cl_event event, EventType type )
+EventRef Event::create( const Event &event )
 {
-	return EventRef( new Event( event, type ) );
+	return EventRef( new Event( event ) );
 }
 	
 Event& Event::operator=( const Event &rhs )

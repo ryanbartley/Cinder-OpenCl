@@ -14,6 +14,7 @@
 namespace cinder { namespace cl {
 	
 typedef std::shared_ptr<class MemoryObj> MemoryObjRef;
+typedef void(*MemObjDestructorCallback)( cl_mem, void *);
 	
 class MemoryObj {
 public:
@@ -27,8 +28,12 @@ public:
 	ContextRef&			getContext() { return mContext; }
 	const ContextRef&	getContext() const { return mContext; }
 	
+	void setDestructorCallback( MemObjDestructorCallback callback, void *userData = nullptr );
+	
 protected:
-	MemoryObj( const ContextRef& context ) : mContext( context ) {}
+	MemoryObj( const ContextRef& context );
+	
+	static void CL_CALLBACK destructionCallback( cl_mem destructedMem, void * userData );
 	
 	cl_mem			mId;
 	cl_mem_flags	mFlags;

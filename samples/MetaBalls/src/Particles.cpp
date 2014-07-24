@@ -99,7 +99,6 @@ Particles::Particles()
 
 void Particles::update( const cl::CommandQueueRef &commandQueue )
 {
-	cl_int errNum = 0;
 	int random = rand();
 	auto kernel = mClProgram->getKernelByName( "particle_update" );
 	float time = 1.0f/60.0f;
@@ -121,22 +120,12 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	glFinish();
 	
 	cl::Event event;
-	
-//	errNum = clEnqueueAcquireGLObjects( commandQueue->getId(), 4, vboMem, 0, NULL, &event );
 	commandQueue->acquireGlObjects( vboMem, {}, &event );
-	
-	if ( errNum ) {
-		std::cout << "ERROR: Aquiring gl objects" << std::endl;
-	}
 	
 	EventList waitList({ event });
 	cl::Event kernelEvent;
     // Queue the kernel up for execution across the array
     commandQueue->NDRangeKernel( kernel, 1, nullptr, globalWorkSize, nullptr, waitList, &kernelEvent );
-    if (errNum != CL_SUCCESS)
-    {
-        std::cerr << "Error queuing kernel for execution." << std::endl;
-    }
 	
 	
 	// Release the GL Object
@@ -144,10 +133,6 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	waitList.getList().push_back( kernelEvent );
 	commandQueue->finish();
 	commandQueue->releaseGlObjects( vboMem, waitList );
-	
-	if ( errNum ) {
-		std::cout << "ERROR: Releasing gl objects" << std::endl;
-	}
 }
 
 

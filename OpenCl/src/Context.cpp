@@ -29,13 +29,7 @@ Context::Context( const PlatformRef &platform, bool sharedGraphics, const Contex
 Context::Context( bool sharedGl, const ContextErrorCallback &errorCallback )
 : mId( nullptr ), mErrorCallback( errorCallback )
 {
-	auto platform = Platform::create( cl::Platform::getAvailablePlatforms()[0] );
-	auto devices = platform->getAvailableDevices( CL_DEVICE_TYPE_GPU );
-	
-	for( auto deviceIdIt = devices.begin(); deviceIdIt != devices.end(); ++deviceIdIt ) {
-		mDevices.push_back( Device::create( platform, (*deviceIdIt) ) );
-		std::cout << "I'm adding things " << mDevices.back()->getId() << std::endl;
-	}
+	auto platform = Platform::create( cl::Platform::getAvailablePlatforms()[0], true );
 	
 	mIsGlShared = sharedGl && platform->isExtensionSupported( "cl_APPLE_gl_sharing" );
 	mErrorCallback =  errorCallback ? errorCallback : &Context::contextErrorCallback;
@@ -79,9 +73,7 @@ void Context::initialize( const PlatformRef &platform )
 	}
 	
 	if ( mIsGlShared ) {
-		
-		auto id = mDevices.front()->getId();
-		mId = clCreateContext( getDefaultSharedGraphicsContextProperties(), 1, &id, mErrorCallback, this, &errNum );
+		mId = clCreateContext( getDefaultSharedGraphicsContextProperties(), deviceIds.size(), deviceIds.data(), mErrorCallback, this, &errNum );
 	}
 	else {
 		mId = clCreateContext( getDefaultPlatformContextProperties( mDevices[0]->getPlatform() ), deviceIds.size(), deviceIds.data(), mErrorCallback, this, &errNum );

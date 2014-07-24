@@ -18,37 +18,126 @@ Platform::Platform( cl_platform_id platform )
 	
 	
 Platform::Platform( cl_platform_id platform, const std::vector<DeviceRef> &devices )
-: mId( platform ), mDevices( devices )
+: mId( platform )
 {
 	
 }
-
-PlatformRef Platform::create()
+	
+Platform::~Platform()
 {
-	return create( nullptr );
 }
 	
-PlatformRef Platform::create( cl_platform_id platform )
+PlatformRef Platform::create( cl_platform_id platform, bool cacheAllDevices )
 {
-	return PlatformRef( new Platform( platform ) );
+	auto ret = PlatformRef( new Platform( platform ) );
+	if( cacheAllDevices ) {
+		ret->cacheDevices();
+	}
+	return ret;
 }
 	
-PlatformRef Platform::create( cl_platform_id platform, const std::vector<cl_device_id> &deviceIds )
+std::vector<cl_device_id> Platform::getDeviceIds( cl_device_type deviceType ) const
 {
-//	std::vector<DeviceRef> devices;
-//	for( auto deviceIt = deviceIds.begin(); deviceIt != deviceIds.end(); ++deviceIt ) {
-//		devices.push_back( Device::create(  *deviceIt ) );
-//	}
-//	return PlatformRef( new Platform( platform, devices ) );
-	std::cout << "ERROR: Don't use this constructor" << std::endl;
-	return PlatformRef();
+	auto devices = getDevices();
+	std::vector<cl_device_id> deviceIds;
+	for( auto deviceIdIts = devices.begin(); deviceIdIts != devices.end(); ++deviceIdIts ) {
+		if( deviceType == CL_DEVICE_TYPE_ALL || (*deviceIdIts)->getType() == deviceType )
+			deviceIds.push_back( (*deviceIdIts)->getId() );
+	}
+	return deviceIds;
 }
 
-PlatformRef Platform::create( cl_platform_id platform, const std::vector<DeviceRef> &devices )
+DeviceRef Platform::getDeviceById( cl_device_id deviceId )
 {
-	return PlatformRef( new Platform( platform, devices ) );
+	auto devices = getDevices();
+	for ( auto deviceIts = devices.begin(); deviceIts != devices.end(); ++deviceIts ) {
+		if ( deviceId == (*deviceIts)->getId() ) {
+			return (*deviceIts);
+		}
+	}
+	return DeviceRef();
 }
 
+const DeviceRef Platform::getDeviceByType( cl_device_type type ) const
+{
+	for( auto deviceIts = mDevices.begin(); deviceIts != mDevices.end(); ++deviceIts ) {
+		if( (*deviceIts)->getType() == type ) {
+			return (*deviceIts);
+		}
+	}
+	return DeviceRef();
+}
+
+DeviceRef Platform::getDeviceByType( cl_device_type type )
+{
+	for( auto deviceIts = mDevices.begin(); deviceIts != mDevices.end(); ++deviceIts ) {
+		if( (*deviceIts)->getType() == type ) {
+			return (*deviceIts);
+		}
+	}
+	return DeviceRef();
+}
+	
+bool Platform::isExtensionSupported( const std::string &support_str )
+{
+	static std::map<std::string, bool> extensionSupport;
+	static std::string ext_string;
+	if ( ext_string.empty() ) {
+		ext_string = getPlatformParam( mId, CL_PLATFORM_EXTENSIONS );
+	}
+	
+	auto found = extensionSupport.find( support_str );
+	
+	if( found == extensionSupport.end() ) {
+		size_t pos = ext_string.find( support_str );
+		bool supported = ( pos != std::string::npos );
+		auto newExtension = extensionSupport.insert( std::pair<std::string, bool>( support_str, supported ) );
+		return newExtension.first->second;
+	}
+	else {
+		return found->second;
+	}
+}
+	
+void Platform::cacheDevices()
+{
+	auto devices = getAvailableDevices( CL_DEVICE_TYPE_ALL );
+	mDevices.resize( devices.size() );
+	std::transform( devices.begin(), devices.end(), mDevices.begin(),
+				   [&]( cl_device_id deviceId ) {
+					   return Device::create( shared_from_this(), deviceId );
+				   });
+}
+	
+std::vector<cl_device_id> Platform::getAvailableDevices( cl_device_type type, cl_uint maxNumEntries )
+{
+	cl_int errNum;
+	cl_uint numDevices = maxNumEntries;
+	
+	if( numDevices == 0 ) {
+		errNum = clGetDeviceIDs( mId, type, 0, NULL, &numDevices);
+		
+		// TODO: Add errNum check here
+		if ( numDevices < 1 ) {
+			std::string excString;
+			excString += "No ";
+			excString += Device::getDeviceTypeString( type );
+			excString += "device found for platform ";
+			excString += getPlatformParam( mId, CL_PLATFORM_NAME );
+			PlatformDeviceExc exc( excString );
+			throw exc;
+		}
+	}
+	
+	std::vector<cl_device_id> devices( numDevices );
+	
+	errNum = clGetDeviceIDs( mId, type, numDevices, devices.data(), NULL);
+	
+	// TODO: Add errNum check here
+	
+	return devices;
+}
+	
 std::vector<cl_platform_id>& Platform::getAvailablePlatforms()
 {
 	cl_int errNum;
@@ -72,17 +161,6 @@ std::vector<cl_platform_id>& Platform::getAvailablePlatforms()
 		}
 	}
 	return platforms;
-}
-
-Platform::~Platform()
-{
-}
-	
-void Platform::setDevices( const std::vector<cl_device_id> &deviceIds )
-{
-	for( auto deviceIt = deviceIds.begin(); deviceIt != deviceIds.end(); ++deviceIt ) {
-		mDevices.push_back( Device::create(  shared_from_this(), *deviceIt ) );
-	}
 }
 	
 void Platform::displayPlatformInfo( const PlatformRef &platform )
@@ -114,105 +192,14 @@ std::string Platform::getPlatformParam( cl_platform_id id, cl_platform_info name
 	if (errNum != CL_SUCCESS) {
 		std::string exc;
 		exc += "Failed to get param info from provided platform id, because ";
-		exc += getErrorString( errNum );
+		exc += getClErrorString( errNum );
 		throw PlatformException( exc );
 	}
 	
 	return info;
 }
 	
-bool Platform::isExtensionSupported( const std::string &support_str )
-{
-	static std::map<std::string, bool> extensionSupport;
-	static std::string ext_string;
-	if ( ext_string.empty() ) {
-		ext_string = getPlatformParam( mId, CL_PLATFORM_EXTENSIONS );
-	}
-	
-	auto found = extensionSupport.find( support_str );
-	
-	if( found == extensionSupport.end() ) {
-		size_t pos = ext_string.find( support_str );
-		bool supported = ( pos != std::string::npos );
-		auto newExtension = extensionSupport.insert( std::pair<std::string, bool>( support_str, supported ) );
-		return newExtension.first->second;
-	}
-	else {
-		return found->second;
-	}
-}
-	
-std::vector<cl_device_id> Platform::getDeviceIds() const
-{
-	auto devices = getDevices();
-	std::vector<cl_device_id> deviceIds;
-	for( auto deviceIdIts = devices.begin(); deviceIdIts != devices.end(); ++deviceIdIts ) {
-		deviceIds.push_back( (*deviceIdIts)->getId() );
-	}
-	return deviceIds;
-}
-	
-DeviceRef Platform::getDeviceById( cl_device_id deviceId )
-{
-	auto devices = getDevices();
-	for ( auto deviceIts = devices.begin(); deviceIts != devices.end(); ++deviceIts ) {
-		if ( deviceId == (*deviceIts)->getId() ) {
-			return (*deviceIts);
-		}
-	}
-	return DeviceRef();
-}
-	
-const DeviceRef Platform::getDeviceByType( cl_device_type type ) const
-{
-	for( auto deviceIts = mDevices.begin(); deviceIts != mDevices.end(); ++deviceIts ) {
-		if( (*deviceIts)->getType() == type ) {
-			return (*deviceIts);
-		}
-	}
-	return DeviceRef();
-}
-	
-DeviceRef Platform::getDeviceByType( cl_device_type type )
-{
-	for( auto deviceIts = mDevices.begin(); deviceIts != mDevices.end(); ++deviceIts ) {
-		if( (*deviceIts)->getType() == type ) {
-			return (*deviceIts);
-		}
-	}
-	return DeviceRef();
-}
-	
-std::vector<cl_device_id> Platform::getAvailableDevices( cl_device_type type, cl_uint maxNumEntries )
-{
-	cl_int errNum;
-	cl_uint numDevices = maxNumEntries;
-	
-	if( numDevices == 0 ) {
-		errNum = clGetDeviceIDs( mId, type, 0, NULL, &numDevices);
-		
-		// TODO: Add errNum check here
-		if ( numDevices < 1 ) {
-			std::string excString;
-			excString += "No ";
-			excString += Device::getDeviceTypeString( type );
-			excString += "device found for platform ";
-			excString += getPlatformParam( mId, CL_PLATFORM_NAME );
-			PlatformDeviceExc exc( excString );
-			throw exc;
-		}
-	}
-	
-	std::vector<cl_device_id> devices( numDevices );
-	
-	errNum = clGetDeviceIDs( mId, type, numDevices, devices.data(), NULL);
-	
-	// TODO: Add errNum check here
-
-	return devices;
-}
-
-const char * Platform::getErrorString(cl_int err){
+const char * Platform::getClErrorString(cl_int err){
 	switch(err){
 		case 0: return "CL_SUCCESS";
 		case -1: return "CL_DEVICE_NOT_FOUND";

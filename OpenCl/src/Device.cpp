@@ -11,11 +11,6 @@
 
 
 namespace cinder { namespace cl {
-
-Device::Device( const PlatformRef &platform, cl_device_type type )
-{
-	
-}
 	
 Device::Device( const PlatformRef &platform, cl_device_id device )
 : mId( device ), mParentPlatform( platform )
@@ -43,6 +38,11 @@ Device::Device( const PlatformRef &platform, cl_device_id device )
 	isExtensionSupported( CL_GL_EVENT_EXT );
 }
 	
+Device::~Device()
+{
+	clReleaseDevice(mId);
+}
+	
 std::string Device::getSupportedExtensions( cl_device_id device )
 {
 	std::string extensions;
@@ -53,7 +53,7 @@ std::string Device::getSupportedExtensions( cl_device_id device )
 		// TODO: Add errnum check and Throw DeviceExc
 		if( errNum != CL_SUCCESS ) {
 			std::string error( "Error: getSupportedExtensions: errNum = " );
-			error += Platform::getErrorString( errNum );
+			error += Platform::getClErrorString( errNum );
 			std::cout << "Error: getSupportedExtensions" << std::endl;
 		}
 	}
@@ -75,48 +75,25 @@ DeviceRef Device::create( const PlatformRef &platform, cl_device_id device )
 	return DeviceRef( new Device( platform, device ) );
 }
 
-Device::~Device()
-{
-	clReleaseDevice(mId);
-}
-
 bool Device::isExtensionSupported( const std::string &support_str )
 {
 	static std::map<std::string, bool> extensionSupport;
 	static std::string ext_string;
 	if ( ext_string.empty() ) {
-		ext_string = getSupportedExtensions( mId ).c_str();
+		ext_string = getSupportedExtensions( mId );
 	}
 	
 	auto found = extensionSupport.find( support_str );
 	
 	if( found == extensionSupport.end() ) {
-		size_t offset = 0;
-		const char* space_substr = strnstr(ext_string.c_str() + offset, " ", ext_string.size() - offset);
-		size_t space_pos = space_substr ? space_substr - ext_string.c_str() : 0;
-		bool supported = false;
-		while (space_pos < ext_string.size()) {
-			if( strncmp(support_str.c_str(), ext_string.c_str() + offset, space_pos) == 0 ) {
-				// Device supports requested extension!
-				printf("Info: Found extension support ‘%s’!\n", support_str.c_str());
-				supported = true;
-				break;
-			}
-			// Keep searching -- skip to next token string
-			offset = space_pos + 1;
-			space_substr = strnstr(ext_string.c_str() + offset, " ", ext_string.size() - offset);
-			space_pos = space_substr ? space_substr - ext_string.c_str() : 0;
-		}
-		if( !supported ) {
-			printf("Warning: Extension not supported ‘%s’!\n", support_str.c_str());
-		}
+		size_t pos = ext_string.find( support_str );
+		bool supported = ( pos != std::string::npos );
 		auto newExtension = extensionSupport.insert( std::pair<std::string, bool>( support_str, supported ) );
 		return newExtension.first->second;
 	}
 	else {
 		return found->second;
-	}
-}
+	}}
 	
 const char* Device::getDeviceTypeString( cl_device_type type )
 {

@@ -45,12 +45,18 @@ public:
 	
 	~Event();
 	
+	//! Returns the opencl event object contained within.
 	cl_event getId() const { return mId; }
+	//! Returns the type inside.
 	EventType getType() const { return mType; }
 	
+	//! Sets Event status to status only if \a mType is USER_EVENT. Normal options are CL_COMPLETE, CL_RUNNING, CL_SUBMITTED or CL_QUEUED
+	void setUserEventStatus( cl_int status );
+	//! Sets the Events Callback function and user_data
 	void setCompletedCallback( EventCallback pFunc, void *userData = nullptr );
 	
-	static EventRef create( cl_event event, EventType type );
+	
+	static EventRef create( const Event &event );
 	
 protected:
 	

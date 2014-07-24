@@ -34,17 +34,8 @@ class MetaBallsApp : public AppNative {
 
 void MetaBallsApp::setup()
 {
-//	cl_event event;
-//	cout << event << endl;
 	// First, select an OpenCL platform to run on.
-	mClPlatform = cl::Platform::create( cl::Platform::getAvailablePlatforms()[0] );
-	
-	
-	// Iterate through the list of platforms until we find one that supports
-	// a GPU device, otherwise fail with an error.
-	auto devices = mClPlatform->getAvailableDevices( CL_DEVICE_TYPE_GPU );
-	
-	mClPlatform->setDevices( devices );
+	mClPlatform = cl::Platform::create( cl::Platform::getAvailablePlatforms()[0], true );
 	
     // Next, create an OpenCL context on the selected platform.
 	// And authorize creation of the sharing context

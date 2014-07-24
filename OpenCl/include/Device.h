@@ -18,19 +18,18 @@ typedef std::shared_ptr<class Device> DeviceRef;
 
 class Device : public std::enable_shared_from_this<Device>, public boost::noncopyable {
 public:
-	static DeviceRef create( const PlatformRef &platform, cl_device_id device );
-	static DeviceRef create( const PlatformRef &platform, cl_device_type type );
 	~Device();
 	
+	//! Returns the cl_device_id contained in this Device
 	cl_device_id		getId() const { return mId; }
+	//! Returns the cl_device_type associated with this Device
 	cl_device_type		getType() const { return mType; }
+	//! Returns a const reference to the parent platform
 	const PlatformRef&	getPlatform() const { return mParentPlatform; }
+	//! Returns a reference to the parent platform
 	PlatformRef&		getPlatform() { return mParentPlatform; }
-	
+	//! Returns whether this Device supports this extension.
 	bool isExtensionSupported( const std::string &support_str );
-	
-	template<typename T>
-	T getInfo( cl_device_info name );
 	
 	template <typename T>
 	static void displayDeviceInfo( cl_device_id deviceId, cl_device_info name, std::string str );
@@ -41,21 +40,57 @@ public:
 	static std::string getSupportedExtensions( const DeviceRef &device );
 	static std::string getSupportedExtensions( cl_device_id device );
 	
+	template<typename T>
+	static void getDeviceInfo( cl_device_id deviceId, cl_device_info param_name, void *returnData );
+	
 private:
 	Device( const PlatformRef &platform, cl_device_id device );
-	Device( const PlatformRef &platform, cl_device_type type );
 	
-	PlatformRef		mParentPlatform;
+	static DeviceRef create( const PlatformRef &platform, cl_device_id device );
+	
 	cl_device_id	mId;
 	cl_device_type	mType;
+	PlatformRef		mParentPlatform;
 	
 	friend class Platform;
 };
 	
 template<typename T>
-T Device::getInfo( cl_device_info info )
+void Device::getDeviceInfo( cl_device_id deviceId, cl_device_info param_name, void *returnData )
 {
+	cl_int errNum;
 	
+	errNum = clGetDeviceInfo( deviceId, param_name, sizeof(T), returnData, NULL );
+	if (errNum != CL_SUCCESS) {
+		std::cerr << "Failed to find OpenCL device info." << std::endl;//<< Platform::getClErrorString( errNum ) << std::endl;
+		return;
+	}
+}
+	
+template<>
+void Device::getDeviceInfo<char>( cl_device_id deviceId, cl_device_info param_name, void *returnData )
+{
+	cl_int errNum;
+	std::size_t paramValueSize;
+	
+	errNum = clGetDeviceInfo( deviceId, param_name, 0, NULL, &paramValueSize );
+	if (errNum != CL_SUCCESS) {
+		std::cerr << "Failed to find OpenCL device info." << std::endl;
+		return;
+	}
+	
+	const char * info = new char[paramValueSize];
+	
+	errNum = clGetDeviceInfo( deviceId, param_name, paramValueSize, &info, NULL );
+	if (errNum != CL_SUCCESS) {
+		std::cerr << "Failed to find OpenCL device info." << std::endl;
+		return;
+	}
+	
+	if( std::string * returnString = static_cast<std::string*>(returnData) ) {
+		returnString->clear();
+		returnString->insert( 0, info );
+	}
 }
 	
 template<typename T>
