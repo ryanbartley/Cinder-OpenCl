@@ -19,7 +19,7 @@ using namespace std;
 
 Particles::Particles()
 {
-	std::vector<Vec4f>	cpuPositions(particle_count),
+	std::vector<vec4>	cpuPositions(particle_count),
 						cpuVelocities(particle_count),
 						cpuRandoms(particle_count);
 	std::vector<float>  cpuLifetimes(particle_count);
@@ -30,23 +30,23 @@ Particles::Particles()
 	
 	for(int i = 0; i < particle_count; i++) {
 		cpuLifetimes[i] = 999;
-		cpuPositions[i] = Vec4f::zero();
-		cpuVelocities[i] = Vec4f::zero();
+		cpuPositions[i] = vec4( 0.0f );
+		cpuVelocities[i] = vec4( 0.0f );
 	
 		float rx = ((float)rand() / RAND_MAX) * 2 - 1;
 		float ry = ((float)rand() / RAND_MAX) * 2 + 0.5;
 		float rz = ((float)rand() / RAND_MAX) * 2 - 1;
 		float rm = (float)rand() / RAND_MAX;
 	
-		Vec3f rand = Vec3f(rx, ry, rz).normalized() * (rm * 2);
+		vec3 rand = normalize( vec3(rx, ry, rz) ) * (rm * 2);
 	
-		cpuRandoms[i] = Vec4f(rand);
+		cpuRandoms[i] = vec4( rand, 1.0f );
 	}
 	
-	mGlPositions = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(Vec4f) * particle_count, cpuPositions.data(), GL_DYNAMIC_COPY );
-	mGlVelocities = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(Vec4f) * particle_count, cpuVelocities.data(), GL_DYNAMIC_COPY );
+	mGlPositions = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(vec4) * particle_count, cpuPositions.data(), GL_DYNAMIC_COPY );
+	mGlVelocities = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(vec4) * particle_count, cpuVelocities.data(), GL_DYNAMIC_COPY );
 	mGlLifetimes = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(float) * particle_count, cpuLifetimes.data(), GL_DYNAMIC_COPY );
-	mGlRandoms = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(Vec4f) * particle_count, cpuRandoms.data(), GL_DYNAMIC_COPY );
+	mGlRandoms = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(vec4) * particle_count, cpuRandoms.data(), GL_DYNAMIC_COPY );
 	
 	mGlVao = gl::Vao::create();
 	{

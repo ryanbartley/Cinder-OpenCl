@@ -26,20 +26,22 @@ public:
 	~MarchingCubes();
 	
 	void clear();
-	void point( const ci::Vec4i &point );
-	void metaball( const ci::Vec3f, int metaballId );
+	void point( const ci::ivec4 &point );
+//	void metaball( const ci::vec3, int metaballId );
 	
 	void data( const ci::cl::BufferObjRef positions, int numMetaballs );
 	void update();
 	void render();
 	void renderShadows();
 	
+	void marchingCubesMetaballData( const ci::cl::BufferObjRef &positions, int numBalls );
+	
 private:
-	MarchingCubes();
+	MarchingCubes( const ci::cl::CommandQueueRef &commandQueue );
 	
 	ci::cl::BufferObjRef	mClVolume, mClPointColors,
 							mClVertPositions, mClVertNormals,
-							mClVertIndex;
+							mClVertIndex, mMetaballPositions;
 	ci::gl::VboRef			mGlPointPositions, mGlPointColors,
 							mGlVertPositions, mGlVertNormals;
 	ci::cl::ProgramRef		mClProgram;
@@ -47,4 +49,6 @@ private:
 							mKernWriteMetaballs, mKernWriteClear,
 							mKernWritePointColorBack, mKernConstructSurface,
 							mKernGenNormals, mKernGenNormalsSmooth;
+	ci::cl::CommandQueueRef mCommandQueue;
+	int						mNumBalls;
 };

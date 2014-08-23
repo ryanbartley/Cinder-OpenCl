@@ -57,7 +57,7 @@ cl_context_properties* Context::getDefaultPlatformContextProperties( const Platf
 	static cl_context_properties contextProperties[] = {
 		CL_CONTEXT_PLATFORM, 0, 0
 	};
-	contextProperties[2] = (cl_context_properties)platform->getId();
+	contextProperties[1] = (cl_context_properties)platform->getId();
 	return contextProperties;
 }
 	

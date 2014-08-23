@@ -304,9 +304,7 @@ void ConvolutionApp::createWithBlock()
 	
 	// Iterate through the list of platforms until we find one that supports
 	// a CPU device, otherwise fail with an error.
-	auto devices = cl::Device::getAvailableDevices( platforms[0], CL_DEVICE_TYPE_CPU );
-	
-	mClPlatform = cl::Platform::create( platforms[0], devices );
+	mClPlatform = cl::Platform::create( platforms[0], CL_DEVICE_TYPE_CPU );
 	
     // Next, create an OpenCL context on the selected platform.
     mContext = cl::Context::create( mClPlatform, false );
@@ -348,7 +346,7 @@ void ConvolutionApp::createWithBlock()
 									NULL,
 									NULL);
     
-	mOutputSignalBuffer->enqueueRead( mCommandQueue, CL_TRUE, 0, sizeof(cl_uint) * outputSignalHeight * outputSignalHeight, outputSignal);
+	mCommandQueue->read( mOutputSignalBuffer, CL_TRUE, 0, sizeof(cl_uint) * outputSignalHeight * outputSignalHeight, outputSignal);
 	
     // Output the result buffer
     for (int y = 0; y < outputSignalHeight; y++)

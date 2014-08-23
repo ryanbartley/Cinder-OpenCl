@@ -28,6 +28,8 @@
 		B3AAE31418D92246006018F4 /* MemoryObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30B18D92246006018F4 /* MemoryObj.cpp */; };
 		B3AAE31518D92246006018F4 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30C18D92246006018F4 /* Platform.cpp */; };
 		B3AAE31618D92246006018F4 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AAE30D18D92246006018F4 /* Program.cpp */; };
+		B3B6639319A85FF60097005F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B6639219A85FF60097005F /* AVFoundation.framework */; };
+		B3B6639519A85FFD0097005F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B6639419A85FFD0097005F /* CoreMedia.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +69,8 @@
 		B3AAE30B18D92246006018F4 /* MemoryObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryObj.cpp; sourceTree = "<group>"; };
 		B3AAE30C18D92246006018F4 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform.cpp; sourceTree = "<group>"; };
 		B3AAE30D18D92246006018F4 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Program.cpp; sourceTree = "<group>"; };
+		B3B6639219A85FF60097005F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		B3B6639419A85FFD0097005F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		FCA97D5C7952435EA4FD0315 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -75,6 +79,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3B6639519A85FFD0097005F /* CoreMedia.framework in Frameworks */,
+				B3B6639319A85FF60097005F /* AVFoundation.framework in Frameworks */,
 				B3AAE2D818D90A8A006018F4 /* OpenCL.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
@@ -173,6 +179,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B3B6639419A85FFD0097005F /* CoreMedia.framework */,
+				B3B6639219A85FF60097005F /* AVFoundation.framework */,
 				B3AAE2D718D90A8A006018F4 /* OpenCL.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
@@ -306,6 +314,7 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = x86_64;
 				CINDER_PATH = ../../../../../;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -332,6 +341,7 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = x86_64;
 				CINDER_PATH = ../../../../../;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;

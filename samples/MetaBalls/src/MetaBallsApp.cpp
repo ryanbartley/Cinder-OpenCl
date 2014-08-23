@@ -48,7 +48,7 @@ void MetaBallsApp::setup()
 	mParticles = Particles::create();
 	
 	mCam.setPerspective( 60, getWindowAspectRatio(), 0.01, 1000 );
-	mCam.lookAt( Vec3f( 32, 15, 35 ), Vec3f( 32, 15, 32 ) );
+	mCam.lookAt( vec3( 32, 15, 35 ), vec3( 32, 15, 32 ) );
 }
 
 void MetaBallsApp::mouseDown( MouseEvent event )

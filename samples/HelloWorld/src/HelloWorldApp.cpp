@@ -32,9 +32,8 @@ class HelloWorldApp : public AppNative {
 void HelloWorldApp::setup()
 {
 	auto platforms = cl::Platform::getAvailablePlatforms();
-	auto devices = cl::Device::getAvailableDevices( platforms[0], CL_DEVICE_TYPE_GPU );
 	
-	mClPlatform = cl::Platform::create( platforms[0], devices );
+	mClPlatform = cl::Platform::create( platforms[0], CL_DEVICE_TYPE_GPU );
 	
     // Create an OpenCL context on first available platform
 	mContext = cl::Context::create( mClPlatform, false );
@@ -83,7 +82,7 @@ void HelloWorldApp::setup()
                                     globalWorkSize, localWorkSize,
                                     0, NULL, NULL);
 	
-	mMemObjects[2]->enqueueRead( mCommandQueue, true, 0, ARRAY_SIZE * sizeof(float), result );
+	mCommandQueue->read( mMemObjects[2], true, 0, ARRAY_SIZE * sizeof(float), result );
 	
     // Output the result buffer
     for (int i = 0; i < ARRAY_SIZE; i++)
