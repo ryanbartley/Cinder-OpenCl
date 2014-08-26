@@ -9,11 +9,12 @@
 #include "Device.h"
 #include "Platform.h"
 
+using namespace std;
 
 namespace cinder { namespace cl {
 	
 Device::Device( const PlatformRef &platform, cl_device_id device )
-: mId( device ), mParentPlatform( platform )
+: mId( device ), mParentPlatform( platform ), mIsGlSupported( false )
 {
 	cl_int errNum;
 	errNum = clGetDeviceInfo( device, CL_DEVICE_TYPE, sizeof(cl_device_type), &mType, nullptr);
@@ -34,7 +35,7 @@ Device::Device( const PlatformRef &platform, cl_device_id device )
 	static const char* CL_GL_SHARING_EXT = "cl_khr_gl_sharing";
 	static const char* CL_GL_EVENT_EXT = "cl_khr_gl_event";
 #endif
-	isExtensionSupported( CL_GL_SHARING_EXT );
+	mIsGlSupported = isExtensionSupported( CL_GL_SHARING_EXT );
 	isExtensionSupported( CL_GL_EVENT_EXT );
 }
 	
@@ -77,18 +78,17 @@ DeviceRef Device::create( const PlatformRef &platform, cl_device_id device )
 
 bool Device::isExtensionSupported( const std::string &support_str )
 {
-	static std::map<std::string, bool> extensionSupport;
-	static std::string ext_string;
-	if ( ext_string.empty() ) {
-		ext_string = getSupportedExtensions( mId );
+	cout << mExtensionSupport.size() << endl;
+	if ( mExtensionString.empty() ) {
+		mExtensionString = getSupportedExtensions( mId );
 	}
 	
-	auto found = extensionSupport.find( support_str );
+	auto found = mExtensionSupport.find( support_str );
 	
-	if( found == extensionSupport.end() ) {
-		size_t pos = ext_string.find( support_str );
+	if( found == mExtensionSupport.end() ) {
+		size_t pos = mExtensionString.find( support_str );
 		bool supported = ( pos != std::string::npos );
-		auto newExtension = extensionSupport.insert( std::pair<std::string, bool>( support_str, supported ) );
+		auto newExtension = mExtensionSupport.insert( make_pair( support_str, supported ) );
 		return newExtension.first->second;
 	}
 	else {

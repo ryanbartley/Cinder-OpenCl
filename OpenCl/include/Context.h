@@ -13,10 +13,12 @@
 
 namespace cinder { namespace cl {
 	
-typedef std::shared_ptr<class Context> ContextRef;
-typedef std::shared_ptr<class Platform> PlatformRef;
-typedef std::shared_ptr<class Device> DeviceRef;
-typedef void(*ContextErrorCallback)(const char * errInfo, const void * privateInfo, size_t cb, void * userData);
+using ContextRef = std::shared_ptr<class Context>;
+using PlatformRef = std::shared_ptr<class Platform>;
+using DeviceRef = std::shared_ptr<class Device>;
+using CommandQueueRef = std::shared_ptr<class CommandQueue>;
+using DeviceCommandMap = std::map<DeviceRef, CommandQueueRef>;
+using ContextErrorCallback = void(*)(const char * errInfo, const void * privateInfo, size_t cb, void * userData);
 	
 class Context : public boost::noncopyable, public std::enable_shared_from_this<Context> {
 public:
@@ -29,7 +31,7 @@ public:
 	
 	cl_context				getId() const { return mId; }
 	bool					isGlShared() const { return mIsGlShared; }
-	std::vector<DeviceRef>& getAssociatedDevices() { return mDevices; }
+	std::vector<DeviceRef> getAssociatedDevices();
 	
 private:
 	Context( bool sharedGl, const ContextErrorCallback &errorCallback );
@@ -42,7 +44,7 @@ private:
 	
 	cl_context				mId;
 	bool					mIsGlShared;
-	std::vector<DeviceRef>	mDevices;
+	DeviceCommandMap		mDeviceCommands;
 	ContextErrorCallback	mErrorCallback;
 	
 };

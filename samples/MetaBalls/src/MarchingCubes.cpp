@@ -97,7 +97,7 @@ void MarchingCubes::clear()
 	mCommandQueue->NDRangeKernel( mKernWriteClear, 1, nullptr, &full_size, nullptr );
 }
 
-void MarchingCubes::point( const Vec4i &point ) {
+void MarchingCubes::point( const ivec4 &point ) {
 
 	if ((point.x >= width) || (point.y >= height) || (point.z >= depth) || (point.x < 0) || (point.y < 0) || (point.z < 0)) {
 		CI_LOG_E("Point outside of volume");
@@ -145,7 +145,7 @@ void MarchingCubes::marchingCubesMetaballData( const cl::BufferObjRef &positions
 
 void MarchingCubes::update()
 {
-	Vec3i size{width, height, depth};
+	ivec3 size{width, height, depth};
 	
 	/* Update volumes */
 	
