@@ -9,6 +9,9 @@
 #include "MarchingCubes.h"
 #include "CommandQueue.h"
 #include "cinder/Log.h"
+#include "cinder/gl/gl.h"
+#include "cinder/gl/Vao.h"
+#include "cinder/gl/GlslProg.h"
 
 using namespace std;
 using namespace ci;
@@ -16,13 +19,20 @@ using namespace ci::app;
 using namespace ci::gl;
 using namespace ci::cl;
 
+const int VERT_POSITION_INDEX = 0;
+const int VERT_NORMAL_INDEX = 1;
+const int POINT_COLOR_INDEX = 2;
+const int POINT_POSITION_INDEX = 3;
+
 size_t full_size = width * height * depth;
 
 MarchingCubes::MarchingCubes( const ci::cl::CommandQueueRef &commandQueue )
 : mCommandQueue( commandQueue )
 {
+	std::vector<vec4> vertPosData(MAX_VERTS);
+	std::vector<vec4> vertNormData(MAX_VERTS);
+	std::vector<vec4> pointColorData(full_size);
 	std::vector<vec4> pointData(full_size);
-	
 
 	int x, y, z;
 	for(x = 0; x < width; x++)
@@ -33,35 +43,46 @@ MarchingCubes::MarchingCubes( const ci::cl::CommandQueueRef &commandQueue )
 		pointData[id] = position;
 	}
 
-	mGlPointPositions = gl::Vbo::create(GL_ARRAY_BUFFER,
-										sizeof(vec4) * full_size,
-										pointData.data(),
-										GL_STATIC_DRAW);
+	mGlVertPositions = gl::Vbo::create(GL_ARRAY_BUFFER, sizeof(vec4) * MAX_VERTS, vertPosData.data(), GL_DYNAMIC_COPY);
+	mGlVertNormals = gl::Vbo::create(GL_ARRAY_BUFFER, sizeof(vec4) * MAX_VERTS, vertNormData.data(), GL_DYNAMIC_COPY);
+	mGlPointColors = gl::Vbo::create(GL_ARRAY_BUFFER, sizeof(vec4) * full_size, pointColorData.data(), GL_DYNAMIC_COPY);
+	mGlPointPositions = gl::Vbo::create(GL_ARRAY_BUFFER, sizeof(vec4) * full_size, pointData.data(), GL_STATIC_DRAW);
 	
-	std::vector<vec4> pointColorData(full_size);
-	memset( pointColorData.data(), 0, sizeof(vec4) * full_size );
-	mGlPointColors = gl::Vbo::create(GL_ARRAY_BUFFER,
-									 sizeof(vec4) * full_size,
-									 pointColorData.data(),
-									 GL_DYNAMIC_COPY);
+	mVao = gl::Vao::create();
+	{
+		gl::ScopedVao scopeVao( mVao );
+		{
+			gl::ScopedBuffer scopeBuffer( mGlVertPositions );
+			gl::enableVertexAttribArray( VERT_POSITION_INDEX );
+			gl::vertexAttribPointer( VERT_POSITION_INDEX, 4, GL_FLOAT, GL_FALSE, 0, nullptr );
+		}
+		{
+			gl::ScopedBuffer scopeBuffer( mGlVertNormals );
+			gl::enableVertexAttribArray( VERT_NORMAL_INDEX );
+			gl::vertexAttribPointer( VERT_NORMAL_INDEX, 4, GL_FLOAT, GL_FALSE, 0, nullptr );
+		}
+		{
+			gl::ScopedBuffer scopeBuffer( mGlPointColors );
+			gl::enableVertexAttribArray( POINT_COLOR_INDEX );
+			gl::vertexAttribPointer( POINT_COLOR_INDEX, 4, GL_FLOAT, GL_FALSE, 0, nullptr );
+		}
+		{
+			gl::ScopedBuffer scopeBuffer( mGlPointPositions );
+			gl::enableVertexAttribArray( POINT_POSITION_INDEX );
+			gl::vertexAttribPointer( POINT_POSITION_INDEX, 4, GL_FLOAT, GL_FALSE, 0, nullptr );
+		}
+	}
+	
+	mRenderGlsl = gl::GlslProg::create( gl::GlslProg::Format() );
+	mShadowGlsl = gl::GlslProg::create( gl::GlslProg::Format() );
+	
 	
 	mClPointColors = cl::BufferObj::create( mGlPointColors, CL_MEM_READ_WRITE );
-	
 	mClVolume = cl::BufferObj::create( CL_MEM_READ_WRITE, sizeof(float) * full_size, nullptr );
-	
-	std::vector<vec4> vertPosData(sizeof(vec4) * MAX_VERTS);
-	memset(vertPosData.data(), 0, sizeof(vec4) * MAX_VERTS);
-	mGlVertPositions = gl::Vbo::create(GL_ARRAY_BUFFER, sizeof(vec4) * MAX_VERTS, vertPosData.data(), GL_DYNAMIC_COPY);
-
 	mClVertPositions = cl::BufferObj::create( mGlVertPositions, CL_MEM_READ_WRITE );
-	
-	std::vector<vec4> vertNormData(sizeof(vec4) * MAX_VERTS);
-	memset(vertNormData.data(), 0, sizeof(vec4) * MAX_VERTS);
-	mGlVertNormals = gl::Vbo::create(GL_ARRAY_BUFFER, sizeof(vec4) * MAX_VERTS, vertNormData.data(), GL_DYNAMIC_COPY);
-	
 	mClVertNormals = cl::BufferObj::create( mGlVertNormals, CL_MEM_READ_WRITE );
-	
 	mClVertIndex = cl::BufferObj::create( CL_MEM_READ_WRITE, sizeof(int), nullptr );
+	
 	
 	mClProgram = cl::Program::create( loadAsset( "marching_cubes.cl" ) );
 	
@@ -111,33 +132,44 @@ void MarchingCubes::point( const ivec4 &point ) {
 	mCommandQueue->NDRangeKernel( mKernWritePoint, 1, nullptr, &work_size, nullptr );
 }
 
-//void MarchingCubes::metaball(float x, float y, float z) {
-//	const int METABALL_SIZE = 10;
-//
-//	int bot_x = math<int>::max(floor(x) - METABALL_SIZE, 0);
-//	int bot_y = math<int>::max(floor(y) - METABALL_SIZE, 0);
-//	int bot_z = math<int>::max(floor(z) - METABALL_SIZE, 0);
-//
-//	int top_x = math<int>::min(ceil(x) + METABALL_SIZE, width-1);
-//	int top_y = math<int>::min(ceil(y) + METABALL_SIZE, height-1);
-//	int top_z = math<int>::min(ceil(z) + METABALL_SIZE, depth-1);
-//
-//	size_t count = (top_x - bot_x) * (top_y - bot_y) * (top_z - bot_z);
-//
-//	Vec3i bottom{bot_x, bot_y, bot_z};
-//	Vec3i top{top_x, top_y, top_z};
-//	Vec3i size{width, height, depth};
-//
-//	mKernWriteMetaball->setKernelArg( 1, sizeof(Vec3i), &bottom );
-//	mKernWriteMetaball->setKernelArg( 2, sizeof(Vec3i), &top);
-//	mKernWriteMetaball->setKernelArg( 3, sizeof(Vec3i), &size);
-//	mKernWriteMetaball->setKernelArg( 4, sizeof(float), &x);
-//	mKernWriteMetaball->setKernelArg( 5, sizeof(float), &y);
-//	mKernWriteMetaball->setKernelArg( 6, sizeof(float), &z);
-//	mCommandQueue->NDRangeKernel( mKernWriteMetaball, 1, nullptr, &count, nullptr );
-//}
+void MarchingCubes::metaball( const ci::vec3 &pos ) {
+	const int METABALL_SIZE = 10;
 
-void MarchingCubes::marchingCubesMetaballData( const cl::BufferObjRef &positions, int numBalls )
+	int bot_x = math<int>::max(floor(pos.x) - METABALL_SIZE, 0);
+	int bot_y = math<int>::max(floor(pos.y) - METABALL_SIZE, 0);
+	int bot_z = math<int>::max(floor(pos.z) - METABALL_SIZE, 0);
+
+	int top_x = math<int>::min(ceil(pos.x) + METABALL_SIZE, width-1);
+	int top_y = math<int>::min(ceil(pos.y) + METABALL_SIZE, height-1);
+	int top_z = math<int>::min(ceil(pos.z) + METABALL_SIZE, depth-1);
+
+	size_t count = (top_x - bot_x) * (top_y - bot_y) * (top_z - bot_z);
+
+	ivec3 bottom{bot_x, bot_y, bot_z};
+	ivec3 top	{top_x, top_y, top_z};
+	ivec3 size	{width, height, depth};
+
+	mKernWriteMetaball->setKernelArg( 1, sizeof(ivec3), &bottom );
+	mKernWriteMetaball->setKernelArg( 2, sizeof(ivec3), &top);
+	mKernWriteMetaball->setKernelArg( 3, sizeof(ivec3), &size);
+	mKernWriteMetaball->setKernelArg( 4, sizeof(float), (void*)&pos.x);
+	mKernWriteMetaball->setKernelArg( 5, sizeof(float), (void*)&pos.y);
+	mKernWriteMetaball->setKernelArg( 6, sizeof(float), (void*)&pos.z);
+	mCommandQueue->NDRangeKernel( mKernWriteMetaball, 1, nullptr, &count, nullptr );
+}
+
+std::vector<ci::cl::MemoryObjRef>& MarchingCubes::getAcqRelMemObjs()
+{
+	static std::vector<cl::MemoryObjRef> vboMem = {
+		mMetaballPositions,
+		mClVertPositions,
+		mClVertNormals
+	};
+	
+	return vboMem;
+}
+
+void MarchingCubes::cacheMarchingCubesMetaballData( const cl::BufferObjRef &positions, int numBalls )
 {
 	mMetaballPositions = positions;
 	mNumBalls = numBalls;
@@ -166,40 +198,108 @@ void MarchingCubes::update()
 	
 	/* End */
 	
-//	int zero = 0;
-//	kernel_memory_write(vertex_index, sizeof(int), &zero);
-//	
-//	const int num_workers = (width-1) * (height-1) * (depth-1);
-//	
-//	kernel_set_argument(construct_surface, 0, sizeof(kernel_memory), &volume);
-//	kernel_set_argument(construct_surface, 1, sizeof(cl_int3), &size);
-//	kernel_set_argument(construct_surface, 2, sizeof(kernel_memory), &vertex_positions_buffer);
-//	kernel_set_argument(construct_surface, 3, sizeof(kernel_memory), &vertex_index);
-//	kernel_run(construct_surface, num_workers);
-//	
-//	kernel_memory_read(vertex_index, sizeof(cl_int), &num_verts);
-//	
-//	/* Generate Normals */
-//	
-//	if (num_verts > 0) {
-//	  kernel_set_argument(generate_normals_smooth, 0, sizeof(kernel_memory), &vertex_positions_buffer);
-//	  kernel_set_argument(generate_normals_smooth, 1, sizeof(kernel_memory), &vertex_normals_buffer);
-//	  kernel_set_argument(generate_normals_smooth, 2, sizeof(kernel_memory), &metaball_positions);
-//	  kernel_set_argument(generate_normals_smooth, 3, sizeof(cl_int), &num_metaballs);
-//	  kernel_run(generate_normals_smooth, num_verts);
-//	}
+	int zero = 0;
+	mCommandQueue->write( mClVertIndex, CL_TRUE, 0, sizeof(int), &zero);
+	
+	size_t num_workers = (width-1) * (height-1) * (depth-1);
+	
+	mKernConstructSurface->setKernelArg( 0, mClVolume );
+	mKernConstructSurface->setKernelArg( 1, sizeof(cl_int3), &size );
+	mKernConstructSurface->setKernelArg( 2, mClVertPositions );
+	mKernConstructSurface->setKernelArg( 3, mClVertIndex );
+	
+	mCommandQueue->NDRangeKernel( mKernConstructSurface, 1, nullptr, &num_workers, 0 );
+	
+	mCommandQueue->read( mClVertIndex, CL_TRUE, 0, sizeof(cl_int), &num_verts );
+	
+	/* Generate Normals */
+	
+	if (num_verts > 0) {
+		mKernGenNormalsSmooth->setKernelArg( 0, mClVertPositions );
+		mKernGenNormalsSmooth->setKernelArg( 1, mClVertNormals );
+		mKernGenNormalsSmooth->setKernelArg( 2, mMetaballPositions );
+		mKernGenNormalsSmooth->setKernelArg( 3, sizeof(cl_int), &mNumBalls );
+		mCommandQueue->NDRangeKernel( mKernGenNormalsSmooth, 1, nullptr, (size_t *)&num_verts, nullptr );
+	}
 	
 	/*
 	kernel_set_argument(generate_normals, 0, sizeof(kernel_memory), &vertex_positions_buffer);
 	kernel_set_argument(generate_normals, 1, sizeof(kernel_memory), &vertex_normals_buffer);
 	kernel_run(generate_normals, num_verts/3);
 	*/
-	
-//	kernel_memory_gl_release(vertex_positions_buffer);
-//	kernel_memory_gl_release(vertex_normals_buffer);
-//	kernel_memory_gl_release(metaball_positions);
-//	
-//	kernel_run_finish();
-
 }
+
+void MarchingCubes::render() {
+
+  size_t full_size = width * height * depth;
+	
+	std::vector<cl::MemoryObjRef> vboMem =  { mClPointColors };
+	cl::Event acquireEvent;
+	mCommandQueue->acquireGlObjects( vboMem, {}, &acquireEvent );
+	
+	cl::EventList waitlist( { acquireEvent } );
+	cl::Event kernelEvent;
+	mCommandQueue->NDRangeKernel( mKernWritePointColorBack, 1, nullptr, &full_size, nullptr, waitlist, &kernelEvent );
+	
+	waitlist.push_back( kernelEvent );
+	mCommandQueue->releaseGlObjects( vboMem, waitlist );
+	
+	gl::ScopedVao scopeVao( mVao );
+	gl::ScopedGlslProg scopeShader( mRenderGlsl );
+	
+	mRenderGlsl->uniform( "light_position", vec3() );
+	
+	// add materials and light colors here
+	// also add an environment map
+	// also add shadow map and render to shadow below
+
+	gl::setDefaultShaderVars();
+	
+	gl::drawArrays(GL_TRIANGLES, 0, num_verts);
+}
+
+void MarchingCubes::renderShadows() {
+
+//  mat4 viewm = light_view_matrix(l);
+//  mat4 projm = light_proj_matrix(l);
+//
+//  mat4_to_array(viewm, view_matrix);
+//  mat4_to_array(projm, proj_matrix);
+//
+//  glMatrixMode(GL_MODELVIEW);
+//  glLoadMatrixf(view_matrix);
+//
+//  glMatrixMode(GL_PROJECTION);
+//  glLoadMatrixf(proj_matrix);
+//
+//  mat4_to_array(mat4_id(), world_matrix);
+//
+//  material* depth_mat = asset_get_load(P("$CORANGE/shaders/depth.mat"));
+//
+//  shader_program* depth_shader = material_get_entry(depth_mat, 0)->program;
+//  glUseProgram(*depth_shader);
+//
+//  GLint world_matrix_u = glGetUniformLocation(*depth_shader, "world_matrix");
+//  glUniformMatrix4fv(world_matrix_u, 1, 0, world_matrix);
+//
+//  GLint proj_matrix_u = glGetUniformLocation(*depth_shader, "proj_matrix");
+//  glUniformMatrix4fv(proj_matrix_u, 1, 0, proj_matrix);
+//
+//  GLint view_matrix_u = glGetUniformLocation(*depth_shader, "view_matrix");
+//  glUniformMatrix4fv(view_matrix_u, 1, 0, view_matrix);
+//
+//  glBindBuffer(GL_ARRAY_BUFFER, vertex_positions);
+//  glVertexPointer(4, GL_FLOAT, 0, (void*)0);
+//  glEnableClientState(GL_VERTEX_ARRAY);
+//
+//    glDrawArrays(GL_TRIANGLES, 0, num_verts);
+//
+//  glDisableClientState(GL_VERTEX_ARRAY);
+//
+//  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//  glBindBuffer(GL_ARRAY_BUFFER, 0);
+//
+//  glUseProgram(0);
+}
+
 

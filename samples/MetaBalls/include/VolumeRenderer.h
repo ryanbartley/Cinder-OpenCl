@@ -6,9 +6,4 @@
 //
 //
 
-#ifndef MetaBalls2_VolumeRenderer_h
-#define MetaBalls2_VolumeRenderer_h
-
-
-
-#endif
+#pragma once

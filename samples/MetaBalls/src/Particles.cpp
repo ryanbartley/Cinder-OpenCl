@@ -17,7 +17,8 @@ using namespace ci::cl;
 using namespace ci::gl;
 using namespace std;
 
-Particles::Particles()
+Particles::Particles( const ci::cl::CommandQueueRef &commandQueue )
+: mCommandQueue( commandQueue )
 {
 	std::vector<vec4>	cpuPositions(particle_count),
 						cpuVelocities(particle_count),
@@ -97,7 +98,19 @@ Particles::Particles()
 	kernel->setKernelArg( 9, sizeof(cl_int), &particle_count );
 }
 
-void Particles::update( const cl::CommandQueueRef &commandQueue )
+std::vector<ci::cl::MemoryObjRef>& Particles::getAcqRelMemObjs()
+{
+	static std::vector<cl::MemoryObjRef> vboMem = {
+		mClPositions,
+		mClVelocities,
+		mClLifetimes,
+		mClRandoms
+	};
+	
+	return vboMem;
+}
+
+void Particles::update()
 {
 	int random = rand();
 	auto kernel = mClProgram->getKernelByName( "particle_update" );
@@ -110,29 +123,24 @@ void Particles::update( const cl::CommandQueueRef &commandQueue )
 	
 	mShouldReset = 0;
 	
-	std::vector<cl::MemoryObjRef> vboMem = {
-		mClPositions,
-		mClVelocities,
-		mClLifetimes,
-		mClRandoms
-	};
+	auto vboMem = getAcqRelMemObjs();
 	
 	glFinish();
 	
 	cl::Event event;
-	commandQueue->acquireGlObjects( vboMem, {}, &event );
+	mCommandQueue->acquireGlObjects( vboMem, {}, &event );
 	
 	EventList waitList({ event });
 	cl::Event kernelEvent;
     // Queue the kernel up for execution across the array
-    commandQueue->NDRangeKernel( kernel, 1, nullptr, globalWorkSize, nullptr, waitList, &kernelEvent );
+    mCommandQueue->NDRangeKernel( kernel, 1, nullptr, globalWorkSize, nullptr, waitList, &kernelEvent );
 	
 	
 	// Release the GL Object
 	// Note, we should ensure OpenCL is finished with any commands that might affect the VBO
 	waitList.getList().push_back( kernelEvent );
-	commandQueue->finish();
-	commandQueue->releaseGlObjects( vboMem, waitList );
+	mCommandQueue->finish();
+	mCommandQueue->releaseGlObjects( vboMem, waitList );
 }
 
 

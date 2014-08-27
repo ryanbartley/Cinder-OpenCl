@@ -17,12 +17,12 @@ typedef std::shared_ptr<class Particles> ParticlesRef;
 class Particles {
 public:
 	
-	static ParticlesRef create()
-	{ return ParticlesRef( new Particles ); }
+	static ParticlesRef create( const ci::cl::CommandQueueRef &commandQueue )
+	{ return ParticlesRef( new Particles( commandQueue ) ); }
 	
 	~Particles() {}
 	
-	void update( const ci::cl::CommandQueueRef &commandQueue );
+	void update();
 	void render();
 	
 	void reset() { mShouldReset = 1; }
@@ -33,14 +33,19 @@ public:
 	ci::gl::VboRef& getGlPositions() { return mGlPositions; }
 	ci::gl::VboRef& getGlVelocities() { return mGlVelocities; }
 	
+	std::vector<ci::cl::MemoryObjRef>& getAcqRelMemObjs();
+	
+	int getNumParticles() const { return particle_count; };
+	
 private:
-	Particles();
+	Particles( const ci::cl::CommandQueueRef &commandQueue );
 	
 	ci::gl::VaoRef			mGlVao;
 	ci::gl::VboRef			mGlPositions, mGlVelocities, mGlLifetimes, mGlRandoms;
 	ci::gl::GlslProgRef		mGlProgram;
 	ci::cl::BufferObjRef	mClPositions, mClVelocities, mClLifetimes, mClRandoms;
 	ci::cl::ProgramRef		mClProgram;
+	ci::cl::CommandQueueRef	mCommandQueue;
 	int						mShouldReset;
 	cl_mem					mGlObjects[4];
 };

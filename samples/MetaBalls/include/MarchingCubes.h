@@ -20,30 +20,39 @@ int num_verts = 0;
 
 #define MAX_VERTS 100000
 
+using MarchingCubesRef = std::shared_ptr<class MarchingCubes>;
+
 class MarchingCubes {
 public:
 	
-	~MarchingCubes();
+	static MarchingCubesRef create( const ci::cl::CommandQueueRef &commandQueue )
+	{ return MarchingCubesRef( new MarchingCubes( commandQueue ) ); }
+	
+	~MarchingCubes() {}
 	
 	void clear();
 	void point( const ci::ivec4 &point );
-//	void metaball( const ci::vec3, int metaballId );
+	void metaball( const ci::vec3 &pos );
 	
 	void data( const ci::cl::BufferObjRef positions, int numMetaballs );
 	void update();
 	void render();
 	void renderShadows();
 	
-	void marchingCubesMetaballData( const ci::cl::BufferObjRef &positions, int numBalls );
+	void cacheMarchingCubesMetaballData( const ci::cl::BufferObjRef &positions, int numBalls );
+	
+	std::vector<ci::cl::MemoryObjRef>& getAcqRelMemObjs();
 	
 private:
 	MarchingCubes( const ci::cl::CommandQueueRef &commandQueue );
 	
+	ci::gl::VaoRef			mVao;
+	ci::gl::GlslProgRef		mRenderGlsl, mShadowGlsl;
+	ci::gl::VboRef			mGlPointPositions, mGlPointColors,
+							mGlVertPositions, mGlVertNormals;
 	ci::cl::BufferObjRef	mClVolume, mClPointColors,
 							mClVertPositions, mClVertNormals,
 							mClVertIndex, mMetaballPositions;
-	ci::gl::VboRef			mGlPointPositions, mGlPointColors,
-							mGlVertPositions, mGlVertNormals;
 	ci::cl::ProgramRef		mClProgram;
 	ci::cl::KernelRef		mKernWritePoint, mKernWriteMetaball,
 							mKernWriteMetaballs, mKernWriteClear,
