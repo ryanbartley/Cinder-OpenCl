@@ -65,7 +65,7 @@ BufferObj::BufferObj( cl_mem_flags flags, size_t size, void *data )
 }
 	
 BufferObj::BufferObj( const gl::BufferObjRef &glBuffer, cl_mem_flags flags )
-: MemoryObj( Context::context() )
+: MemoryObj( Context::context() ), mSize( glBuffer->getSize() )
 {
 	cl_int errcode = CL_SUCCESS;
 	mFlags = flags;

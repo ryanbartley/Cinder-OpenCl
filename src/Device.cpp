@@ -14,7 +14,7 @@ using namespace std;
 namespace cinder { namespace cl {
 	
 Device::Device( const PlatformRef &platform, cl_device_id device )
-: mId( device ), mParentPlatform( platform ), mIsGlSupported( false )
+: mId( device ), mParentPlatform( platform )
 {
 	cl_int errNum;
 	errNum = clGetDeviceInfo( device, CL_DEVICE_TYPE, sizeof(cl_device_type), &mType, nullptr);
@@ -35,7 +35,7 @@ Device::Device( const PlatformRef &platform, cl_device_id device )
 	static const char* CL_GL_SHARING_EXT = "cl_khr_gl_sharing";
 	static const char* CL_GL_EVENT_EXT = "cl_khr_gl_event";
 #endif
-	mIsGlSupported = isExtensionSupported( CL_GL_SHARING_EXT );
+	isExtensionSupported( CL_GL_SHARING_EXT );
 	isExtensionSupported( CL_GL_EVENT_EXT );
 }
 	

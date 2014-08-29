@@ -18,6 +18,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		B3B6638F19A85EBF0097005F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B6638E19A85EBF0097005F /* CoreMedia.framework */; };
 		B3B6639119A85EC70097005F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B6639019A85EC70097005F /* AVFoundation.framework */; };
+		B3B6674A19AFDA970097005F /* Convolution.cl in Sources */ = {isa = PBXBuildFile; fileRef = B3B6674919AFDA970097005F /* Convolution.cl */; };
 		B3F78F7818DFB29B009D9951 /* BufferObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F78F6F18DFB29B009D9951 /* BufferObj.cpp */; };
 		B3F78F7918DFB29B009D9951 /* CommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F78F7018DFB29B009D9951 /* CommandQueue.cpp */; };
 		B3F78F7A18DFB29B009D9951 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F78F7118DFB29B009D9951 /* Context.cpp */; };
@@ -49,6 +50,7 @@
 		9711FE5C28824F07AD9B53AA /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 		B3B6638E19A85EBF0097005F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		B3B6639019A85EC70097005F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		B3B6674919AFDA970097005F /* Convolution.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = Convolution.cl; path = "../../../../Cinder-OpenCL/samples/Convolution/assets/Convolution.cl"; sourceTree = "<group>"; };
 		B3F78F6418DFB29B009D9951 /* BufferObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BufferObj.h; sourceTree = "<group>"; };
 		B3F78F6518DFB29B009D9951 /* CommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandQueue.h; sourceTree = "<group>"; };
 		B3F78F6618DFB29B009D9951 /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Context.h; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B3B6674919AFDA970097005F /* Convolution.cl */,
 				605875650F3046FA9FC78BBC /* CinderApp.icns */,
 				6A913F966EB9493FB28B0B4A /* Info.plist */,
 			);
@@ -292,6 +295,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3F78F8018DFB29B009D9951 /* Program.cpp in Sources */,
+				B3B6674A19AFDA970097005F /* Convolution.cl in Sources */,
 				B3F78F7C18DFB29B009D9951 /* Event.cpp in Sources */,
 				0AA9A419071F4D89A69547BA /* ConvolutionApp.cpp in Sources */,
 				B3F78F7E18DFB29B009D9951 /* MemoryObj.cpp in Sources */,

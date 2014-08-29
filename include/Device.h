@@ -28,8 +28,6 @@ public:
 	const PlatformRef&	getPlatform() const { return mParentPlatform; }
 	//! Returns a reference to the parent platform
 	PlatformRef&		getPlatform() { return mParentPlatform; }
-	//! Returns whether this Device supports cl/gl sharing
-	bool isGlSupported() { return mIsGlSupported; }
 	//! Returns whether this Device supports this extension.
 	bool isExtensionSupported( const std::string &support_str );
 	
@@ -50,12 +48,11 @@ private:
 	
 	static DeviceRef create( const PlatformRef &platform, cl_device_id device );
 	
-	cl_device_id	mId;
-	cl_device_type	mType;
-	PlatformRef		mParentPlatform;
+	cl_device_id				mId;
+	cl_device_type				mType;
+	PlatformRef					mParentPlatform;
 	std::map<std::string, bool> mExtensionSupport;
 	std::string					mExtensionString;
-	bool			mIsGlSupported;
 	
 	friend class Platform;
 };

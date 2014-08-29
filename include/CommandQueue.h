@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <OpenCL/OpenCL.h>
+#include <OpenCl/opencl.h>
 #include "Event.h"
 #include "Program.h"
 #include "BufferObj.h"

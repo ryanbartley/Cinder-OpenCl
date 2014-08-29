@@ -1,0 +1,20 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Event", "Event.vcxproj", "{3DC1FC38-CC16-4903-A1B9-6A8B4DDA5E4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DC1FC38-CC16-4903-A1B9-6A8B4DDA5E4C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3DC1FC38-CC16-4903-A1B9-6A8B4DDA5E4C}.Debug|Win32.Build.0 = Debug|Win32
+		{3DC1FC38-CC16-4903-A1B9-6A8B4DDA5E4C}.Release|Win32.ActiveCfg = Release|Win32
+		{3DC1FC38-CC16-4903-A1B9-6A8B4DDA5E4C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

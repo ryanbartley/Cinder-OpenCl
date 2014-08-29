@@ -13,11 +13,11 @@
 //    This is a simple kernel performing convolution.
 
 __kernel void convolve(
-	const __global  uint * const input,
-    __constant uint * const mask,
-    __global  uint * const output,
-    const int inputWidth,
-    const int maskWidth)
+					   const __global  uint * const input,
+					         __constant uint * const mask,
+					         __global  uint * const output,
+					   const int inputWidth,
+					   const int maskWidth)
 {
     const int x = get_global_id(0);
     const int y = get_global_id(1);

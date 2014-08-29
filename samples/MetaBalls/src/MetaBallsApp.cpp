@@ -43,10 +43,6 @@ void MetaBallsApp::setup()
 	// First, select an OpenCL platform to run on.
 	mClPlatform = cl::Platform::create( cl::Platform::getAvailablePlatforms()[0], true );
 	
-	for( const auto& device : mClPlatform->getDevices() ) {
-		cout << "Gl: " << device->isGlSupported() << endl;
-	}
-	
     // Next, create an OpenCL context on the selected platform.
 	// And authorize creation of the sharing context
 	// The true tells Context to create a sharing context and

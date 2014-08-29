@@ -14,29 +14,28 @@
 
 namespace cinder { namespace cl {
 	
-typedef std::shared_ptr<class BufferObj> BufferObjRef;
-typedef std::shared_ptr<class CommandQueue> CommandQueueRef;
-typedef std::shared_ptr<class Event> EventRef;
-typedef void(*BufferDestructorCallback)( cl_mem, void *);
-	
-//typedef struct _cl_buffer_region {
-//	size_t origin;
-//	size_t size;
-//} cl_buffer_region;
+using BufferObjRef = std::shared_ptr<class BufferObj>;
+using BufferDestructorCallback = void(*)( cl_mem, void *);
 
-class BufferObj : public boost::noncopyable, public std::enable_shared_from_this<BufferObj>, public MemoryObj {
+class BufferObj : public std::enable_shared_from_this<BufferObj>, public MemoryObj {
 public:
 	static BufferObjRef create( cl_mem_flags flags, size_t size, void *data );
 	static BufferObjRef create( const gl::BufferObjRef &glBuffer, cl_mem_flags flags );
 	
-	class SubBuffer : public boost::noncopyable, public std::enable_shared_from_this<SubBuffer>, public MemoryObj {
+	class SubBuffer : public std::enable_shared_from_this<SubBuffer>, public MemoryObj {
 	public:
-		typedef std::shared_ptr<SubBuffer> SubBufferRef;
+		using SubBufferRef = std::shared_ptr<SubBuffer>;
 		
 		static SubBufferRef create( const BufferObjRef &buffer, cl_mem_flags flags, const cl_buffer_region *bufferCreateInfo );
 		static SubBufferRef create( const BufferObjRef &buffer, cl_mem_flags flags, size_t origin, size_t size );
 		
 		~SubBuffer(){}
+		
+		// NON COPYABLE
+		SubBuffer( const SubBuffer &other ) = delete;
+		SubBuffer& operator=( const SubBuffer &other ) = delete;
+		SubBuffer( SubBuffer&& other ) = delete;
+		SubBuffer& operator=( SubBuffer&& other ) = delete;
 		
 	private:
 		SubBuffer( const BufferObjRef &buffer, cl_mem_flags flags, const cl_buffer_region *bufferCreateInfo );
@@ -46,9 +45,13 @@ public:
 		BufferObjRef	mParent;
 	};
 	
-	typedef std::shared_ptr<SubBuffer> SubBufferRef;
-	
 	~BufferObj() {}
+	
+	// NON COPYABLE
+	BufferObj( const BufferObj &other ) = delete;
+	BufferObj& operator=( const BufferObj &other ) = delete;
+	BufferObj( BufferObj&& other ) = delete;
+	BufferObj& operator=( BufferObj&& other ) = delete;
 	
 	size_t			getSize() { return mSize; }
 	
@@ -61,12 +64,12 @@ private:
 	// TODO: Make a directX buffer object for shared context
 	BufferObj( const gl::BufferObjRef &glBuffer, cl_mem_flags flags );
 	
-	void setReturnEvent( EventRef *returnEvent, cl_event event );
+	using SubBufferRef = std::shared_ptr<SubBuffer>;
 	
 	size_t						mSize;
 	std::vector<SubBufferRef>	mSubBuffers;
 };
 	
-typedef std::shared_ptr<BufferObj::SubBuffer> SubBufferRef;
+using SubBufferRef = std::shared_ptr<BufferObj::SubBuffer>;
 	
 }}
