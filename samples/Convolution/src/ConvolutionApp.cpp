@@ -1,4 +1,4 @@
-#include "cinder/app/AppNative.h"
+#include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 
@@ -65,7 +65,7 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class ConvolutionApp : public AppNative {
+class ConvolutionApp : public App {
   public:
 	void setup();
 	void mouseDown( MouseEvent event );	
@@ -381,4 +381,4 @@ void ConvolutionApp::draw()
 	gl::clear( Color( 0, 0, 0 ) ); 
 }
 
-CINDER_APP_NATIVE( ConvolutionApp, RendererGl )
+CINDER_APP( ConvolutionApp, RendererGl )

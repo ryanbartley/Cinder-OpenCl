@@ -130,7 +130,6 @@ Context::~Context()
 void Context::contextErrorCallback( const char *errInfo, const void *privateInfo, size_t cb, void *userData )
 {
 	std::cout << "Error occured during context use: " << errInfo << std::endl;
-	exit(EXIT_FAILURE);
 }
 	
 std::vector<DeviceRef> Context::getAssociatedDevices()

@@ -9,6 +9,8 @@
 #include "Platform.h"
 #include "Device.h"
 
+using namespace std;
+
 namespace cinder { namespace cl {
 
 Platform::Platform( cl_platform_id platform )
@@ -27,12 +29,17 @@ Platform::~Platform()
 {
 }
 	
-PlatformRef Platform::create( cl_platform_id platform, bool cacheAllDevices )
+PlatformRef Platform::create( cl_platform_id platform, cl_device_type deviceType )
 {
 	auto ret = PlatformRef( new Platform( platform ) );
-	if( cacheAllDevices ) {
-		ret->cacheDevices();
-	}
+	auto devices = ret->getAvailableDevices( deviceType );
+	cout << "Num devices: " << devices.size() << endl;
+	DeviceList deviceList;
+	std::transform( devices.begin(), devices.end(), std::back_inserter( deviceList ),
+	[ret]( const cl_device_id & device ) {
+		return Device::create( ret, device );
+	});
+	ret->mDevices = deviceList;
 	return ret;
 }
 	

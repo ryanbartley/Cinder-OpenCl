@@ -1,4 +1,4 @@
-#include "cinder/app/AppNative.h"
+#include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/Batch.h"
@@ -20,7 +20,7 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class MetaBallsApp : public AppNative {
+class MetaBallsApp : public App {
   public:
 	void setup();
 	void mouseDown( MouseEvent event );	
@@ -41,7 +41,7 @@ class MetaBallsApp : public AppNative {
 void MetaBallsApp::setup()
 {
 	// First, select an OpenCL platform to run on.
-	mClPlatform = cl::Platform::create( cl::Platform::getAvailablePlatforms()[0], true );
+	mClPlatform = cl::Platform::create( cl::Platform::getAvailablePlatforms()[0], CL_DEVICE_TYPE_GPU );
 	
     // Next, create an OpenCL context on the selected platform.
 	// And authorize creation of the sharing context
@@ -97,4 +97,4 @@ void MetaBallsApp::draw()
 	mParticles->render();
 }
 
-CINDER_APP_NATIVE( MetaBallsApp, RendererGl )
+CINDER_APP( MetaBallsApp, RendererGl )

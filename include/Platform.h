@@ -21,7 +21,7 @@ class Platform
 	: public std::enable_shared_from_this<Platform>, public boost::noncopyable {
 public:
 	//! Returns a PlatformRef containing \a platform. Caches DeviceMap if \a cacheAllDevices is true. If \a platform is nullptr, it will create the Platform from the first available platform.
-	static PlatformRef create( cl_platform_id platform = nullptr, bool cacheAllDevices = false );
+	static PlatformRef create( cl_platform_id platform, cl_device_type deviceType = CL_DEVICE_TYPE_GPU );
 	//TODO: Fix this factory function.
 	//! DON'T USE THIS FACTORY FUNCTION. Under repair. Returns a PlatformRef with \a platform as the platform, converting devices into DeviceRef's and filling the mDevices.
 	static PlatformRef create( cl_platform_id platform, const std::vector<cl_device_id> &devices );

@@ -1,4 +1,4 @@
-#include "cinder/app/AppNative.h"
+#include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 
@@ -17,10 +17,9 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class OpenGLInteropApp : public AppNative {
+class OpenGLInteropApp : public App {
   public:
 	void setup();
-	void prepareSettings( Settings *settings ) { settings->setWindowSize( 256, 256 ); }
 	void mouseDown( MouseEvent event );	
 	void update();
 	void draw();
@@ -48,7 +47,7 @@ void OpenGLInteropApp::setup()
 
 void OpenGLInteropApp::setupGl()
 {
-	mGlVbo = gl::Vbo::create(GL_ARRAY_BUFFER, getWindowHeight() * sizeof(Vec4f), NULL, GL_STREAM_DRAW);
+	mGlVbo = gl::Vbo::create( GL_ARRAY_BUFFER, getWindowHeight() * sizeof(vec4), NULL, GL_STREAM_DRAW );
 	
 	mGlVao = gl::Vao::create();
 	
@@ -68,16 +67,12 @@ void OpenGLInteropApp::setupGl()
 
 void OpenGLInteropApp::setupCl()
 {
-
-	
     // First, select an OpenCL platform to run on.
 	auto platforms = cl::Platform::getAvailablePlatforms();
 	
 	// Iterate through the list of platforms until we find one that supports
 	// a GPU device, otherwise fail with an error.
-	auto devices = cl::Device::getAvailableDevices( platforms[0], CL_DEVICE_TYPE_GPU );
-	
-	mClPlatform = cl::Platform::create( platforms[0], devices );
+	mClPlatform = cl::Platform::create( platforms[0], CL_DEVICE_TYPE_GPU );
 	
     // Next, create an OpenCL context on the selected platform.
 	// And authorize creation of the sharing context
@@ -247,4 +242,6 @@ void OpenGLInteropApp::draw()
 	gl::drawArrays( GL_LINES, 0, getWindowHeight() * 2 );
 }
 
-CINDER_APP_NATIVE( OpenGLInteropApp, RendererGl )
+void prepareSettings( App::Settings *settings ) { settings->setWindowSize( 256, 256 ); }
+
+CINDER_APP( OpenGLInteropApp, RendererGl, &prepareSettings )

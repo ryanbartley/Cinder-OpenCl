@@ -1,4 +1,4 @@
-#include "cinder/app/AppNative.h"
+#include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 
@@ -15,11 +15,9 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class HelloWorldApp : public AppNative {
+class HelloWorldApp : public App {
   public:
-	void setup();
-	void mouseDown( MouseEvent event );	
-	void update();
+	void setup() override;
 	void draw();
 	
 	cl::PlatformRef		mClPlatform;
@@ -93,20 +91,10 @@ void HelloWorldApp::setup()
     std::cout << "Executed program succesfully." << std::endl;
 }
 
-void HelloWorldApp::mouseDown( MouseEvent event )
-{
-}
-
-void HelloWorldApp::update()
-{
-}
-
 void HelloWorldApp::draw()
 {
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) ); 
 }
 
-
-
-CINDER_APP_NATIVE( HelloWorldApp, RendererGl )
+CINDER_APP( HelloWorldApp, RendererGl )
