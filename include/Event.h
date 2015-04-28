@@ -98,7 +98,7 @@ public:
 					   [&]( const Event &event ) {
 						   return event.getId();
 					   });
-		std::cout << "mList Size " << mList.size() << " eventIdList size: " << eventIdList.size() << std::endl;
+		//std::cout << "mList Size " << mList.size() << " eventIdList size: " << eventIdList.size() << std::endl;
 		return eventIdList;
 	}
 	

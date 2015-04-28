@@ -45,7 +45,7 @@ Event::Event( cl_event event, EventType type )
 Event::Event( const Event &rhs )
 : mId( rhs.mId ), mType( rhs.mType )
 {
-	std::cout << "Using Event::Event Copy Constructor" << std::endl;
+	//std::cout << "Using Event::Event Copy Constructor" << std::endl;
 	clRetainEvent( mId );
 }
 	
@@ -68,7 +68,7 @@ EventRef Event::create( const Event &event )
 	
 Event& Event::operator=( const Event &rhs )
 {
-	std::cout << "Using Event::operator= Copy Assignment" << std::endl;
+	//std::cout << "Using Event::operator= Copy Assignment" << std::endl;
 	if (this != &rhs) {
 		mId = rhs.mId;
 		if( mId )
@@ -80,7 +80,7 @@ Event& Event::operator=( const Event &rhs )
 	
 Event& Event::operator=( Event &&rhs )
 {
-	std::cout << "Using Event::operator= Move Assignment" << std::endl;
+	//std::cout << "Using Event::operator= Move Assignment" << std::endl;
 	if (this != &rhs) {
 		mId = rhs.mId;
 		mType = rhs.mType;
@@ -93,7 +93,7 @@ Event& Event::operator=( Event &&rhs )
 Event::Event( Event &&rhs )
 : mId( rhs.mId ), mType( rhs.mType )
 {
-	std::cout << "Using Event::Event Move Constructor" << std::endl;
+	//std::cout << "Using Event::Event Move Constructor" << std::endl;
 	rhs.mId = nullptr;
 	rhs.mType = (EventType)-1;
 }
