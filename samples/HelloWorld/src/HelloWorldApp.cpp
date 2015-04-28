@@ -28,8 +28,12 @@ class HelloWorldApp : public App {
 };
 
 void HelloWorldApp::setup()
-{
+{	
 	auto platforms = cl::Platform::getAvailablePlatforms();
+	
+	for( auto & platform : platforms ){
+		cl::Platform::displayPlatformInfo(platform);
+	}
 	
 	mClPlatform = cl::Platform::create( platforms[0], CL_DEVICE_TYPE_GPU );
 	

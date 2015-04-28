@@ -74,14 +74,14 @@ private:
 };
 	
 // TODO: Figure out if these are needed and work
-std::ostream& operator<<( std::ostream &lhs, const PlatformRef &rhs )
+inline std::ostream& operator<<( std::ostream &lhs, const PlatformRef &rhs )
 {
 	auto platformId = rhs->getId();
 	return lhs << platformId;
 }
 
 // TODO: Figure out if these are needed and work
-std::ostream& operator<<( std::ostream &lhs, const cl_platform_id &platformId )
+inline std::ostream& operator<<( std::ostream &lhs, const cl_platform_id &platformId )
 {
 	lhs << "\t" << "CL_PLATFORM_NAME" << ":\t" <<
 		Platform::getPlatformParam( platformId, CL_PLATFORM_NAME ) << "\n"
