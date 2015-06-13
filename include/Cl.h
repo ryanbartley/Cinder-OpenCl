@@ -6,9 +6,6 @@
 //
 //
 
-namespace cinder { namespace cl {
+namespace cl {
 	
-//	bool isExtensionSupported( )
-	
-}
 }

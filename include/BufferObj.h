@@ -9,18 +9,21 @@
 #pragma once
 
 #include <OpenCL/OpenCL.h>
-#include "cinder/gl/BufferObj.h"
 #include "MemoryObj.h"
 
-namespace cinder { namespace cl {
+//namespace cinder { namespace gl {
+//		using BufferObjRef = std::shared_ptr<class BufferObj>;
+//}}
+
+namespace cl {
 	
 using BufferObjRef = std::shared_ptr<class BufferObj>;
 using BufferDestructorCallback = void(*)( cl_mem, void *);
 
 class BufferObj : public std::enable_shared_from_this<BufferObj>, public MemoryObj {
 public:
+	
 	static BufferObjRef create( cl_mem_flags flags, size_t size, void *data );
-	static BufferObjRef create( const gl::BufferObjRef &glBuffer, cl_mem_flags flags );
 	
 	class SubBuffer : public std::enable_shared_from_this<SubBuffer>, public MemoryObj {
 	public:
@@ -62,14 +65,16 @@ public:
 private:
 	BufferObj( cl_mem_flags flags, size_t size, void *data );
 	// TODO: Make a directX buffer object for shared context
-	BufferObj( const gl::BufferObjRef &glBuffer, cl_mem_flags flags );
+	BufferObj( cl_mem_flags flags, size_t size );
 	
 	using SubBufferRef = std::shared_ptr<SubBuffer>;
 	
 	size_t						mSize;
 	std::vector<SubBufferRef>	mSubBuffers;
+	
+	friend BufferObjRef createBufferFromGl( const ci::gl::BufferObjRef&, cl_mem_flags );
 };
 	
 using SubBufferRef = std::shared_ptr<BufferObj::SubBuffer>;
 	
-}}
+} // namespace cl

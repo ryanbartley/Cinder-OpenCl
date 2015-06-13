@@ -10,7 +10,7 @@
 
 #include <OpenCl/OpenCl.h>
 
-namespace cinder { namespace cl {
+namespace cl {
 	
 typedef std::shared_ptr<class Event> EventRef;
 typedef std::shared_ptr<class SysEvent> SysEventRef;
@@ -106,4 +106,4 @@ private:
 	std::list<Event> mList;
 };
 	
-}}
+} // namespace cl

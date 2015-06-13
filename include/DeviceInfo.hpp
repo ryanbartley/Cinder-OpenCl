@@ -10,7 +10,7 @@
 
 #include <OpenCl/OpenCl.h>
 
-namespace cinder { namespace cl {
+namespace cl {
 
 template<typename T>
 void appendBitfield(T info, T value, std::string name, std::string & str)
@@ -195,4 +195,4 @@ public:
 	}
 };
 	
-}}
+} // namespace cl

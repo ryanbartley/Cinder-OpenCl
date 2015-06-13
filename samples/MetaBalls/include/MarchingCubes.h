@@ -25,7 +25,7 @@ using MarchingCubesRef = std::shared_ptr<class MarchingCubes>;
 class MarchingCubes {
 public:
 	
-	static MarchingCubesRef create( const ci::cl::CommandQueueRef &commandQueue )
+	static MarchingCubesRef create( const cl::CommandQueueRef &commandQueue )
 	{ return MarchingCubesRef( new MarchingCubes( commandQueue ) ); }
 	
 	~MarchingCubes() {}
@@ -34,30 +34,30 @@ public:
 	void point( const ci::ivec4 &point );
 	void metaball( const ci::vec3 &pos );
 	
-	void data( const ci::cl::BufferObjRef positions, int numMetaballs );
+	void data( const cl::BufferObjRef positions, int numMetaballs );
 	void update();
 	void render();
 	void renderShadows();
 	
-	void cacheMarchingCubesMetaballData( const ci::cl::BufferObjRef &positions, int numBalls );
+	void cacheMarchingCubesMetaballData( const cl::BufferObjRef &positions, int numBalls );
 	
-	std::vector<ci::cl::MemoryObjRef>& getAcqRelMemObjs();
+	std::vector<cl::MemoryObjRef>& getAcqRelMemObjs();
 	
 private:
-	MarchingCubes( const ci::cl::CommandQueueRef &commandQueue );
+	MarchingCubes( const cl::CommandQueueRef &commandQueue );
 	
 	ci::gl::VaoRef			mVao;
 	ci::gl::GlslProgRef		mRenderGlsl, mShadowGlsl;
 	ci::gl::VboRef			mGlPointPositions, mGlPointColors,
 							mGlVertPositions, mGlVertNormals;
-	ci::cl::BufferObjRef	mClVolume, mClPointColors,
+	cl::BufferObjRef		mClVolume, mClPointColors,
 							mClVertPositions, mClVertNormals,
 							mClVertIndex, mMetaballPositions;
-	ci::cl::ProgramRef		mClProgram;
-	ci::cl::KernelRef		mKernWritePoint, mKernWriteMetaball,
+	cl::ProgramRef			mClProgram;
+	cl::KernelRef			mKernWritePoint, mKernWriteMetaball,
 							mKernWriteMetaballs, mKernWriteClear,
 							mKernWritePointColorBack, mKernConstructSurface,
 							mKernGenNormals, mKernGenNormalsSmooth;
-	ci::cl::CommandQueueRef mCommandQueue;
+	cl::CommandQueueRef		mCommandQueue;
 	int						mNumBalls;
 };

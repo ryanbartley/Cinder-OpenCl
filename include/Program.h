@@ -12,7 +12,7 @@
 
 #define BINARY 0
 
-namespace cinder { namespace cl {
+namespace cl {
 
 class Program;
 typedef std::shared_ptr<Program> ProgramRef;
@@ -48,7 +48,7 @@ public:
 	
 	typedef std::shared_ptr<Kernel> KernelRef;
 	
-	static ProgramRef create( const DataSourceRef &dataSource, const PlatformRef &platform = nullptr, const std::string *options = nullptr, bool createKernels = false );
+	static ProgramRef create( const ci::DataSourceRef &dataSource, const PlatformRef &platform = nullptr, const std::string *options = nullptr, bool createKernels = false );
 	
 #if BINARY
 	// TODO: Test this
@@ -72,7 +72,7 @@ public:
 	bool saveBinaries( const std::map<std::string, DeviceRef> &fileNameDevicePair );
 	
 private:
-	Program( const DataSourceRef &dataSource, const PlatformRef &platform, const std::string *options, bool createKernels );
+	Program( const ci::DataSourceRef &dataSource, const PlatformRef &platform, const std::string *options, bool createKernels );
 	
 #if BINARY
 	// TODO: Test this
@@ -87,4 +87,4 @@ private:
 	
 typedef std::shared_ptr<typename Program::Kernel> KernelRef;
 	
-}}
+}

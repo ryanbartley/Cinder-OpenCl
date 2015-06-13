@@ -11,7 +11,7 @@
 #include <OpenCL/opencl.h>
 #include "cinder/gl/Context.h"
 
-namespace cinder { namespace cl {
+namespace cl {
 	
 using ContextRef			= std::shared_ptr<class Context>;
 using PlatformRef			= std::shared_ptr<class Platform>;
@@ -58,4 +58,4 @@ private:
 	
 };
 	
-}}
+} // namespace cl

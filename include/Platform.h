@@ -11,14 +11,13 @@
 #include <OpenCL/opencl.h>
 #include "cinder/Exception.h"
 
-namespace cinder { namespace cl {
+namespace cl {
 	
 typedef std::shared_ptr<class Platform>						PlatformRef;
 typedef std::shared_ptr<class Device>						DeviceRef;
 typedef std::vector<DeviceRef>								DeviceList;
 	
-class Platform
-	: public std::enable_shared_from_this<Platform>, public boost::noncopyable {
+class Platform : public std::enable_shared_from_this<Platform>, public boost::noncopyable {
 public:
 	//! Returns a PlatformRef containing \a platform. Caches DeviceMap if \a cacheAllDevices is true. If \a platform is nullptr, it will create the Platform from the first available platform.
 	static PlatformRef create( cl_platform_id platform, cl_device_type deviceType = CL_DEVICE_TYPE_GPU );
@@ -55,10 +54,8 @@ public:
 	static void displayPlatformInfo( cl_platform_id platformId );
 	//! Prints out information on \a platform, specifically, PROFILE, VERSION, VENDOR, EXTENSIONS. Uses getPlatformInfo to print out the most needed info on a platform
 	static void displayPlatformInfo( const PlatformRef &platform );
-	//! Returns string of the value of the provided \a id and \a pName enumerator.
-	static std::string getPlatformParam( cl_platform_id id, cl_platform_info pName );
-	//! Returns the Error String in const char * format.
-	static const char * getClErrorString( cl_int err );
+	//! Returns string of the value of the provided \a platformId and \a paramName enumerator.
+	static std::string getPlatformParam( cl_platform_id platformId, cl_platform_info paramName );
 	
 private:
 	Platform( cl_platform_id platform );
@@ -70,52 +67,27 @@ private:
 	DeviceList		mDevices;
 	
 	friend std::ostream& operator<<( std::ostream &lhs, const Platform &rhs );
-	friend std::ostream& operator<<( std::ostream &lhs, const cl_platform_id &platformId );
 };
 	
-// TODO: Figure out if these are needed and work
-inline std::ostream& operator<<( std::ostream &lhs, const PlatformRef &rhs )
-{
-	auto platformId = rhs->getId();
-	return lhs << platformId;
-}
-
-// TODO: Figure out if these are needed and work
-inline std::ostream& operator<<( std::ostream &lhs, const cl_platform_id &platformId )
-{
-	lhs << "\t" << "CL_PLATFORM_NAME" << ":\t" <<
-		Platform::getPlatformParam( platformId, CL_PLATFORM_NAME ) << "\n"
-		<< "\t" << "CL_PLATFORM_PROFILE" << ":\t" <<
-		Platform::getPlatformParam( platformId, CL_PLATFORM_PROFILE ) << "\n"
-		<< "\t" << "CL_PLATFORM_VERSION" << ":\t" <<
-		Platform::getPlatformParam( platformId, CL_PLATFORM_VERSION ) << "\n"
-		<< "\t" << "CL_PLATFORM_VENDOR" << ":\t" <<
-		Platform::getPlatformParam( platformId, CL_PLATFORM_VENDOR ) << "\n"
-		<< "\t" << "CL_PLATFORM_EXTENSIONS" << ":\t" <<
-		Platform::getPlatformParam( platformId, CL_PLATFORM_EXTENSIONS ) << "\n";
-	return lhs;
-}
+std::ostream& operator<<( std::ostream &lhs, const PlatformRef &rhs );
+std::ostream& operator<<( std::ostream &lhs, const cl_platform_id &platformId );
 	
-class PlatformException : public Exception {
+class OpenCLException : public ci::Exception {
 public:
-	PlatformException() : Exception() { mMessage[0] = 0; }
-	PlatformException( const std::string &message ) throw();
+	OpenCLException() : Exception() {}
+	OpenCLException( const std::string &message ) : Exception( message ) {}
+};
 	
-	virtual const char * what() const throw() { return mMessage; }
-	
-private:
-	char	mMessage[256];
+class PlatformException : public OpenCLException {
+public:
+	PlatformException() : OpenCLException() {}
+	PlatformException( const std::string &message ) : OpenCLException( message ) {}
 };
 
 class PlatformDeviceExc : public PlatformException {
 public:
-	PlatformDeviceExc() : PlatformException() { mMessage[0] = 0; }
+	PlatformDeviceExc() : PlatformException() {}
 	PlatformDeviceExc( const std::string &message ) : PlatformException( message ) {}
-	
-	virtual const char * what() const throw() { return mMessage; }
-	
-private:
-	char	mMessage[256];
 };
 	
-}} // cl // cinder
+} // namespace cl

@@ -12,7 +12,7 @@
 #include "Device.h"
 #include "BufferObj.h"
 
-namespace cinder { namespace cl {
+namespace cl {
 	
 Program::Kernel::Kernel( const ProgramRef &program, const std::string &name  )
 : mId( nullptr ), mName( name )
@@ -72,14 +72,14 @@ void Program::Kernel::setKernelArg( cl_int index, const BufferObjRef &buffer )
 	}
 }
 
-Program::Program( const DataSourceRef &dataSource, const PlatformRef &platform, const std::string *options, bool createKernels )
+Program::Program( const ci::DataSourceRef &dataSource, const PlatformRef &platform, const std::string *options, bool createKernels )
 {
 	cl_int errNum;
 	std::string program;
-	Buffer buffer( dataSource );
-	program.resize( buffer.getDataSize() + 1 );
-	memcpy( (void*)program.data(), buffer.getData(), buffer.getDataSize() );
-	program[buffer.getDataSize()] = 0;
+	ci::Buffer buffer( dataSource );
+	program.resize( buffer.getSize() + 1 );
+	memcpy( (void*)program.data(), buffer.getData(), buffer.getSize() );
+	program[buffer.getSize()] = 0;
 	auto curContext = Context::context()->getId();
 	size_t size = program.size() - 1;
 	
@@ -205,7 +205,7 @@ Program::Program( const std::string &binaryFileName )
 }
 #endif
 	
-ProgramRef Program::create( const DataSourceRef &dataSource, const PlatformRef &platform, const std::string *options, bool createKernels )
+ProgramRef Program::create( const ci::DataSourceRef &dataSource, const PlatformRef &platform, const std::string *options, bool createKernels )
 {
 	return ProgramRef( new Program( dataSource, platform, options, createKernels ) );
 }
@@ -381,4 +381,4 @@ cl_kernel Program::getKernelIdByName( const std::string &name )
 	}
 }
 	
-}}
+} // namespace cl

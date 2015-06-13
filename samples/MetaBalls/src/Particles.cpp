@@ -13,11 +13,11 @@
 
 using namespace ci;
 using namespace ci::app;
-using namespace ci::cl;
+using namespace cl;
 using namespace ci::gl;
 using namespace std;
 
-Particles::Particles( const ci::cl::CommandQueueRef &commandQueue )
+Particles::Particles( const CommandQueueRef &commandQueue )
 : mCommandQueue( commandQueue )
 {
 	std::vector<vec4>	cpuPositions(particle_count),
@@ -98,7 +98,7 @@ Particles::Particles( const ci::cl::CommandQueueRef &commandQueue )
 	kernel->setKernelArg( 9, sizeof(cl_int), &particle_count );
 }
 
-std::vector<ci::cl::MemoryObjRef>& Particles::getAcqRelMemObjs()
+std::vector<cl::MemoryObjRef>& Particles::getAcqRelMemObjs()
 {
 	static std::vector<cl::MemoryObjRef> vboMem = {
 		mClPositions,

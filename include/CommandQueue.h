@@ -14,7 +14,7 @@
 #include "BufferObj.h"
 #include "Platform.h"
 
-namespace cinder { namespace cl {
+namespace cl {
 	
 typedef std::shared_ptr<class CommandQueue> CommandQueueRef;
 typedef std::shared_ptr<class Device> DeviceRef;
@@ -24,17 +24,20 @@ class Event;
 typedef std::shared_ptr<class EventList> EventListRef;
 typedef std::shared_ptr<class MemoryObj> MemoryObjRef;
 
-class CommandQueue : public boost::noncopyable, public std::enable_shared_from_this<CommandQueue> {
+class CommandQueue : public std::enable_shared_from_this<CommandQueue> {
 public:
 	
 	static CommandQueueRef create( const DeviceRef &device, cl_command_queue_properties properties = 0 );
+	
+	CommandQueue( const CommandQueue & ) = delete;
+	CommandQueue( CommandQueue && ) = delete;
+	CommandQueue& operator=( const CommandQueue & ) = delete;
+	CommandQueue& operator=( CommandQueue && ) = delete;
 	
 	~CommandQueue();
 	
 	cl_command_queue getId() { return mId; }
 	
-	//! A synchronization point that ensures that all queued commands in command_queue have finished execution before the next batch of commands can begin execution.
-	void barrier() { clEnqueueBarrier( mId ); }
 	//! Enqueues a marker command which waits for either a \a list of events to complete, or if the list is empty it waits for all commands previously enqueued in command_queue to complete before it completes.
 	void barrierWithWaitlist( const EventList &list = EventList(), Event *event = nullptr );
 	//! Enqueues a marker command to command_queue. The marker command returns an event, through \a event which can be used to queue a wait on this marker event i.e. wait for all commands queued before the marker command to complete.
@@ -107,8 +110,8 @@ void CommandQueue::fill(const BufferObjRef &buffer, T* pattern, size_t offset, s
 	errNum = clEnqueueFillBuffer( mId, buffer->getId(), pattern, sizeof(T), offset, amountToWrite, waitList.size(), waitList.data(), returnEvent ? (*returnEvent) : nullptr );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+//		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 	
-}}
+} // namespace cl

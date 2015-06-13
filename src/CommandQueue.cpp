@@ -13,9 +13,9 @@
 #include "Event.h"
 #include "Platform.h"
 #include "Program.h"
+#include "ConstantConversion.h"
 
-
-namespace cinder { namespace cl {
+namespace cl {
 
 CommandQueue::CommandQueue( const DeviceRef &device, cl_command_queue_properties properties  )
 : mId( nullptr ), mProperties( properties ), mDevice( device ), mContext( Context::context() )
@@ -49,7 +49,7 @@ void CommandQueue::barrierWithWaitlist( const EventList &list, Event *event )
 	errNum = clEnqueueBarrierWithWaitList( mId, waitList.size(), waitList.data(), event ? (*event) : nullptr );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 	
@@ -59,7 +59,7 @@ void CommandQueue::marker( Event *event )
 	errNum = clEnqueueMarker( mId, *event );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 	
@@ -72,7 +72,7 @@ void CommandQueue::waitForEvents( const EventList &list )
 	errNum = clEnqueueWaitForEvents( mId, waitList.size(), waitList.data() );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 	
@@ -96,7 +96,7 @@ void CommandQueue::acquireGlObjects( std::vector<MemoryObjRef>& acquireObjs, con
 	errNum = clEnqueueAcquireGLObjects( mId, memObjs.size(), memObjs.data(), events.size(), events.data(), returnEvent ? (*returnEvent) : nullptr );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 
@@ -120,7 +120,7 @@ void CommandQueue::releaseGlObjects( std::vector<MemoryObjRef>& acquireObjs, con
 	errNum = clEnqueueAcquireGLObjects( mId, memObjs.size(), memObjs.data(), events.size(), events.data(), returnEvent ? (*returnEvent) : nullptr );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 
@@ -133,7 +133,7 @@ void CommandQueue::write( const BufferObjRef &buffer, cl_bool blockWrite, size_t
 	errNum = clEnqueueWriteBuffer( mId, buffer->getId(), blockWrite, offset, size, data, eventIdList.size(), eventIdList.data(), returnEvent ? (*returnEvent) : nullptr  );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 	
@@ -146,7 +146,7 @@ void CommandQueue::read( const BufferObjRef &buffer, cl_bool blockRead, size_t o
 	errNum = clEnqueueReadBuffer( mId, buffer->getId(), blockRead, offset, size, data, eventIdList.size(), eventIdList.data(), returnEvent ? (*returnEvent) : nullptr  );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 	
@@ -159,7 +159,7 @@ void CommandQueue::fill( const BufferObjRef &buffer, void* pattern, size_t patte
 	errNum = clEnqueueFillBuffer( mId, buffer->getId(), pattern, patternSize, offset, size, waitList.size(), waitList.data(), returnEvent ? (*returnEvent) : nullptr );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 	
@@ -172,7 +172,7 @@ void CommandQueue::copy( const BufferObjRef &srcBuffer, const BufferObjRef &dstB
 	errNum = clEnqueueCopyBuffer ( mId, srcBuffer->getId(), dstBuffer->getId(), srcOffset, dstOffset, size, waitList.size(), waitList.data(), returnEvent ? (*returnEvent) : nullptr );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 	
@@ -187,7 +187,7 @@ void* CommandQueue::map( const BufferObjRef &buffer, cl_bool blockMap, cl_map_fl
 	auto ret = clEnqueueMapBuffer ( mId, buffer->getId(), blockMap, mapFlags, offset, amountToWrite, waitList.size(), waitList.data(), returnEvent ? (*returnEvent) : nullptr, &errNum );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 	return ret;
 }
@@ -201,7 +201,7 @@ void CommandQueue::unmap( const MemoryObjRef &memObj, void* mappedPointer, const
 	errNum = clEnqueueUnmapMemObject( mId, memObj->getId(), mappedPointer, waitList.size(), waitList.data(), returnEvent ? (*returnEvent) : nullptr );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 	
@@ -223,8 +223,8 @@ void CommandQueue::NDRangeKernel(	const KernelRef &kernel, cl_uint work_dim, siz
 									returnEvent ? (*returnEvent) : nullptr );
 	
 	if ( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString( errNum ) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString( errNum ) << std::endl;
 	}
 }
 	
-}}
+}

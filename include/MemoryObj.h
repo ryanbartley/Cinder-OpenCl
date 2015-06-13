@@ -11,7 +11,7 @@
 #include <OpenCl/OpenCl.h>
 #include "Context.h"
 
-namespace cinder { namespace cl {
+namespace cl {
 	
 typedef std::shared_ptr<class MemoryObj> MemoryObjRef;
 typedef void(*MemObjDestructorCallback)( cl_mem, void *);
@@ -39,5 +39,5 @@ protected:
 	cl_mem_flags	mFlags;
 	ContextRef		mContext;
 };
-}
-}
+
+} // namespace cl

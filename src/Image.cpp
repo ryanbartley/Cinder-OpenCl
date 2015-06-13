@@ -8,8 +8,9 @@
 
 #include "Image.h"
 #include "Platform.h"
+#include "ConstantConversion.h"
 
-namespace cinder { namespace cl {
+namespace cl {
 	
 ImageBase::ImageBase()
 : MemoryObj( Context::context() )
@@ -36,11 +37,11 @@ Image2d::Image2d( void *data, cl_mem_flags flags, const cl_image_format *image_f
 	mId = clCreateImage2D( mContext->getId(), mFlags, image_format, mWidth, mHeight, row_pitch, data, &errNum );
 	
 	if( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString(errNum) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString(errNum) << std::endl;
 	}
 }
 	
-Image2d::Image2d( const gl::Texture2dRef &texture, cl_mem_flags flags, GLint mipLevelForUse )
+Image2d::Image2d( const ci::gl::Texture2dRef &texture, cl_mem_flags flags, GLint mipLevelForUse )
 {
 	cl_int errNum;
 	
@@ -50,9 +51,8 @@ Image2d::Image2d( const gl::Texture2dRef &texture, cl_mem_flags flags, GLint mip
 	
 	mId = clCreateFromGLTexture2D( mContext->getId(), flags, texture->getTarget(), mipLevelForUse, texture->getId(), &errNum );
 	if( errNum != CL_SUCCESS ) {
-		std::cout << "ERROR: " << __FUNCTION__ << " " << Platform::getClErrorString(errNum) << std::endl;
+		std::cout << "ERROR: " << __FUNCTION__ << " " << getErrorString(errNum) << std::endl;
 	}
 }
-
 	
-}}
+} // namespace cl

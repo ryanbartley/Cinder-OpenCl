@@ -17,7 +17,7 @@ typedef std::shared_ptr<class Particles> ParticlesRef;
 class Particles {
 public:
 	
-	static ParticlesRef create( const ci::cl::CommandQueueRef &commandQueue )
+	static ParticlesRef create( const cl::CommandQueueRef &commandQueue )
 	{ return ParticlesRef( new Particles( commandQueue ) ); }
 	
 	~Particles() {}
@@ -28,24 +28,24 @@ public:
 	void reset() { mShouldReset = 1; }
 	int count() { return particle_count; }
 	
-	ci::cl::BufferObjRef& getClPositions() { return mClPositions; }
+	cl::BufferObjRef& getClPositions() { return mClPositions; }
 	
 	ci::gl::VboRef& getGlPositions() { return mGlPositions; }
 	ci::gl::VboRef& getGlVelocities() { return mGlVelocities; }
 	
-	std::vector<ci::cl::MemoryObjRef>& getAcqRelMemObjs();
+	std::vector<cl::MemoryObjRef>& getAcqRelMemObjs();
 	
 	int getNumParticles() const { return particle_count; };
 	
 private:
-	Particles( const ci::cl::CommandQueueRef &commandQueue );
+	Particles( const cl::CommandQueueRef &commandQueue );
 	
 	ci::gl::VaoRef			mGlVao;
 	ci::gl::VboRef			mGlPositions, mGlVelocities, mGlLifetimes, mGlRandoms;
 	ci::gl::GlslProgRef		mGlProgram;
-	ci::cl::BufferObjRef	mClPositions, mClVelocities, mClLifetimes, mClRandoms;
-	ci::cl::ProgramRef		mClProgram;
-	ci::cl::CommandQueueRef	mCommandQueue;
+	cl::BufferObjRef		mClPositions, mClVelocities, mClLifetimes, mClRandoms;
+	cl::ProgramRef			mClProgram;
+	cl::CommandQueueRef		mCommandQueue;
 	int						mShouldReset;
 	cl_mem					mGlObjects[4];
 };

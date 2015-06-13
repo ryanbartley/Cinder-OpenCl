@@ -45,6 +45,7 @@
 		B3B6676A19AFFFAD0097005F /* MemoryObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6676019AFFFAD0097005F /* MemoryObj.cpp */; };
 		B3B6676B19AFFFAD0097005F /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6676119AFFFAD0097005F /* Platform.cpp */; };
 		B3B6676C19AFFFAD0097005F /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6676219AFFFAD0097005F /* Program.cpp */; };
+		B3E3227F1AF525BE001BDFA9 /* ConstantConversion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3E3227E1AF525BE001BDFA9 /* ConstantConversion.cpp */; };
 		CFE2776C0B5244C1A0273048 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 66615FBC41C84135AC3230C0 /* CinderApp.icns */; };
 		EE64BE15612548199A62E999 /* MetaBallsApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */; };
 /* End PBXBuildFile section */
@@ -114,6 +115,8 @@
 		B3B6676019AFFFAD0097005F /* MemoryObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryObj.cpp; sourceTree = "<group>"; };
 		B3B6676119AFFFAD0097005F /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform.cpp; sourceTree = "<group>"; };
 		B3B6676219AFFFAD0097005F /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Program.cpp; sourceTree = "<group>"; };
+		B3E3227C1AF52590001BDFA9 /* ConstantConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantConversion.h; sourceTree = "<group>"; };
+		B3E3227E1AF525BE001BDFA9 /* ConstantConversion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConstantConversion.cpp; sourceTree = "<group>"; };
 		CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MetaBallsApp.cpp; path = ../src/MetaBallsApp.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -288,6 +291,7 @@
 				B3B6674D19AFFFAD0097005F /* BufferObj.h */,
 				B3B6674E19AFFFAD0097005F /* Cl.h */,
 				B3B6674F19AFFFAD0097005F /* CommandQueue.h */,
+				B3E3227C1AF52590001BDFA9 /* ConstantConversion.h */,
 				B3B6675019AFFFAD0097005F /* Context.h */,
 				B3B6675119AFFFAD0097005F /* Device.h */,
 				B3B6675219AFFFAD0097005F /* DeviceInfo.hpp */,
@@ -307,6 +311,7 @@
 				B3B6675919AFFFAD0097005F /* BufferObj.cpp */,
 				B3B6675A19AFFFAD0097005F /* Cl.cpp */,
 				B3B6675B19AFFFAD0097005F /* CommandQueue.cpp */,
+				B3E3227E1AF525BE001BDFA9 /* ConstantConversion.cpp */,
 				B3B6675C19AFFFAD0097005F /* Context.cpp */,
 				B3B6675D19AFFFAD0097005F /* Device.cpp */,
 				B3B6675E19AFFFAD0097005F /* Event.cpp */,
@@ -391,6 +396,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3B6676C19AFFFAD0097005F /* Program.cpp in Sources */,
+				B3E3227F1AF525BE001BDFA9 /* ConstantConversion.cpp in Sources */,
 				B3B6676319AFFFAD0097005F /* BufferObj.cpp in Sources */,
 				B3B6676719AFFFAD0097005F /* Device.cpp in Sources */,
 				B3445BBA197ADC040085228D /* VolumeRenderer.cpp in Sources */,
@@ -434,6 +440,7 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
@@ -458,6 +465,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MetaBalls_Prefix.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";

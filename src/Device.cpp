@@ -8,10 +8,11 @@
 
 #include "Device.h"
 #include "Platform.h"
+#include "ConstantConversion.h"
 
 using namespace std;
 
-namespace cinder { namespace cl {
+namespace cl {
 	
 Device::Device( const PlatformRef &platform, cl_device_id device )
 : mId( device ), mParentPlatform( platform )
@@ -54,7 +55,7 @@ std::string Device::getSupportedExtensions( cl_device_id device )
 		// TODO: Add errnum check and Throw DeviceExc
 		if( errNum != CL_SUCCESS ) {
 			std::string error( "Error: getSupportedExtensions: errNum = " );
-			error += Platform::getClErrorString( errNum );
+			error += getErrorString( errNum );
 			std::cout << "Error: getSupportedExtensions" << std::endl;
 		}
 	}
@@ -122,4 +123,4 @@ const char* Device::getDeviceTypeString( cl_device_type type )
 	}
 }
 	
-}}
+} // namespace cl

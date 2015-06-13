@@ -1,0 +1,435 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		006D720419952D00008149E2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D720219952D00008149E2 /* AVFoundation.framework */; };
+		006D720519952D00008149E2 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D720319952D00008149E2 /* CoreMedia.framework */; };
+		0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
+		00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
+		00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
+		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
+		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		0C82C96441E24D89BA2139D4 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0CBF96D7874F20B25CE60C /* OpenCL.framework */; };
+		110803D9AF914F25BAFF77AC /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FB82FA4C5E4AC981D4BC02 /* Program.cpp */; };
+		155F9F1C94094E5A8148A7DB /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 353C922CD63C49B193FF0B5E /* Platform.cpp */; };
+		1EFDA4323A6445E98727EE08 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7400178F02CB4FCE9169936B /* CinderApp.icns */; };
+		27E6D5563FD149D98AAF4709 /* ConstantConversion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E22E07119B14625BC91C7DF /* ConstantConversion.cpp */; };
+		2A2E0D8546E847359ECBF5AF /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E412903D2B13441FB1D10FAC /* Context.cpp */; };
+		338004AC19BA4AB1837A5E88 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B5CF24F84AC54871AB375832 /* Event.cpp */; };
+		365723F851CB4A259B87433D /* MemoryObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAD16F33ED9E4173992385F5 /* MemoryObj.cpp */; };
+		3847D5A1144647D78BE0FC8F /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5D5D65D55B4408385179110 /* Device.cpp */; };
+		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
+		64F4AEC0FED74C0CAE1F512A /* CommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52EE59E650D647B58C27EDE0 /* CommandQueue.cpp */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		B31FEBAF1B0FCDF7000BF1FC /* clgl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B31FEBAE1B0FCDF7000BF1FC /* clgl.cpp */; };
+		DC140767DF014B029F132B44 /* BufferObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 08F346E534974FE69C15EC30 /* BufferObj.cpp */; };
+		E910427A9DFE4F18B2419932 /* ProceduralGeometricDisplacementApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C5DAE389406C43C5B2CEFD17 /* ProceduralGeometricDisplacementApp.cpp */; };
+		EBA3361D29B14D2286B48278 /* Cl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B004217695C849DBB256E94C /* Cl.cpp */; };
+		F442F2EB416C4E98A8A65C00 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF64BF15A9A0462E8D67E766 /* Image.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		006D720219952D00008149E2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		006D720319952D00008149E2 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		0091D8F80E81B9330029341E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		00B784AF0FF439BC000DE1D7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		00B784B10FF439BC000DE1D7 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		00B784B20FF439BC000DE1D7 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		0604CDF01B894E71BCF93AF0 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		08F346E534974FE69C15EC30 /* BufferObj.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = BufferObj.cpp; path = ../../../src/BufferObj.cpp; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		156C8945CB254A309427A193 /* Program.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Program.h; path = ../../../include/Program.h; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		2D13F8C8E97842CFABDEFC19 /* MemoryObj.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MemoryObj.h; path = ../../../include/MemoryObj.h; sourceTree = "<group>"; };
+		348F9A0D680046098CE6C257 /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Event.h; path = ../../../include/Event.h; sourceTree = "<group>"; };
+		353C922CD63C49B193FF0B5E /* Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = Platform.cpp; path = ../../../src/Platform.cpp; sourceTree = "<group>"; };
+		3A315CA628144459B57AE9E6 /* BufferObj.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BufferObj.h; path = ../../../include/BufferObj.h; sourceTree = "<group>"; };
+		3F6121DB73934F799AFF1432 /* Device.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Device.h; path = ../../../include/Device.h; sourceTree = "<group>"; };
+		474B1761CB6C45CAB365CECE /* Context.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Context.h; path = ../../../include/Context.h; sourceTree = "<group>"; };
+		48619737F57E4A569B72549F /* ConstantConversion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ConstantConversion.h; path = ../../../include/ConstantConversion.h; sourceTree = "<group>"; };
+		52EE59E650D647B58C27EDE0 /* CommandQueue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = CommandQueue.cpp; path = ../../../src/CommandQueue.cpp; sourceTree = "<group>"; };
+		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
+		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		54E9F2510DCF45F8B8420A90 /* ProceduralGeometricDisplacement_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = ProceduralGeometricDisplacement_Prefix.pch; sourceTree = "<group>"; };
+		6E22E07119B14625BC91C7DF /* ConstantConversion.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ConstantConversion.cpp; path = ../../../src/ConstantConversion.cpp; sourceTree = "<group>"; };
+		7400178F02CB4FCE9169936B /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		7D0BF8461F8549D689E433CE /* Platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = ../../../include/Platform.h; sourceTree = "<group>"; };
+		811553C1BFB947DBB51F71F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		830F43794112448D8807FB23 /* CommandQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommandQueue.h; path = ../../../include/CommandQueue.h; sourceTree = "<group>"; };
+		8B1279AA13234BCDA1BA3CEF /* Image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Image.h; path = ../../../include/Image.h; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* ProceduralGeometricDisplacement.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProceduralGeometricDisplacement.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0C7AFB71C64471A9BB8AA6 /* Cl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Cl.h; path = ../../../include/Cl.h; sourceTree = "<group>"; };
+		AAD16F33ED9E4173992385F5 /* MemoryObj.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MemoryObj.cpp; path = ../../../src/MemoryObj.cpp; sourceTree = "<group>"; };
+		AF64BF15A9A0462E8D67E766 /* Image.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = Image.cpp; path = ../../../src/Image.cpp; sourceTree = "<group>"; };
+		B004217695C849DBB256E94C /* Cl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = Cl.cpp; path = ../../../src/Cl.cpp; sourceTree = "<group>"; };
+		B31FEBAC1B0FCDDB000BF1FC /* clgl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = clgl.h; path = ../../../include/clgl.h; sourceTree = "<group>"; };
+		B31FEBAE1B0FCDF7000BF1FC /* clgl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = clgl.cpp; path = ../../../src/clgl.cpp; sourceTree = "<group>"; };
+		B5CF24F84AC54871AB375832 /* Event.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = Event.cpp; path = ../../../src/Event.cpp; sourceTree = "<group>"; };
+		C5DAE389406C43C5B2CEFD17 /* ProceduralGeometricDisplacementApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ProceduralGeometricDisplacementApp.cpp; path = ../src/ProceduralGeometricDisplacementApp.cpp; sourceTree = "<group>"; };
+		D0FB82FA4C5E4AC981D4BC02 /* Program.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = Program.cpp; path = ../../../src/Program.cpp; sourceTree = "<group>"; };
+		E412903D2B13441FB1D10FAC /* Context.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = Context.cpp; path = ../../../src/Context.cpp; sourceTree = "<group>"; };
+		E5D5D65D55B4408385179110 /* Device.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = Device.cpp; path = ../../../src/Device.cpp; sourceTree = "<group>"; };
+		ED0CBF96D7874F20B25CE60C /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				006D720419952D00008149E2 /* AVFoundation.framework in Frameworks */,
+				006D720519952D00008149E2 /* CoreMedia.framework in Frameworks */,
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
+				5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */,
+				5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */,
+				00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */,
+				00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */,
+				00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */,
+				00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */,
+				0C82C96441E24D89BA2139D4 /* OpenCL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01B97315FEAEA392516A2CEA /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				278E5EFE24A7473CB749050A /* Cinder-OpenCL */,
+			);
+			name = Blocks;
+			sourceTree = "<group>";
+		};
+		080E96DDFE201D6D7F000001 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				C5DAE389406C43C5B2CEFD17 /* ProceduralGeometricDisplacementApp.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				006D720219952D00008149E2 /* AVFoundation.framework */,
+				006D720319952D00008149E2 /* CoreMedia.framework */,
+				00B784AF0FF439BC000DE1D7 /* Accelerate.framework */,
+				00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */,
+				00B784B10FF439BC000DE1D7 /* AudioUnit.framework */,
+				00B784B20FF439BC000DE1D7 /* CoreAudio.framework */,
+				5323E6B50EAFCA7E003A9687 /* QTKit.framework */,
+				5323E6B10EAFCA74003A9687 /* CoreVideo.framework */,
+				0091D8F80E81B9330029341E /* OpenGL.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* ProceduralGeometricDisplacement.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1F4BB3161E5E4FAB85BDDF03 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				3A315CA628144459B57AE9E6 /* BufferObj.h */,
+				9A0C7AFB71C64471A9BB8AA6 /* Cl.h */,
+				830F43794112448D8807FB23 /* CommandQueue.h */,
+				48619737F57E4A569B72549F /* ConstantConversion.h */,
+				474B1761CB6C45CAB365CECE /* Context.h */,
+				3F6121DB73934F799AFF1432 /* Device.h */,
+				348F9A0D680046098CE6C257 /* Event.h */,
+				8B1279AA13234BCDA1BA3CEF /* Image.h */,
+				2D13F8C8E97842CFABDEFC19 /* MemoryObj.h */,
+				7D0BF8461F8549D689E433CE /* Platform.h */,
+				156C8945CB254A309427A193 /* Program.h */,
+				B31FEBAC1B0FCDDB000BF1FC /* clgl.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		278E5EFE24A7473CB749050A /* Cinder-OpenCL */ = {
+			isa = PBXGroup;
+			children = (
+				1F4BB3161E5E4FAB85BDDF03 /* include */,
+				F7C60F655A7A434794BB7DF5 /* src */,
+			);
+			name = "Cinder-OpenCL";
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* ProceduralGeometricDisplacement */ = {
+			isa = PBXGroup;
+			children = (
+				01B97315FEAEA392516A2CEA /* Blocks */,
+				29B97315FDCFA39411CA2CEA /* Headers */,
+				080E96DDFE201D6D7F000001 /* Source */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = ProceduralGeometricDisplacement;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				0604CDF01B894E71BCF93AF0 /* Resources.h */,
+				54E9F2510DCF45F8B8420A90 /* ProceduralGeometricDisplacement_Prefix.pch */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7400178F02CB4FCE9169936B /* CinderApp.icns */,
+				811553C1BFB947DBB51F71F9 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+				ED0CBF96D7874F20B25CE60C /* OpenCL.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F7C60F655A7A434794BB7DF5 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				08F346E534974FE69C15EC30 /* BufferObj.cpp */,
+				B004217695C849DBB256E94C /* Cl.cpp */,
+				B31FEBAE1B0FCDF7000BF1FC /* clgl.cpp */,
+				52EE59E650D647B58C27EDE0 /* CommandQueue.cpp */,
+				6E22E07119B14625BC91C7DF /* ConstantConversion.cpp */,
+				E412903D2B13441FB1D10FAC /* Context.cpp */,
+				E5D5D65D55B4408385179110 /* Device.cpp */,
+				B5CF24F84AC54871AB375832 /* Event.cpp */,
+				AF64BF15A9A0462E8D67E766 /* Image.cpp */,
+				AAD16F33ED9E4173992385F5 /* MemoryObj.cpp */,
+				353C922CD63C49B193FF0B5E /* Platform.cpp */,
+				D0FB82FA4C5E4AC981D4BC02 /* Program.cpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* ProceduralGeometricDisplacement */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "ProceduralGeometricDisplacement" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ProceduralGeometricDisplacement;
+			productInstallPath = "$(HOME)/Applications";
+			productName = ProceduralGeometricDisplacement;
+			productReference = 8D1107320486CEB800E47090 /* ProceduralGeometricDisplacement.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "ProceduralGeometricDisplacement" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* ProceduralGeometricDisplacement */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* ProceduralGeometricDisplacement */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EFDA4323A6445E98727EE08 /* CinderApp.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E910427A9DFE4F18B2419932 /* ProceduralGeometricDisplacementApp.cpp in Sources */,
+				DC140767DF014B029F132B44 /* BufferObj.cpp in Sources */,
+				EBA3361D29B14D2286B48278 /* Cl.cpp in Sources */,
+				B31FEBAF1B0FCDF7000BF1FC /* clgl.cpp in Sources */,
+				64F4AEC0FED74C0CAE1F512A /* CommandQueue.cpp in Sources */,
+				27E6D5563FD149D98AAF4709 /* ConstantConversion.cpp in Sources */,
+				2A2E0D8546E847359ECBF5AF /* Context.cpp in Sources */,
+				3847D5A1144647D78BE0FC8F /* Device.cpp in Sources */,
+				338004AC19BA4AB1837A5E88 /* Event.cpp in Sources */,
+				F442F2EB416C4E98A8A65C00 /* Image.cpp in Sources */,
+				365723F851CB4A259B87433D /* MemoryObj.cpp in Sources */,
+				155F9F1C94094E5A8148A7DB /* Platform.cpp in Sources */,
+				110803D9AF914F25BAFF77AC /* Program.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ProceduralGeometricDisplacement_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
+				PRODUCT_NAME = ProceduralGeometricDisplacement;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ProceduralGeometricDisplacement_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NDEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
+				PRODUCT_NAME = ProceduralGeometricDisplacement;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
+				CINDER_PATH = ../../../../..;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../../src ../../../include";
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
+				CINDER_PATH = ../../../../..;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../../src ../../../include";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "ProceduralGeometricDisplacement" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "ProceduralGeometricDisplacement" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

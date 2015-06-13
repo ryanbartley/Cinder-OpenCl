@@ -12,7 +12,7 @@
 #include "Device.h"
 #include "cinder/Log.h"
 
-namespace cinder { namespace cl {
+namespace cl {
 
 static ContextRef sClContext = nullptr;
 static bool sClContextInitialized = false;
@@ -151,4 +151,4 @@ ContextRef& Context::context()
 	return sClContext;
 }
 	
-}}
+} // namespace cl

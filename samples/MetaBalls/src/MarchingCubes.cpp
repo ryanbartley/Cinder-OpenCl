@@ -17,7 +17,7 @@ using namespace std;
 using namespace ci;
 using namespace ci::app;
 using namespace ci::gl;
-using namespace ci::cl;
+using namespace cl;
 
 const int VERT_POSITION_INDEX = 0;
 const int VERT_NORMAL_INDEX = 1;
@@ -26,7 +26,7 @@ const int POINT_POSITION_INDEX = 3;
 
 size_t full_size = width * height * depth;
 
-MarchingCubes::MarchingCubes( const ci::cl::CommandQueueRef &commandQueue )
+MarchingCubes::MarchingCubes( const cl::CommandQueueRef &commandQueue )
 : mCommandQueue( commandQueue )
 {
 	std::vector<vec4> vertPosData(MAX_VERTS);
@@ -158,7 +158,7 @@ void MarchingCubes::metaball( const ci::vec3 &pos ) {
 	mCommandQueue->NDRangeKernel( mKernWriteMetaball, 1, nullptr, &count, nullptr );
 }
 
-std::vector<ci::cl::MemoryObjRef>& MarchingCubes::getAcqRelMemObjs()
+std::vector<cl::MemoryObjRef>& MarchingCubes::getAcqRelMemObjs()
 {
 	static std::vector<cl::MemoryObjRef> vboMem = {
 		mMetaballPositions,

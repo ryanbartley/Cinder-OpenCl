@@ -13,7 +13,7 @@
 #include "cinder/Surface.h"
 #include "cinder/gl/Texture.h"
 
-namespace cinder { namespace cl {
+namespace cl {
 
 // need to make this an abstract class to forgoe needing a virtual destructor
 class ImageBase : public MemoryObj {
@@ -52,7 +52,7 @@ public:
 private:
 	Image2d( void *data, cl_mem_flags flags, const cl_image_format *image_format, size_t width, size_t height, size_t row_pitch );
 	Image2d( size_t width, size_t height, const Format &format = Format() );
-	Image2d( const gl::Texture2dRef &texture, cl_mem_flags flags, GLint mipLevelForUse = 0 );
+	Image2d( const ci::gl::Texture2dRef &texture, cl_mem_flags flags, GLint mipLevelForUse = 0 );
 	
 	cl_int mWidth, mHeight;
 	
@@ -68,4 +68,4 @@ private:
 	
 };
 	
-}}
+} // namespace cl

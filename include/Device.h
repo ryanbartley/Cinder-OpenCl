@@ -11,7 +11,7 @@
 #include <OpenCL/OpenCL.h>
 #include "DeviceInfo.hpp"
 
-namespace cinder { namespace cl {
+namespace cl {
 
 typedef std::shared_ptr<class Platform> PlatformRef;
 typedef std::shared_ptr<class Device> DeviceRef;
@@ -64,7 +64,7 @@ void Device::getDeviceInfo( cl_device_id deviceId, cl_device_info param_name, vo
 	
 	errNum = clGetDeviceInfo( deviceId, param_name, sizeof(T), returnData, NULL );
 	if (errNum != CL_SUCCESS) {
-		std::cerr << "Failed to find OpenCL device info." << std::endl;//<< Platform::getClErrorString( errNum ) << std::endl;
+		std::cerr << "Failed to find OpenCL device info." << std::endl;//<< getErrorString( errNum ) << std::endl;
 		return;
 	}
 }
@@ -101,4 +101,4 @@ void Device::displayDeviceInfo(cl_device_id deviceId, cl_device_info name, std::
 	InfoDevice<T>::display( deviceId, name, str );
 }
 	
-}}
+} // namespace cl
