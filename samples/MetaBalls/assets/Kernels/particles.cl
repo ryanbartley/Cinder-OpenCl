@@ -19,7 +19,7 @@ kernel void particle_update(global float4* positions,
   
   if ((lifetimes[i] > max_life) || ( length(velocities[i]) < min_velocity ) || reset) {
     
-    lifetimes[i] = 0.0;
+    lifetimes[i] = 0.0f;
     
     //positions[i] = (float4)(0,0,0,1);
     positions[i] = (float4)(32,15,32,1);
@@ -34,11 +34,11 @@ kernel void particle_update(global float4* positions,
   
     /* Update positions and velocity */
     positions[i].xyz = positions[i].xyz + (velocities[i].xyz * time_difference);
-    velocities[i].y = velocities[i].y - (9.81 * time_difference);
+    velocities[i].y = velocities[i].y - (9.81f * time_difference);
     
     /* Bounce on floors */
-    if (positions[i].y < 15.0) {
-      velocities[i].xyz = velocities[i].xyz * 0.75;
+    if (positions[i].y < 15.0f) {
+      velocities[i].xyz = velocities[i].xyz * 0.75f;
       velocities[i].y = -velocities[i].y;
     }
 

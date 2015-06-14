@@ -1,8 +1,8 @@
-int volume_coords(int3 coords, int3 size) {
+static int volume_coords(int3 coords, int3 size) {
   return coords.x + coords.y * size.x + coords.z * size.x * size.y;
 }
 
-int3 volume_position(int index, int3 size) {
+static int3 volume_position(int index, int3 size) {
   return (int3)( index % size.x, (index / (size.x)) % size.y, index / (size.x * size.y) );
 }
 
@@ -16,7 +16,7 @@ kernel void write_point(global float* volume, int x, int y, int z, int size_x, i
 }
 
 
-float smoothstepmap(float val) {
+static float smoothstepmap(float val) {
   return val*val*(3 - 2*val);
 }
 
@@ -66,7 +66,7 @@ kernel void write_point_color_back(global float* volume, global float4* point_co
   point_color[get_global_id(0)] = (float4)(color, 0, 0, 1);
 }
 
-float4 vertex_lerp(float threashold, float4 pos1, float4 pos2, float val1, float val2) {
+static float4 vertex_lerp(float threashold, float4 pos1, float4 pos2, float val1, float val2) {
   float mu = (threashold - val1) / (val2 - val1);
   float4 ret = pos1 + mu * (pos2 - pos1);
   ret.w = 1;
@@ -92,7 +92,7 @@ kernel void construct_surface(global float* volume,
   float v6 = volume[volume_coords(pos + (int3)(1,1,1), volume_size)];
   float v7 = volume[volume_coords(pos + (int3)(0,1,1), volume_size)];
   
-  const float threashold = 0.5;
+  const float threashold = 0.5f;
   
   unsigned char c0 = v0 > threashold;
   unsigned char c1 = v1 > threashold;
@@ -143,7 +143,7 @@ kernel void construct_surface(global float* volume,
   for(int i = 0; i < num_verts; i++) {
     vertex_buffer[index + i] = vert_list[triangle_table[hash][i]];
   }
-  
+	
 }
 
 kernel void generate_flat_normals(global float4* vertex_positions, global float4* vertex_normals) {

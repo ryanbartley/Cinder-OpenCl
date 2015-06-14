@@ -1,13 +1,9 @@
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
+#include "cinder/Utilities.h"
 
-#include "BufferObj.h"
-#include "Platform.h"
-#include "Device.h"
-#include "Context.h"
-#include "Program.h"
-#include "CommandQueue.h"
+#include "Cinder-OpenCL.h"
 
 const int ARRAY_SIZE = 1000;
 
@@ -18,41 +14,58 @@ using namespace std;
 class HelloWorldApp : public App {
   public:
 	void setup() override;
-	void draw();
 	
-	cl::PlatformRef		mClPlatform;
-	cl::ContextRef		mContext;
-	cl::ProgramRef		mProgram;
-	cl::CommandQueueRef mCommandQueue;
-	cl::BufferObjRef	mMemObjects[3];
+	static void contextErrorCallback( const char *errinfo,
+								const void *private_info,
+								::size_t cb,
+								void *user_data)
+	{
+		cout << "ERROR: " << errinfo << endl;
+	}
+	
+	cl::Platform		mClPlatform;
+	cl::Context			mContext;
+	cl::Program			mProgram;
+	cl::CommandQueue	mCommandQueue;
+	cl::Buffer			mMemObjects[3];
 };
 
 void HelloWorldApp::setup()
-{	
-	auto platforms = cl::Platform::getAvailablePlatforms();
+{
+	// Get all of the platforms on this system
+	std::vector<cl::Platform> platforms;
+	cl::Platform::get( &platforms );
+	// Assign the platform that we need
+	mClPlatform = platforms[0];
 	
+	// Print the information for each platform
 	for( auto & platform : platforms ){
-		cl::Platform::displayPlatformInfo(platform);
+		cout << platform << endl;
 	}
 	
-	mClPlatform = cl::Platform::create( platforms[0], CL_DEVICE_TYPE_GPU );
-	
-    // Create an OpenCL context on first available platform
-	mContext = cl::Context::create( mClPlatform, false );
-	
+	// Get the GPU devices from the platform
+	std::vector<cl::Device> devices;
+	mClPlatform.getDevices( CL_DEVICE_TYPE_GPU, &devices );
+	for( auto & device : devices ) {
+		cout << "DEVICE NAME: " << device.getInfo<CL_DEVICE_NAME>() << endl;
+	}
+	// Create an OpenCL context on first available platform
+	mContext = cl::Context( devices, nullptr, &HelloWorldApp::contextErrorCallback );
+
     // Create a command-queue on the first device available
     // on the created context
-	mCommandQueue = cl::CommandQueue::create( mClPlatform->getDevices()[0] );
-	
+	mCommandQueue = cl::CommandQueue( mContext );
+
     // Create OpenCL program from HelloWorld.cl kernel source
-	mProgram = cl::Program::create( loadAsset( "HelloWorld.cl" ) );
-    
+	mProgram = cl::Program( mContext, loadString( loadAsset( "HelloWorld.cl" ) ), true );
+
 	// Create OpenCL kernel
-	mProgram->createKernel( "hello_kernel" );
-	
-	std::map<std::string, cl::DeviceRef> mDevFilePair;
-	mDevFilePair.insert( std::pair<std::string, cl::DeviceRef>( "mHelloWorld.cl.bin", mClPlatform->getDevices()[0] ) );
-	mProgram->saveBinaries( mDevFilePair );
+	std::vector<cl::Kernel> kernels;
+	mProgram.createKernels( &kernels );
+	for( auto & kernel : kernels ) {
+		cout << "KERNEL NAME: " << kernel.getInfo<CL_KERNEL_FUNCTION_NAME>() << endl;
+	}
+	cout << endl;
 	
     // Create memory objects that will be used as arguments to
     // kernel.  First create host memory arrays that will be
@@ -66,25 +79,25 @@ void HelloWorldApp::setup()
         b[i] = (float)(i * 2);
     }
 	
-    mMemObjects[0] = cl::BufferObj::create( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * ARRAY_SIZE, a);
-	mMemObjects[1] = cl::BufferObj::create( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * ARRAY_SIZE, b );
-	mMemObjects[2] = cl::BufferObj::create( CL_MEM_READ_WRITE, sizeof(float) * ARRAY_SIZE, NULL );
-	
-	mProgram->setKernelArg( "hello_kernel", 0, mMemObjects[0] );
-	mProgram->setKernelArg( "hello_kernel", 1, mMemObjects[1] );
-	mProgram->setKernelArg( "hello_kernel", 2, mMemObjects[2] );
-	
-	
-	
-    size_t globalWorkSize[1] = { ARRAY_SIZE };
-    size_t localWorkSize[1] = { 1 };
-	
+    mMemObjects[0] = cl::Buffer( mContext, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * ARRAY_SIZE, a);
+	mMemObjects[1] = cl::Buffer( mContext, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * ARRAY_SIZE, b );
+	mMemObjects[2] = cl::Buffer( mContext, CL_MEM_READ_WRITE, sizeof(float) * ARRAY_SIZE, NULL );
+
+	kernels[0].setArg( 0, mMemObjects[0] );
+	kernels[0].setArg( 1, mMemObjects[1] );
+	kernels[0].setArg( 2, mMemObjects[2] );
+
+	cl::Event event;
     // Queue the kernel up for execution across the array
-    clEnqueueNDRangeKernel( mCommandQueue->getId(), mProgram->getKernelIdByName( "hello_kernel" ), 1, NULL,
-                                    globalWorkSize, localWorkSize,
-                                    0, NULL, NULL);
+	mCommandQueue.enqueueNDRangeKernel( kernels[0],
+									   cl::NullRange,
+									   cl::NDRange( ARRAY_SIZE ),
+									   cl::NDRange( 1 ),
+									   nullptr,
+									   &event );
 	
-	mCommandQueue->read( mMemObjects[2], true, 0, ARRAY_SIZE * sizeof(float), result );
+	std::vector<cl::Event> waitEvents = { event };
+	mCommandQueue.enqueueReadBuffer( mMemObjects[2], true, 0, ARRAY_SIZE * sizeof(float), result, &waitEvents );
 	
     // Output the result buffer
     for (int i = 0; i < ARRAY_SIZE; i++)
@@ -93,12 +106,7 @@ void HelloWorldApp::setup()
     }
     std::cout << std::endl;
     std::cout << "Executed program succesfully." << std::endl;
-}
-
-void HelloWorldApp::draw()
-{
-	// clear out the window with black
-	gl::clear( Color( 0, 0, 0 ) ); 
+	quit();
 }
 
 CINDER_APP( HelloWorldApp, RendererGl )

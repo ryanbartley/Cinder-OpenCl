@@ -7,9 +7,9 @@
 //
 
 #include "Particles.h"
-#include "CommandQueue.h"
 #include "cinder/gl/Vao.h"
 #include "cinder/gl/GlslProg.h"
+#include "cinder/Utilities.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -17,7 +17,12 @@ using namespace cl;
 using namespace ci::gl;
 using namespace std;
 
-Particles::Particles( const CommandQueueRef &commandQueue )
+ParticlesRef Particles::create( const cl::Context &context, const cl::CommandQueue &commandQueue )
+{
+	return ParticlesRef( new Particles( context, commandQueue ) );
+}
+
+Particles::Particles( const cl::Context &context, const cl::CommandQueue &commandQueue )
 : mCommandQueue( commandQueue )
 {
 	std::vector<vec4>	cpuPositions(particle_count),
@@ -69,38 +74,38 @@ Particles::Particles( const CommandQueueRef &commandQueue )
 	mGlProgram = gl::GlslProg::create( gl::GlslProg::Format()
 									  .vertex( loadAsset( "basic.vert" ) )
 									  .fragment( loadAsset( "basic.frag" ) )
-									  .attribLocation( "position", 0 )
-									  .attribLocation( "color", 1 )
-									  .uniform( UNIFORM_MODEL_VIEW_PROJECTION, "mvp" ) );
+									  .attribLocation( "ciPosition", 0 )
+									  .attribLocation( "ciColor", 1 ) );
 	
-	mClPositions = cl::BufferObj::create( mGlPositions, CL_MEM_READ_WRITE );
-	mClVelocities = cl::BufferObj::create( mGlVelocities, CL_MEM_READ_WRITE );
-	mClLifetimes = cl::BufferObj::create( mGlLifetimes, CL_MEM_READ_WRITE );
-	mClRandoms = cl::BufferObj::create( mGlRandoms, CL_MEM_READ_WRITE );
+	mClPositions = cl::BufferGL( context, CL_MEM_READ_WRITE, mGlPositions->getId() );
+	mClVelocities = cl::BufferGL( context, CL_MEM_READ_WRITE, mGlVelocities->getId() );
+	mClLifetimes = cl::BufferGL( context, CL_MEM_READ_WRITE, mGlLifetimes->getId() );
+	mClRandoms = cl::BufferGL( context, CL_MEM_READ_WRITE, mGlRandoms->getId() );
 	
-	mClProgram = cl::Program::create( loadAsset( "particlesProg.cl" ) );
-	auto kernel = mClProgram->createKernel( "particle_update" );
-	
-	mGlObjects[0] = mClPositions->getId();
-	mGlObjects[1] = mClVelocities->getId();
-	mGlObjects[2] = mClLifetimes->getId();
-	mGlObjects[3] = mClRandoms->getId();
+	mClProgram = cl::Program( context, loadString( loadAsset( "kernels/particles.cl" ) ), true );
+	mClUpdateKernel = cl::Kernel( mClProgram, "particle_update" );
 	
 	float max_life = 60.0;
 	float min_velocity = 0.5;
 	
-	kernel->setKernelArg( 0, mClPositions );
-	kernel->setKernelArg( 1, mClVelocities );
-	kernel->setKernelArg( 2, mClLifetimes );
-	kernel->setKernelArg( 3, mClRandoms );
-	kernel->setKernelArg( 4, sizeof(float), &max_life );
-	kernel->setKernelArg( 5, sizeof(float), &min_velocity );
-	kernel->setKernelArg( 9, sizeof(cl_int), &particle_count );
+	mClUpdateKernel.setArg( 0, mClPositions );
+	mClUpdateKernel.setArg( 1, mClVelocities );
+	mClUpdateKernel.setArg( 2, mClLifetimes );
+	mClUpdateKernel.setArg( 3, mClRandoms );
+	mClUpdateKernel.setArg( 4, sizeof(float), &max_life );
+	mClUpdateKernel.setArg( 5, sizeof(float), &min_velocity );
+	mClUpdateKernel.setArg( 9, sizeof(cl_int), &particle_count );
+	
+	mGlObjects.resize( 4 );
+	mGlObjects[0] = mClPositions;
+	mGlObjects[1] = mClVelocities;
+	mGlObjects[2] = mClLifetimes;
+	mGlObjects[3] = mClRandoms;
 }
 
-std::vector<cl::MemoryObjRef>& Particles::getAcqRelMemObjs()
+std::vector<cl::Memory>& Particles::getAcqRelMemObjs()
 {
-	static std::vector<cl::MemoryObjRef> vboMem = {
+	static std::vector<cl::Memory> vboMem = {
 		mClPositions,
 		mClVelocities,
 		mClLifetimes,
@@ -113,34 +118,34 @@ std::vector<cl::MemoryObjRef>& Particles::getAcqRelMemObjs()
 void Particles::update()
 {
 	int random = rand();
-	auto kernel = mClProgram->getKernelByName( "particle_update" );
 	float time = 1.0f/60.0f;
 	
-	kernel->setKernelArg( 6, sizeof(float), &time );
-	kernel->setKernelArg( 7, sizeof(int), &mShouldReset );
-	kernel->setKernelArg( 8, sizeof(int), &random );
-	size_t globalWorkSize[1] = { static_cast<size_t>(particle_count) };
+	mClUpdateKernel.setArg( 6, sizeof(float), &time );
+	mClUpdateKernel.setArg( 7, sizeof(int), &mShouldReset );
+	mClUpdateKernel.setArg( 8, sizeof(int), &random );
 	
 	mShouldReset = 0;
 	
 	auto vboMem = getAcqRelMemObjs();
-	
-	glFinish();
-	
+
 	cl::Event event;
-	mCommandQueue->acquireGlObjects( vboMem, {}, &event );
+	mCommandQueue.enqueueAcquireGLObjects( &mGlObjects, nullptr, &event );
 	
-	EventList waitList({ event });
+	std::vector<cl::Event> waitList({ event });
 	cl::Event kernelEvent;
     // Queue the kernel up for execution across the array
-    mCommandQueue->NDRangeKernel( kernel, 1, nullptr, globalWorkSize, nullptr, waitList, &kernelEvent );
+	mCommandQueue.enqueueNDRangeKernel( mClUpdateKernel,
+									   cl::NullRange,
+									   cl::NDRange( particle_count ),
+									   cl::NullRange,
+									   &waitList,
+									   &kernelEvent );
 	
 	
 	// Release the GL Object
 	// Note, we should ensure OpenCL is finished with any commands that might affect the VBO
-	waitList.getList().push_back( kernelEvent );
-	mCommandQueue->finish();
-	mCommandQueue->releaseGlObjects( vboMem, waitList );
+	
+	mCommandQueue.enqueueReleaseGLObjects( &mGlObjects );
 }
 
 
