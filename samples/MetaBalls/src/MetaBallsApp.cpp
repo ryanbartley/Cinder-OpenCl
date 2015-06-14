@@ -4,6 +4,7 @@
 #include "cinder/gl/Batch.h"
 #include "cinder/ObjLoader.h"
 #include "cinder/CameraUi.h"
+#include "cinder/gl/Sync.h"
 
 #include "Cinder-OpenCL.h"
 
@@ -43,6 +44,8 @@ class MetaBallsApp : public App {
 	cl::CommandQueue	mClCommandQueue;
 	
 	PodiumRef			mPodium;
+	GLsync				mClSync;
+	gl::SyncRef			mGlSync;
 };
 
 void MetaBallsApp::setup()
@@ -51,7 +54,7 @@ void MetaBallsApp::setup()
 	std::vector<cl::Platform> platforms;
 	cl::Platform::get( &platforms );
 	// Assign the platform that we need
-	mClPlatform = platforms[0];
+	mClPlatform = cl::Platform( platforms[0] );
 	
 	// Print the information for each platform
 	for( auto & platform : platforms ){
@@ -76,11 +79,12 @@ void MetaBallsApp::setup()
 	
     // Create a command-queue on the first device available
     // on the created context
-    mClCommandQueue = cl::CommandQueue( mClContext );
-	cout << "Setting up" << endl;
+	mClCommandQueue = cl::CommandQueue( mClContext ) ;
+	
 	mParticles = Particles::create( mClContext, mClCommandQueue );
 	mMarchingCubes = MarchingCubes::create( mClContext, mClCommandQueue );
-	cout << "done setting up" << endl;
+	mMarchingCubes->cacheMarchingCubesMetaballData( mParticles->getClPositions(), mParticles->getNumParticles() );
+	
 	mPodium = Podium::create();
 	
 	mCam.setPerspective( 60, getWindowAspectRatio(), 0.01, 1000 );
@@ -103,13 +107,15 @@ void MetaBallsApp::mouseDrag( MouseEvent event )
 
 void MetaBallsApp::update()
 {
-	cout << "Updating particles" << endl;
+	std::vector<cl::Memory> acquire;
+	auto particleAcquire = mParticles->getInterop();
+	std::copy( particleAcquire.begin(), particleAcquire.end(), std::back_inserter(acquire) );
+	auto marchingAcquire = mMarchingCubes->getInterop();
+	std::copy( marchingAcquire.begin(), marchingAcquire.end(), std::back_inserter(acquire) );
+	mClCommandQueue.enqueueAcquireGLObjects( &acquire );
 	mParticles->update();
-	cout << "Updating marching cubes" << endl;
-	mMarchingCubes->cacheMarchingCubesMetaballData( mParticles->getClPositions(), mParticles->getNumParticles() );
-	mMarchingCubes->clear();
 	mMarchingCubes->update();
-	cout << "done updating" << endl;
+	mClCommandQueue.enqueueReleaseGLObjects( &acquire );
 }
 
 void MetaBallsApp::draw()
@@ -118,10 +124,8 @@ void MetaBallsApp::draw()
 	gl::clear( Color( 0, 0, 0 ) );
 	
 	gl::setMatrices( mCam );
-//	mPodium->draw();
-	cout << "drawing marching cubes" << endl; 
-//	mMarchingCubes->render();
-//	mParticles->render();
+	mPodium->draw();
+	mMarchingCubes->render();
 	getWindow()->setTitle( to_string( getAverageFps() ) );
 }
 

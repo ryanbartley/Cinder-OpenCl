@@ -2,6 +2,7 @@
 
 in vec4 ciPosition;
 
+
 uniform mat4 ciModelViewProjection;
 
 void main() {

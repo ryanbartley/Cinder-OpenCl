@@ -8,6 +8,7 @@
 
 #include "Cinder-OpenCL.h"
 #include <OpenGL/OpenGL.h>
+#include "cinder/gl/Context.h"
 #include "cinder/Utilities.h"
 
 namespace cinder {
@@ -48,6 +49,7 @@ std::ostream& operator<<( std::ostream &lhs, const cl::Device &rhs )
 	
 cl_context_properties* getDefaultSharedGraphicsContextProperties()
 {
+	auto ctx = gl::context();
 	static cl_context_properties contextProperties[] = { 0, 0, 0 };
 #if defined (__APPLE__) || defined(MACOSX)
 	contextProperties[0] = CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE;

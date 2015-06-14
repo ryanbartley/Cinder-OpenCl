@@ -95,24 +95,17 @@ Particles::Particles( const cl::Context &context, const cl::CommandQueue &comman
 	mClUpdateKernel.setArg( 4, sizeof(float), &max_life );
 	mClUpdateKernel.setArg( 5, sizeof(float), &min_velocity );
 	mClUpdateKernel.setArg( 9, sizeof(cl_int), &particle_count );
-	
-	mGlObjects.resize( 4 );
-	mGlObjects[0] = mClPositions;
-	mGlObjects[1] = mClVelocities;
-	mGlObjects[2] = mClLifetimes;
-	mGlObjects[3] = mClRandoms;
 }
 
-std::vector<cl::Memory>& Particles::getAcqRelMemObjs()
+std::vector<cl::Memory> Particles::getInterop()
 {
-	static std::vector<cl::Memory> vboMem = {
+	std::vector<cl::Memory> ret = {
 		mClPositions,
 		mClVelocities,
-		mClLifetimes,
-		mClRandoms
+		mClRandoms,
+		mClLifetimes
 	};
-	
-	return vboMem;
+	return ret;
 }
 
 void Particles::update()
@@ -126,37 +119,19 @@ void Particles::update()
 	
 	mShouldReset = 0;
 	
-	auto vboMem = getAcqRelMemObjs();
-
-	cl::Event event;
-	mCommandQueue.enqueueAcquireGLObjects( &mGlObjects, nullptr, &event );
-	
-	std::vector<cl::Event> waitList({ event });
-	cl::Event kernelEvent;
     // Queue the kernel up for execution across the array
 	mCommandQueue.enqueueNDRangeKernel( mClUpdateKernel,
 									   cl::NullRange,
 									   cl::NDRange( particle_count ),
-									   cl::NullRange,
-									   &waitList,
-									   &kernelEvent );
-	
-	
-	// Release the GL Object
-	// Note, we should ensure OpenCL is finished with any commands that might affect the VBO
-	
-	mCommandQueue.enqueueReleaseGLObjects( &mGlObjects );
+									   cl::NullRange );
 }
-
-
 
 void Particles::render()
 {
 	ScopedVao scopeVao( mGlVao );
 	ScopedGlslProg scopeGlsl( mGlProgram );
+	ScopedState scopeState( GL_VERTEX_PROGRAM_POINT_SIZE, true );
 	
 	gl::setDefaultShaderVars();
-	gl::enable( GL_VERTEX_PROGRAM_POINT_SIZE );
 	gl::drawArrays( GL_POINTS, 0, particle_count );
-	gl::disable( GL_VERTEX_PROGRAM_POINT_SIZE );
 }

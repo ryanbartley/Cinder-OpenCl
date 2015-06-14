@@ -9,7 +9,7 @@
 #include "Cinder-OpenCL.h"
 #include "cinder/gl/Vbo.h"
 
-static int particle_count = 64;
+static int particle_count = 128;
 
 typedef std::shared_ptr<class Particles> ParticlesRef;
 
@@ -28,10 +28,10 @@ public:
 	
 	cl::BufferGL& getClPositions() { return mClPositions; }
 	
+	std::vector<cl::Memory> getInterop();
+	
 	ci::gl::VboRef& getGlPositions() { return mGlPositions; }
 	ci::gl::VboRef& getGlVelocities() { return mGlVelocities; }
-	
-	std::vector<cl::Memory>& getAcqRelMemObjs();
 	
 	int getNumParticles() const { return particle_count; };
 	
@@ -41,10 +41,10 @@ private:
 	ci::gl::VaoRef				mGlVao;
 	ci::gl::VboRef				mGlPositions, mGlVelocities, mGlLifetimes, mGlRandoms;
 	ci::gl::GlslProgRef			mGlProgram;
+	
 	cl::BufferGL				mClPositions, mClVelocities, mClLifetimes, mClRandoms;
 	cl::Program					mClProgram;
 	cl::Kernel					mClUpdateKernel;
 	cl::CommandQueue			mCommandQueue;
 	int							mShouldReset;
-	std::vector<cl::Memory>		mGlObjects;
 };

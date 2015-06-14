@@ -15,7 +15,7 @@ const int width = 64;
 const int height = 64;
 const int depth = 64;
 
-#define MAX_VERTS 100
+#define MAX_VERTS 100000
 
 using MarchingCubesRef = std::shared_ptr<class MarchingCubes>;
 
@@ -31,8 +31,7 @@ public:
 	void point( const ci::ivec4 &point );
 	void metaball( const ci::vec3 &pos );
 	
-	void data( const cl::Buffer positions, int numMetaballs );
-	void update();
+	std::vector<cl::Event> update();
 	void render();
 	void renderShadows();
 	
@@ -40,6 +39,8 @@ public:
 	
 	void setupGl();
 	void setupCl( const cl::Context &context );
+	
+	std::vector<cl::Memory> getInterop();
 	
 private:
 	MarchingCubes( const cl::Context &context, const cl::CommandQueue &commandQueue );
@@ -61,5 +62,7 @@ private:
 							mKernConstructSurface, mKernGenNormals,
 							mKernGenNormalsSmooth;
 	cl::CommandQueue		mCommandQueue;
+	
+	bool					mDebug;
 	int						mNumBalls;
 };
