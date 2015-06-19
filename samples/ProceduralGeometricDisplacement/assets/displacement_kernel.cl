@@ -268,16 +268,9 @@ __kernel void displace(
 	float lacunarity, 
 	float increment, 
 	float octaves, 
-	float roughness,
-    uint count) 
+	float roughness) 
 {
-    //int ix = (int) dimx;
-    int tx = get_global_id(0);
-    int ty = get_global_id(1);
-    int sx = get_global_size(0);
-    int index = ty * sx + tx;
-    if(index >= count)
-        return;
+    int index = get_global_id(0);
 
     //int2 di = (int2)(tx, ty);
 
