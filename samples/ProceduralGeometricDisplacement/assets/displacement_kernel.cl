@@ -262,7 +262,6 @@ __kernel void displace(
 	const __global float *vertices, 
 	__global float *normals, 
 	__global float *output,
-    float dimx, float dimy,
 	float frequency, 
 	float amplitude, 
 	float phase, 

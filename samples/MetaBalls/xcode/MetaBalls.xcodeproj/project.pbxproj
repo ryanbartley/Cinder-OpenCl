@@ -36,10 +36,9 @@
 		B3445BBC197ADEAE0085228D /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3445BBB197ADEAE0085228D /* OpenCL.framework */; };
 		B3445BBE197AFD2B0085228D /* basic.vert in Resources */ = {isa = PBXBuildFile; fileRef = B3445BBD197AFD2B0085228D /* basic.vert */; };
 		B3445BC0197AFD400085228D /* basic.frag in Resources */ = {isa = PBXBuildFile; fileRef = B3445BBF197AFD400085228D /* basic.frag */; };
-		B38A43351B2D681E0086B65E /* basicPos.vert in Resources */ = {isa = PBXBuildFile; fileRef = B38A43341B2D681E0086B65E /* basicPos.vert */; };
-		B38A43371B2D68330086B65E /* basicPos.frag in Resources */ = {isa = PBXBuildFile; fileRef = B38A43361B2D68330086B65E /* basicPos.frag */; };
 		B3B6639719A860620097005F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B6639619A860620097005F /* AVFoundation.framework */; };
 		B3B6639919A860690097005F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B6639819A860690097005F /* CoreMedia.framework */; };
+		B3DD01E51B2E1C5500019877 /* MetaBallsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3DD01E41B2E1C5500019877 /* MetaBallsController.cpp */; };
 		CFE2776C0B5244C1A0273048 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 66615FBC41C84135AC3230C0 /* CinderApp.icns */; };
 		EE64BE15612548199A62E999 /* MetaBallsApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */; };
 /* End PBXBuildFile section */
@@ -92,10 +91,10 @@
 		B3445BBB197ADEAE0085228D /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 		B3445BBD197AFD2B0085228D /* basic.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.vert; path = ../assets/basic.vert; sourceTree = "<group>"; };
 		B3445BBF197AFD400085228D /* basic.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.frag; path = ../assets/basic.frag; sourceTree = "<group>"; };
-		B38A43341B2D681E0086B65E /* basicPos.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basicPos.vert; path = ../assets/basicPos.vert; sourceTree = "<group>"; };
-		B38A43361B2D68330086B65E /* basicPos.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basicPos.frag; path = ../assets/basicPos.frag; sourceTree = "<group>"; };
 		B3B6639619A860620097005F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B3B6639819A860690097005F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		B3DD01E21B2E1C3F00019877 /* MetaBallsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetaBallsController.h; path = ../include/MetaBallsController.h; sourceTree = "<group>"; };
+		B3DD01E41B2E1C5500019877 /* MetaBallsController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MetaBallsController.cpp; path = ../src/MetaBallsController.cpp; sourceTree = "<group>"; };
 		CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MetaBallsApp.cpp; path = ../src/MetaBallsApp.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -134,11 +133,12 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */,
-				B3445BB2197ADAFE0085228D /* Particles.cpp */,
 				B3445BB6197ADBC90085228D /* MarchingCubes.cpp */,
-				B3445BB9197ADC040085228D /* VolumeRenderer.cpp */,
+				CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */,
+				B3DD01E41B2E1C5500019877 /* MetaBallsController.cpp */,
+				B3445BB2197ADAFE0085228D /* Particles.cpp */,
 				B30CAA3C1B2CB2FA002DB285 /* Podium.cpp */,
+				B3445BB9197ADC040085228D /* VolumeRenderer.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -192,12 +192,13 @@
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				27BE53E96BE34E8B8898325E /* Resources.h */,
-				158B6D20AAA440AD96606452 /* MetaBalls_Prefix.pch */,
-				B3445BB4197ADB1D0085228D /* Particles.h */,
 				B3445BB5197ADBB10085228D /* MarchingCubes.h */,
-				B3445BB8197ADBF00085228D /* VolumeRenderer.h */,
+				158B6D20AAA440AD96606452 /* MetaBalls_Prefix.pch */,
+				B3DD01E21B2E1C3F00019877 /* MetaBallsController.h */,
+				B3445BB4197ADB1D0085228D /* Particles.h */,
 				B30CAA3A1B2CB2DE002DB285 /* Podium.h */,
+				27BE53E96BE34E8B8898325E /* Resources.h */,
+				B3445BB8197ADBF00085228D /* VolumeRenderer.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -210,8 +211,6 @@
 				3ACDE57CBA1D4AB388421F06 /* Info.plist */,
 				B3445BBD197AFD2B0085228D /* basic.vert */,
 				B3445BBF197AFD400085228D /* basic.frag */,
-				B38A43341B2D681E0086B65E /* basicPos.vert */,
-				B38A43361B2D68330086B65E /* basicPos.frag */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -343,13 +342,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B33EE0C01967B6C3008D4CD1 /* metaballs_def.mat in Resources */,
-				B38A43371B2D68330086B65E /* basicPos.frag in Resources */,
 				B3445BC0197AFD400085228D /* basic.frag in Resources */,
 				B33EE0BE1967B6C3008D4CD1 /* metaballs.vs in Resources */,
 				B33EE0C11967B6C3008D4CD1 /* metaballs_def.vs in Resources */,
 				B3445BBE197AFD2B0085228D /* basic.vert in Resources */,
 				B33EE0BC1967B6C3008D4CD1 /* metaballs.fs in Resources */,
-				B38A43351B2D681E0086B65E /* basicPos.vert in Resources */,
 				CFE2776C0B5244C1A0273048 /* CinderApp.icns in Resources */,
 				B33EE0BD1967B6C3008D4CD1 /* metaballs.mat in Resources */,
 				B33EE0BF1967B6C3008D4CD1 /* metaballs_def.fs in Resources */,
@@ -366,6 +363,7 @@
 				B3445BBA197ADC040085228D /* VolumeRenderer.cpp in Sources */,
 				B3445BAE197ADAD40085228D /* marching_cubes.c in Sources */,
 				B3445BAF197ADAD40085228D /* metaballs.c in Sources */,
+				B3DD01E51B2E1C5500019877 /* MetaBallsController.cpp in Sources */,
 				B30CAA341B2C0ACB002DB285 /* Cinder-OpenCL.cpp in Sources */,
 				B30CAA3D1B2CB2FA002DB285 /* Podium.cpp in Sources */,
 				B3445BB0197ADAD40085228D /* particles.c in Sources */,

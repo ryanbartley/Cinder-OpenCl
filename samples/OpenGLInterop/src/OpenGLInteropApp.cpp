@@ -18,7 +18,6 @@ using namespace std;
 class OpenGLInteropApp : public App {
   public:
 	void setup();
-	void mouseDown( MouseEvent event );	
 	void update();
 	void draw();
 	void setupCl();

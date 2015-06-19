@@ -6,37 +6,46 @@
 //
 //
 
+#pragma once
+
 #include "Cinder-OpenCL.h"
 #include "cinder/gl/Vbo.h"
 
-static int particle_count = 128;
-
-typedef std::shared_ptr<class Particles> ParticlesRef;
+using ParticlesRef = std::shared_ptr<class Particles>;
 
 class Particles {
 public:
 	
-	static ParticlesRef create( const cl::Context &context, const cl::CommandQueue &commandQueue );
+	static ParticlesRef create();
 	
 	~Particles() {}
 	
 	void update();
 	void render();
 	
-	void reset() { mShouldReset = 1; }
-	int count() { return particle_count; }
+	void reset() { mShouldReset = true; }
 	
 	cl::BufferGL& getClPositions() { return mClPositions; }
+	cl::BufferGL& getClLifetimes() { return mClLifetimes; }
 	
 	std::vector<cl::Memory> getInterop();
 	
 	ci::gl::VboRef& getGlPositions() { return mGlPositions; }
 	ci::gl::VboRef& getGlVelocities() { return mGlVelocities; }
 	
-	int getNumParticles() const { return particle_count; };
+	int getNumParticles() const { return sParticleCount; };
+	
+	static const int sParticleCount;
+	
+	void toggleDebugDraw();
+	
+	bool shouldDebugDraw() { return mDebugDraw; }
 	
 private:
-	Particles( const cl::Context &context, const cl::CommandQueue &commandQueue );
+	Particles();
+	
+	void setupGl();
+	void setupCl();
 	
 	ci::gl::VaoRef				mGlVao;
 	ci::gl::VboRef				mGlPositions, mGlVelocities, mGlLifetimes, mGlRandoms;
@@ -45,6 +54,6 @@ private:
 	cl::BufferGL				mClPositions, mClVelocities, mClLifetimes, mClRandoms;
 	cl::Program					mClProgram;
 	cl::Kernel					mClUpdateKernel;
-	cl::CommandQueue			mCommandQueue;
-	int							mShouldReset;
+	
+	bool						mShouldReset, mDebugDraw;
 };

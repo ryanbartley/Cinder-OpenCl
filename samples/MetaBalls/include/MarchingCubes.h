@@ -15,7 +15,7 @@ const int width = 64;
 const int height = 64;
 const int depth = 64;
 
-#define MAX_VERTS 100000
+const int MAX_VERTS = 100000;
 
 using MarchingCubesRef = std::shared_ptr<class MarchingCubes>;
 
@@ -23,7 +23,7 @@ class MarchingCubes {
 public:
 	static int num_verts;
 	
-	static MarchingCubesRef create( const cl::Context &context, const cl::CommandQueue &commandQueue );
+	static MarchingCubesRef create();
 	
 	~MarchingCubes() {}
 	
@@ -31,22 +31,19 @@ public:
 	void point( const ci::ivec4 &point );
 	void metaball( const ci::vec3 &pos );
 	
-	std::vector<cl::Event> update();
+	void update();
 	void render();
-	void renderShadows();
 	
 	void cacheMarchingCubesMetaballData( const cl::BufferGL &positions, int numBalls );
-	
-	void setupGl();
-	void setupCl( const cl::Context &context );
 	
 	std::vector<cl::Memory> getInterop();
 	
 private:
-	MarchingCubes( const cl::Context &context, const cl::CommandQueue &commandQueue );
+	MarchingCubes();
 	
+	void setupGl();
+	void setupCl();
 	
-	ci::gl::GlslProgRef		mRenderGlsl, mShadowGlsl;
 	ci::gl::BatchRef		mRenderBatch, mShadowBatch, mDebugBatch;
 	ci::gl::VboRef			mGlPointPositions, mGlPointColors,
 							mGlVertPositions, mGlVertNormals;
@@ -61,8 +58,7 @@ private:
 							mKernWritePointColorBack,
 							mKernConstructSurface, mKernGenNormals,
 							mKernGenNormalsSmooth;
-	cl::CommandQueue		mCommandQueue;
 	
-	bool					mDebug;
+	bool					mDebugDraw;
 	int						mNumBalls;
 };

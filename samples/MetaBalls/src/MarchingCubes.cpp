@@ -12,6 +12,7 @@
 #include "cinder/gl/Vao.h"
 #include "cinder/gl/GlslProg.h"
 #include "cinder/Utilities.h"
+#include "MetaBallsController.h"
 
 using namespace std;
 using namespace ci;
@@ -23,16 +24,16 @@ using namespace cl;
 
 int MarchingCubes::num_verts = 0;
 
-MarchingCubesRef MarchingCubes::create( const cl::Context &context, const cl::CommandQueue &commandQueue )
+MarchingCubesRef MarchingCubes::create()
 {
-	return MarchingCubesRef( new MarchingCubes( context, commandQueue ) );
+	return MarchingCubesRef( new MarchingCubes() );
 }
 
-MarchingCubes::MarchingCubes( const cl::Context &context, const cl::CommandQueue &commandQueue )
-: mCommandQueue( commandQueue ), mDebug( false )
+MarchingCubes::MarchingCubes()
+: mDebugDraw( false )
 {
 	setupGl();
-	setupCl( context );
+	setupCl();
 }
 
 void MarchingCubes::setupGl()
@@ -56,11 +57,6 @@ void MarchingCubes::setupGl()
 			{ normalBufferLayout, mGlVertNormals }
 		} );
 		mRenderBatch = gl::Batch::create( vboMesh, glsl );
-//		mRenderGlsl = gl::GlslProg::create( gl::GlslProg::Format() );
-//		mShadowGlsl = gl::GlslProg::create( gl::GlslProg::Format() );
-//		
-//		mRenderBatch = gl::Batch::create( vboMesh, mRenderGlsl );
-//		mShadowBatch = gl::Batch::create( vboMesh, mShadowGlsl );
 	}
 	
 	std::vector<vec4> pointColorData(full_size);
@@ -96,16 +92,17 @@ void MarchingCubes::setupGl()
 	mEnvironmentMap = gl::Texture2d::createFromDds( loadAsset( "metaballs_env.dds" ) );
 }
 
-void MarchingCubes::setupCl( const cl::Context &context )
+void MarchingCubes::setupCl()
 {
-	mClPointColors   =	cl::BufferGL( context, CL_MEM_READ_WRITE, mGlPointColors->getId() );
-	mClVertPositions =	cl::BufferGL( context, CL_MEM_READ_WRITE, mGlVertPositions->getId() );
-	mClVertNormals   =	cl::BufferGL( context, CL_MEM_READ_WRITE, mGlVertNormals->getId() );
-	mClVolume		 =	cl::Buffer( context, CL_MEM_READ_WRITE, sizeof(float) * full_size, nullptr );
-	mClVertIndex     =	cl::Buffer( context, CL_MEM_READ_WRITE, sizeof(int), nullptr );
+	auto clCtx = MetaBallsController::get()->getContext();
+	mClPointColors   =	cl::BufferGL( clCtx, CL_MEM_READ_WRITE, mGlPointColors->getId() );
+	mClVertPositions =	cl::BufferGL( clCtx, CL_MEM_READ_WRITE, mGlVertPositions->getId() );
+	mClVertNormals   =	cl::BufferGL( clCtx, CL_MEM_READ_WRITE, mGlVertNormals->getId() );
+	mClVolume		 =	cl::Buffer( clCtx, CL_MEM_READ_WRITE, sizeof(float) * full_size, nullptr );
+	mClVertIndex     =	cl::Buffer( clCtx, CL_MEM_READ_WRITE, sizeof(int), nullptr );
 	
 	
-	mClProgram = cl::Program( context, loadString( loadAsset( "kernels/marching_cubes.cl" ) ) );
+	mClProgram = cl::Program( clCtx, loadString( loadAsset( "kernels/marching_cubes.cl" ) ) );
 	auto path = "-I" + getAssetPath( "" ).string();
 	mClProgram.build( path.c_str() );
 	
@@ -137,14 +134,15 @@ void MarchingCubes::setupCl( const cl::Context &context )
 
 void MarchingCubes::clear()
 {
-	mCommandQueue.enqueueNDRangeKernel( mKernWriteClear,
-									   cl::NullRange,
-									   cl::NDRange( full_size ),
-									   cl::NullRange );
+	auto clCQ = MetaBallsController::get()->getCommandQueue();
+	clCQ.enqueueNDRangeKernel( mKernWriteClear,
+							cl::NullRange,
+							cl::NDRange( full_size ),
+							cl::NullRange );
 }
 
-void MarchingCubes::point( const ivec4 &point ) {
-
+void MarchingCubes::point( const ivec4 &point )
+{
 	if ((point.x >= width) || (point.y >= height) || (point.z >= depth) || (point.x < 0) || (point.y < 0) || (point.z < 0)) {
 		CI_LOG_E("Point outside of volume");
 	}
@@ -154,10 +152,11 @@ void MarchingCubes::point( const ivec4 &point ) {
 	mKernWritePoint.setArg( 3, sizeof(int), (void*)&point.z );
 	mKernWritePoint.setArg( 7, sizeof(float), (void*)&point.w );
 	
-	mCommandQueue.enqueueNDRangeKernel( mKernWritePoint,
-									   cl::NullRange,
-									   cl::NDRange( 1 ),
-									   cl::NullRange );
+	auto clCQ = MetaBallsController::get()->getCommandQueue();
+	clCQ.enqueueNDRangeKernel( mKernWritePoint,
+							cl::NullRange,
+							cl::NDRange( 1 ),
+							cl::NullRange );
 }
 
 void MarchingCubes::metaball( const ci::vec3 &pos ) {
@@ -183,7 +182,9 @@ void MarchingCubes::metaball( const ci::vec3 &pos ) {
 	mKernWriteMetaball.setArg( 4, sizeof(float), (void*)&pos.x);
 	mKernWriteMetaball.setArg( 5, sizeof(float), (void*)&pos.y);
 	mKernWriteMetaball.setArg( 6, sizeof(float), (void*)&pos.z);
-	mCommandQueue.enqueueNDRangeKernel( mKernWriteClear,
+	
+	auto clCQ = MetaBallsController::get()->getCommandQueue();
+	clCQ.enqueueNDRangeKernel( mKernWriteClear,
 									   cl::NullRange,
 									   cl::NDRange( count ),
 									   cl::NullRange );
@@ -205,26 +206,31 @@ std::vector<cl::Memory> MarchingCubes::getInterop()
 	return ret;
 }
 
-std::vector<cl::Event> MarchingCubes::update()
+void MarchingCubes::update()
 {
+	auto clCQ = MetaBallsController::get()->getCommandQueue();
+	
 	ivec3 size{width, height, depth};
 	std::vector<cl::Event> waitEvents;
-	/* Update volumes */
+	
+	
 	clear();
+	
+	/* Update volumes */
 	mKernWriteMetaballs.setArg( 1, sizeof(cl_int3), &size );
 	mKernWriteMetaballs.setArg( 2, mMetaballPositions );
 	mKernWriteMetaballs.setArg( 3, sizeof(cl_int), &mNumBalls );
 	
-	mCommandQueue.enqueueNDRangeKernel( mKernWriteMetaballs,
-									   cl::NullRange,
-									   cl::NDRange(  width * height * depth ),
-									   cl::NullRange );
+	clCQ.enqueueNDRangeKernel( mKernWriteMetaballs,
+							cl::NullRange,
+							cl::NDRange(  width * height * depth ),
+							cl::NullRange );
 	
 	/* End */
 	
 	int zero = 0;
 	cl::Event writeEvent;
-	mCommandQueue.enqueueWriteBuffer( mClVertIndex, false, 0, sizeof(int), &zero, nullptr, &writeEvent );
+	clCQ.enqueueWriteBuffer( mClVertIndex, false, 0, sizeof(int), &zero, nullptr, &writeEvent );
 	
 	mKernConstructSurface.setArg( 0, mClVolume );
 	mKernConstructSurface.setArg( 1, sizeof(cl_int3), &size );
@@ -234,7 +240,7 @@ std::vector<cl::Event> MarchingCubes::update()
 	waitEvents.push_back( writeEvent );
 	
 	cl::Event constructEvent;
-	mCommandQueue.enqueueNDRangeKernel( mKernConstructSurface,
+	clCQ.enqueueNDRangeKernel( mKernConstructSurface,
 										cl::NullRange,
 										cl::NDRange( (width-1) * (height-1) * (depth-1) ),
 										cl::NullRange,
@@ -242,7 +248,7 @@ std::vector<cl::Event> MarchingCubes::update()
 										&constructEvent );
 	waitEvents.push_back( constructEvent );
 	cl::Event readEvent;
-	mCommandQueue.enqueueReadBuffer( mClVertIndex, true, 0, sizeof(cl_int), &num_verts, &waitEvents, &readEvent );
+	clCQ.enqueueReadBuffer( mClVertIndex, true, 0, sizeof(cl_int), &num_verts, &waitEvents, &readEvent );
 	waitEvents.push_back( readEvent );
 	
 	/* Generate Normals */
@@ -252,7 +258,7 @@ std::vector<cl::Event> MarchingCubes::update()
 		if( ! smooth ) {
 			mKernGenNormals.setArg( 0, mClVertPositions );
 			mKernGenNormals.setArg( 1, mClVertNormals );
-			mCommandQueue.enqueueNDRangeKernel( mKernGenNormals,
+			clCQ.enqueueNDRangeKernel( mKernGenNormals,
 												cl::NullRange,
 												cl::NDRange( num_verts ),
 												cl::NullRange,
@@ -264,7 +270,7 @@ std::vector<cl::Event> MarchingCubes::update()
 			mKernGenNormalsSmooth.setArg( 1, mClVertNormals );
 			mKernGenNormalsSmooth.setArg( 2, mMetaballPositions );
 			mKernGenNormalsSmooth.setArg( 3, sizeof(cl_int), &mNumBalls );
-			mCommandQueue.enqueueNDRangeKernel( mKernGenNormalsSmooth,
+			clCQ.enqueueNDRangeKernel( mKernGenNormalsSmooth,
 												cl::NullRange,
 												cl::NDRange( num_verts ),
 												cl::NullRange,
@@ -274,9 +280,9 @@ std::vector<cl::Event> MarchingCubes::update()
 		waitEvents.push_back( normals );
 	}
 
-	if( mDebug ) {
+	if( mDebugDraw ) {
 		cl::Event pointColor;
-		mCommandQueue.enqueueNDRangeKernel( mKernWritePointColorBack,
+		clCQ.enqueueNDRangeKernel( mKernWritePointColorBack,
 											cl::NullRange,
 											cl::NDRange( full_size ),
 											cl::NullRange,
@@ -284,12 +290,10 @@ std::vector<cl::Event> MarchingCubes::update()
 											&pointColor );
 		waitEvents.push_back( pointColor );
 	}
-	return waitEvents;
 }
 
 void MarchingCubes::render()
 {
-	renderShadows();
 //	mDebugBatch->draw();
 	mRenderBatch->draw( 0, num_verts );
 //	gl::ScopedVao scopeVao( mVao );
@@ -358,50 +362,6 @@ void MarchingCubes::render()
 //	gl::setDefaultShaderVars();
 //	
 //	gl::drawArrays(GL_TRIANGLES, 0, num_verts);
-}
-
-void MarchingCubes::renderShadows() {
-
-//  mat4 viewm = light_view_matrix(l);
-//  mat4 projm = light_proj_matrix(l);
-//
-//  mat4_to_array(viewm, view_matrix);
-//  mat4_to_array(projm, proj_matrix);
-//
-//  glMatrixMode(GL_MODELVIEW);
-//  glLoadMatrixf(view_matrix);
-//
-//  glMatrixMode(GL_PROJECTION);
-//  glLoadMatrixf(proj_matrix);
-//
-//  mat4_to_array(mat4_id(), world_matrix);
-//
-//  material* depth_mat = asset_get_load(P("$CORANGE/shaders/depth.mat"));
-//
-//  shader_program* depth_shader = material_get_entry(depth_mat, 0)->program;
-//  glUseProgram(*depth_shader);
-//
-//  GLint world_matrix_u = glGetUniformLocation(*depth_shader, "world_matrix");
-//  glUniformMatrix4fv(world_matrix_u, 1, 0, world_matrix);
-//
-//  GLint proj_matrix_u = glGetUniformLocation(*depth_shader, "proj_matrix");
-//  glUniformMatrix4fv(proj_matrix_u, 1, 0, proj_matrix);
-//
-//  GLint view_matrix_u = glGetUniformLocation(*depth_shader, "view_matrix");
-//  glUniformMatrix4fv(view_matrix_u, 1, 0, view_matrix);
-//
-//  glBindBuffer(GL_ARRAY_BUFFER, vertex_positions);
-//  glVertexPointer(4, GL_FLOAT, 0, (void*)0);
-//  glEnableClientState(GL_VERTEX_ARRAY);
-//
-//    glDrawArrays(GL_TRIANGLES, 0, num_verts);
-//
-//  glDisableClientState(GL_VERTEX_ARRAY);
-//
-//  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-//  glBindBuffer(GL_ARRAY_BUFFER, 0);
-//
-//  glUseProgram(0);
 }
 
 

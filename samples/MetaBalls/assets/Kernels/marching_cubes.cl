@@ -40,8 +40,8 @@ kernel void write_metaball(global float* volume,
   volume[index] += amount;
 }
 
-kernel void write_metaballs(global float* volume, int3 size, global float4* metaball_positions, int num_metaballs) {
-  
+kernel void write_metaballs(global float* volume, int3 size, global float4* metaball_positions, int num_metaballs)
+{
   const int METABALL_SIZE = 5;
   
   int id = get_global_id(0);
@@ -58,8 +58,6 @@ kernel void write_metaballs(global float* volume, int3 size, global float4* meta
   }
 
 }
-
-
 
 kernel void write_point_color_back(global float* volume, global float4* point_color) {
   float color = volume[get_global_id(0)];

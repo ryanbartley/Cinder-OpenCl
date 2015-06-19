@@ -11,48 +11,56 @@
 #include "cinder/gl/GlslProg.h"
 #include "cinder/Utilities.h"
 
+#include "MetaBallsController.h"
+
+const int Particles::sParticleCount = 64;
+
 using namespace ci;
 using namespace ci::app;
 using namespace cl;
 using namespace ci::gl;
 using namespace std;
 
-ParticlesRef Particles::create( const cl::Context &context, const cl::CommandQueue &commandQueue )
+ParticlesRef Particles::create()
 {
-	return ParticlesRef( new Particles( context, commandQueue ) );
+	return ParticlesRef( new Particles() );
 }
 
-Particles::Particles( const cl::Context &context, const cl::CommandQueue &commandQueue )
-: mCommandQueue( commandQueue )
+Particles::Particles()
+: mShouldReset( false ), mDebugDraw( false )
 {
-	std::vector<vec4>	cpuPositions(particle_count),
-						cpuVelocities(particle_count),
-						cpuRandoms(particle_count);
-	std::vector<float>  cpuLifetimes(particle_count);
+	setupGl();
+	setupCl();
+}
+
+void Particles::setupGl()
+{
+	std::array<vec4, sParticleCount> cpuPositions, cpuVelocities, cpuRandoms;
+	std::array<float, sParticleCount>  cpuLifetimes;
 	
 	srand(time(NULL));
 	
 	mShouldReset = 0;
 	
-	for(int i = 0; i < particle_count; i++) {
+	for(int i = 0; i < sParticleCount; i++) {
 		cpuLifetimes[i] = 999;
 		cpuPositions[i] = vec4( 0.0f );
 		cpuVelocities[i] = vec4( 0.0f );
-	
+		
 		float rx = ((float)rand() / RAND_MAX) * 2 - 1;
 		float ry = ((float)rand() / RAND_MAX) * 2 + 0.5;
 		float rz = ((float)rand() / RAND_MAX) * 2 - 1;
 		float rm = (float)rand() / RAND_MAX;
-	
+		
 		vec3 rand = normalize( vec3(rx, ry, rz) ) * (rm * 2);
-	
+		
 		cpuRandoms[i] = vec4( rand, 1.0f );
 	}
 	
-	mGlPositions = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(vec4) * particle_count, cpuPositions.data(), GL_DYNAMIC_COPY );
-	mGlVelocities = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(vec4) * particle_count, cpuVelocities.data(), GL_DYNAMIC_COPY );
-	mGlLifetimes = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(float) * particle_count, cpuLifetimes.data(), GL_DYNAMIC_COPY );
-	mGlRandoms = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(vec4) * particle_count, cpuRandoms.data(), GL_DYNAMIC_COPY );
+	mGlPositions = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(vec4) * sParticleCount, cpuPositions.data(), GL_DYNAMIC_COPY );
+	mGlVelocities = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(vec4) * sParticleCount, cpuVelocities.data(), GL_DYNAMIC_COPY );
+	mGlLifetimes = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(float) * sParticleCount, cpuLifetimes.data(), GL_DYNAMIC_COPY );
+	mGlRandoms = gl::Vbo::create( GL_ARRAY_BUFFER, sizeof(vec4) * sParticleCount, cpuRandoms.data(), GL_DYNAMIC_COPY );
 	
 	mGlVao = gl::Vao::create();
 	{
@@ -64,25 +72,28 @@ Particles::Particles( const cl::Context &context, const cl::CommandQueue &comman
 			gl::vertexAttribPointer( 0, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0 );
 		}
 		{
-			gl::ScopedBuffer scopeBuffer( mGlRandoms );
+			gl::ScopedBuffer scopeBuffer( mGlVelocities );
 			gl::enableVertexAttribArray( 1 );
 			gl::vertexAttribPointer( 1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0 );
 		}
 	}
-	
 	
 	mGlProgram = gl::GlslProg::create( gl::GlslProg::Format()
 									  .vertex( loadAsset( "basic.vert" ) )
 									  .fragment( loadAsset( "basic.frag" ) )
 									  .attribLocation( "ciPosition", 0 )
 									  .attribLocation( "ciColor", 1 ) );
+}
+
+void Particles::setupCl()
+{
+	auto clCtx = MetaBallsController::get()->getContext();
+	mClPositions = cl::BufferGL( clCtx, CL_MEM_READ_WRITE, mGlPositions->getId() );
+	mClVelocities = cl::BufferGL( clCtx, CL_MEM_READ_WRITE, mGlVelocities->getId() );
+	mClLifetimes = cl::BufferGL( clCtx, CL_MEM_READ_WRITE, mGlLifetimes->getId() );
+	mClRandoms = cl::BufferGL( clCtx, CL_MEM_READ_WRITE, mGlRandoms->getId() );
 	
-	mClPositions = cl::BufferGL( context, CL_MEM_READ_WRITE, mGlPositions->getId() );
-	mClVelocities = cl::BufferGL( context, CL_MEM_READ_WRITE, mGlVelocities->getId() );
-	mClLifetimes = cl::BufferGL( context, CL_MEM_READ_WRITE, mGlLifetimes->getId() );
-	mClRandoms = cl::BufferGL( context, CL_MEM_READ_WRITE, mGlRandoms->getId() );
-	
-	mClProgram = cl::Program( context, loadString( loadAsset( "kernels/particles.cl" ) ), true );
+	mClProgram = cl::Program( clCtx, loadString( loadAsset( "kernels/particles.cl" ) ), true );
 	mClUpdateKernel = cl::Kernel( mClProgram, "particle_update" );
 	
 	float max_life = 60.0;
@@ -94,7 +105,7 @@ Particles::Particles( const cl::Context &context, const cl::CommandQueue &comman
 	mClUpdateKernel.setArg( 3, mClRandoms );
 	mClUpdateKernel.setArg( 4, sizeof(float), &max_life );
 	mClUpdateKernel.setArg( 5, sizeof(float), &min_velocity );
-	mClUpdateKernel.setArg( 9, sizeof(cl_int), &particle_count );
+	mClUpdateKernel.setArg( 9, sizeof(cl_int), &sParticleCount );
 }
 
 std::vector<cl::Memory> Particles::getInterop()
@@ -110,20 +121,21 @@ std::vector<cl::Memory> Particles::getInterop()
 
 void Particles::update()
 {
+	auto clCQ = MetaBallsController::get()->getCommandQueue();
 	int random = rand();
-	float time = 1.0f/60.0f;
+	float time = 1.0f / 60.0f;
 	
 	mClUpdateKernel.setArg( 6, sizeof(float), &time );
-	mClUpdateKernel.setArg( 7, sizeof(int), &mShouldReset );
+	mClUpdateKernel.setArg( 7, sizeof(bool), &mShouldReset );
 	mClUpdateKernel.setArg( 8, sizeof(int), &random );
 	
-	mShouldReset = 0;
+	mShouldReset = false;
 	
     // Queue the kernel up for execution across the array
-	mCommandQueue.enqueueNDRangeKernel( mClUpdateKernel,
-									   cl::NullRange,
-									   cl::NDRange( particle_count ),
-									   cl::NullRange );
+	clCQ.enqueueNDRangeKernel( mClUpdateKernel,
+							cl::NullRange,
+							cl::NDRange( sParticleCount ),
+							cl::NullRange );
 }
 
 void Particles::render()
@@ -133,5 +145,5 @@ void Particles::render()
 	ScopedState scopeState( GL_VERTEX_PROGRAM_POINT_SIZE, true );
 	
 	gl::setDefaultShaderVars();
-	gl::drawArrays( GL_POINTS, 0, particle_count );
+	gl::drawArrays( GL_POINTS, 0, sParticleCount );
 }
