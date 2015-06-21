@@ -29,6 +29,8 @@
 		B38A432D1B2D0FF10086B65E /* Cinder-OpenCL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B38A432C1B2D0FF10086B65E /* Cinder-OpenCL.cpp */; };
 		B38A43311B2D12010086B65E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38A43301B2D12010086B65E /* IOKit.framework */; };
 		B38A43331B2D12090086B65E /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38A43321B2D12090086B65E /* IOSurface.framework */; };
+		B39C60131B35C0EA00DA288C /* basic.vert in Resources */ = {isa = PBXBuildFile; fileRef = B39C60121B35C0EA00DA288C /* basic.vert */; };
+		B39C60151B35C0FB00DA288C /* basic.frag in Resources */ = {isa = PBXBuildFile; fileRef = B39C60141B35C0FB00DA288C /* basic.frag */; };
 		E910427A9DFE4F18B2419932 /* ProceduralGeometricDisplacementApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C5DAE389406C43C5B2CEFD17 /* ProceduralGeometricDisplacementApp.cpp */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +64,8 @@
 		B38A432C1B2D0FF10086B65E /* Cinder-OpenCL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Cinder-OpenCL.cpp"; sourceTree = "<group>"; };
 		B38A43301B2D12010086B65E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		B38A43321B2D12090086B65E /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
+		B39C60121B35C0EA00DA288C /* basic.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.vert; path = ../assets/basic.vert; sourceTree = "<group>"; };
+		B39C60141B35C0FB00DA288C /* basic.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.frag; path = ../assets/basic.frag; sourceTree = "<group>"; };
 		C5DAE389406C43C5B2CEFD17 /* ProceduralGeometricDisplacementApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ProceduralGeometricDisplacementApp.cpp; path = ../src/ProceduralGeometricDisplacementApp.cpp; sourceTree = "<group>"; };
 		ED0CBF96D7874F20B25CE60C /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -183,6 +187,8 @@
 				B32862CA1B3352F000AAE085 /* shadow_mapping.vert */,
 				7400178F02CB4FCE9169936B /* CinderApp.icns */,
 				811553C1BFB947DBB51F71F9 /* Info.plist */,
+				B39C60121B35C0EA00DA288C /* basic.vert */,
+				B39C60141B35C0FB00DA288C /* basic.frag */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -271,12 +277,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B32862BE1B3319CE00AAE085 /* env_map.jpg in Resources */,
+				B39C60131B35C0EA00DA288C /* basic.vert in Resources */,
 				1EFDA4323A6445E98727EE08 /* CinderApp.icns in Resources */,
 				B32862C41B3345E200AAE085 /* sky_box.vert in Resources */,
 				B32862CC1B3352F000AAE085 /* shadow_mapping.vert in Resources */,
 				B32862C71B33461500AAE085 /* env_map.frag in Resources */,
 				B32862CB1B3352F000AAE085 /* shadow_mapping.frag in Resources */,
 				B32862C31B3345E200AAE085 /* sky_box.frag in Resources */,
+				B39C60151B35C0FB00DA288C /* basic.frag in Resources */,
 				B32862C81B33461500AAE085 /* env_map.vert in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

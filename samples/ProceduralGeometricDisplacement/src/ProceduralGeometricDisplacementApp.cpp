@@ -7,6 +7,7 @@
 #include "cinder/Log.h"
 #include "Cinder-OpenCL.h"
 #include "cinder/gl/ConstantConversions.h"
+#include "cinder/params/Params.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -20,16 +21,15 @@ int divide_up(int a, int b)
 }
 
 struct Material {
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
 	float shininess;
 };
 
 struct Light {
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
+	vec3 intensity;
+	float ambientCoefficient;
 	float attenuation;
 };
 
@@ -47,7 +47,12 @@ class ProceduralGeometricDisplacementApp : public App {
 	void createShadowFbo();
 	void createCubeMap();
 	
+	void createParams();
+	
 	void compute();
+	void renderRoom();
+	void renderShadow();
+	void renderSkyBox();
 	
 	static void contextErrorCallback( const char *errinfo,
 									 const void *private_info,
@@ -62,9 +67,13 @@ class ProceduralGeometricDisplacementApp : public App {
 	
 	gl::GlslProgRef		mShadowGlsl;
 	gl::BatchRef		mSphereEnv, mSphereShadow, mSphereRoom,
-						mSkyBatch, mRoomBatch;
+						mSkyBatch, mFloorBatch, mFloorShadow,
+						mWallBatch, mWallShadow;
 	gl::FboRef			mShadowFbo;
+	gl::Texture2dRef	mShadowTex;
 	gl::TextureCubeMapRef mSkyBox;
+	
+	params::InterfaceGlRef mParams;
 	
 	cl::Context			mContext;
 	cl::Kernel			mComputeKernel;
@@ -75,7 +84,9 @@ class ProceduralGeometricDisplacementApp : public App {
 	cl::BufferGL		mOutputVertexBuffer,
 						mOutputNormalBuffer;
 	
-	bool		mRenderRoom			= true;
+	bool		mRenderRoom			= true,
+				mUseLightCam		= false,
+				mRenderDepthTex		= false;
 	uint32_t	mGroupSize			= 4;
 	uint32_t	mMaxWorkGroupSize;
 	size_t		mSphereNumVertices;
@@ -88,42 +99,45 @@ class ProceduralGeometricDisplacementApp : public App {
 	float	mLacunarity = 2.0f;
 	float	mIncrement  = 1.5f;
 	float	mPhase      = 0.0f;
+	float	mPhaseIncrease = 0.01f;
 	
 	float	mDepthBias	= -0.0005f;
 	float	mPolygonOffsetFactor;
 	float	mPolygonOffsetUnits;
 	
 	Light		mLight;
-	Material	mSphereMaterial, mQuadMaterial;
+	Material	mSphereMaterial, mRoomMaterial;
 };
 
 void ProceduralGeometricDisplacementApp::setup()
 {
-	mSphereMaterial.ambient = {0.1f, 0.1f, 0.1f, 1.0f};
-	mSphereMaterial.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
-	mSphereMaterial.specular = {1.0f, 1.0f, 1.0f, 1.0f};
+	mSphereMaterial.ambient = {0.1f, 0.1f, 0.1f};
+	mSphereMaterial.diffuse = Color::hex( 0x014421 );
+	mSphereMaterial.specular = {1.0f, 1.0f, 1.0f};
 	mSphereMaterial.shininess = 128.0f;
 	
-	mQuadMaterial.ambient = {1.0f, 1.0f, 1.0f, 1.0f};
-	mQuadMaterial.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
-	mQuadMaterial.specular = {1.0f, 1.0f, 1.0f, 1.0f};
-	mQuadMaterial.shininess = 0.0f;
+	mRoomMaterial.ambient = {0.1f, 0.1f, 0.1f};
+	mRoomMaterial.diffuse = {0.5f, 0.0f, 0.0f};
+	mRoomMaterial.specular = {1.0f, 1.0f, 1.0f};
+	mRoomMaterial.shininess = 0.0f;
 	
-	mLight.ambient = {0.1f, 0.1f, 0.1f, 1.0f};
-	mLight.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
-	mLight.specular = {1.0f, 1.0f, 1.0f, 1.0f};
+	mLight.intensity = { 1.0f, 1.0f, 1.0f };
+	mLight.ambientCoefficient = { 0.005f };
 	mLight.attenuation = 0.1f;
+	
+	getWindow()->setSize( ivec2( 1024, 1024 ) );
 	
 	setupCl();
 	setupBuffers();
 	setupKernels();
 	createShadowFbo();
 	createCubeMap();
+	createParams();
 	
 	mCam.lookAt( vec3( 0.0f, 5.0f, -7.0f ), vec3( 0 ) );
 	mCam.setPerspective( 55.0f, getWindowAspectRatio(), 0.1f, 10000.0f );
-	mLightCam.lookAt( vec3( -7.0f, 10.0f, 7.0f ), vec3( 0 ) );
-	mLightCam.setPerspective( 45.0f, 1.0f, 10.0f, 20.0f );
+	mLightCam.lookAt( vec3( -7.0f, 10.0f, -7.0f ), vec3( 0 ) );
+	mLightCam.setPerspective( 55.0f, getWindowAspectRatio(), 0.01f, 10000.0f );
 	
 	mCameraControl.setCamera( &mCam );
 	
@@ -160,24 +174,29 @@ void ProceduralGeometricDisplacementApp::setupBuffers()
 {
 	auto environmentMap = gl::GlslProg::create( loadAsset( "env_map.vert" ), loadAsset( "env_map.frag" ) );
 	environmentMap->uniform( "uCubeMapTex", 0 );
-	mShadowGlsl	= gl::GlslProg::create( loadAsset( "shadow_mapping.vert"), loadAsset("shadow_mapping.frag") );
-	mShadowGlsl->uniform( "uShadowMap", 0 );
-	mShadowGlsl->uniform( "uDepthBias", mDepthBias );
 	auto skyBoxGlsl		= gl::GlslProg::create( loadAsset( "sky_box.vert" ), loadAsset( "sky_box.frag" ) );
 	skyBoxGlsl->uniform( "uCubeMapTex", 0 );
 	
-	// Create the room.
-	auto cube = geom::Cube().size( vec3( 20 ) );
-	mRoomBatch = gl::Batch::create( cube, mShadowGlsl );
-	cube.size( vec3( 500 ) );
-	mSkyBatch = gl::Batch::create( cube, skyBoxGlsl );
+	mShadowGlsl	= gl::GlslProg::create( loadAsset( "shadow_mapping.vert"), loadAsset("shadow_mapping.frag") );
+	mShadowGlsl->uniform( "uShadowMap", 0 );
+	mShadowGlsl->uniform( "uDepthBias", mDepthBias );
+	auto basicGlsl = gl::GlslProg::create( loadAsset( "basic.vert" ), loadAsset( "basic.frag" ) );
 	
+	// Create the room.
+	auto floor = geom::Cube().size( vec3( 100, .5, 100 ) );
+	mFloorBatch = gl::Batch::create( floor, mShadowGlsl );
+	mFloorShadow = gl::Batch::create( floor, basicGlsl );
+	auto backWall = geom::Cube().size( vec3( 100, 100, .5f ) );
+	mWallBatch = gl::Batch::create( backWall, mShadowGlsl );
+	mWallShadow = gl::Batch::create( backWall, basicGlsl );
+	auto sky = geom::Cube().size( vec3( 500 ) );
+	mSkyBatch = gl::Batch::create( sky, skyBoxGlsl );
 	// Create the sphere
 	auto sphere = geom::Sphere().subdivisions( 200 );
 	auto sphereIndexTrimesh = TriMesh::create( sphere, TriMesh::Format().positions(4) );
 	
 	mSphereNumVertices = sphereIndexTrimesh->getNumVertices();
-	cout << mSphereNumVertices << endl;
+	
 	size_t bytes = mSphereNumVertices * sizeof(vec4);
 
 	// Create the buffers for the position and normals
@@ -187,7 +206,9 @@ void ProceduralGeometricDisplacementApp::setupBuffers()
 	auto normalVbo		= gl::Vbo::create( GL_ARRAY_BUFFER, bytes, nullptr, GL_STATIC_DRAW );
 	auto normalAttrib	= geom::AttribInfo( geom::NORMAL, geom::FLOAT, 4, 0, 0 );
 	auto normalLayout	= geom::BufferLayout( { normalAttrib } );
-	auto indicesVbo		= gl::Vbo::create( GL_ELEMENT_ARRAY_BUFFER, sphereIndexTrimesh->getNumIndices() * sizeof(uint32_t), sphereIndexTrimesh->getIndices().data() );
+	auto indicesVbo		= gl::Vbo::create( GL_ELEMENT_ARRAY_BUFFER,
+										  sphereIndexTrimesh->getNumIndices() * sizeof(uint32_t),
+										  sphereIndexTrimesh->getIndices().data(), GL_STATIC_DRAW );
 	
 	auto vboMesh		= gl::VboMesh::create( mSphereNumVertices, GL_TRIANGLES,
 									   { { positionLayout, positionVbo },
@@ -195,7 +216,7 @@ void ProceduralGeometricDisplacementApp::setupBuffers()
 
 	mSphereEnv		= gl::Batch::create( vboMesh, environmentMap );
 	mSphereRoom		= gl::Batch::create( vboMesh, mShadowGlsl );
-	mSphereShadow	= gl::Batch::create( vboMesh, gl::getStockShader( gl::ShaderDef() ) );
+	mSphereShadow	= gl::Batch::create( vboMesh, basicGlsl );
 	
 	mInputVertexBuffer = cl::Buffer( mContext, CL_MEM_COPY_HOST_PTR | CL_MEM_READ_ONLY,
 									bytes, sphereIndexTrimesh->getBufferPositions().data() );
@@ -214,23 +235,85 @@ void ProceduralGeometricDisplacementApp::setupKernels()
 
 void ProceduralGeometricDisplacementApp::createShadowFbo()
 {
-	auto texFormat = gl::Texture2d::Format()
-						.internalFormat( GL_DEPTH_COMPONENT24 )
-						.minFilter( GL_LINEAR )
-						.magFilter( GL_LINEAR )
-						.wrap( GL_CLAMP_TO_EDGE )
-						.compareFunc( GL_COMPARE_R_TO_TEXTURE_ARB )
-						.compareMode( GL_LEQUAL );
+	gl::Texture2d::Format depthFormat;
+	depthFormat.setInternalFormat( GL_DEPTH_COMPONENT32F );
+	depthFormat.setMagFilter( GL_LINEAR );
+	depthFormat.setMinFilter( GL_LINEAR );
+	depthFormat.setWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
+	depthFormat.setCompareMode( GL_COMPARE_REF_TO_TEXTURE );
+	depthFormat.setCompareFunc( GL_LEQUAL );
+	mShadowTex = gl::Texture2d::create( 1024, 1024, depthFormat );
 	
-	mShadowFbo = gl::Fbo::create( 1024, 1024,
-								gl::Fbo::Format()
-								.disableColor()
-								.depthTexture( texFormat ) );
+	gl::Fbo::Format fboFormat;
+	fboFormat.attachment( GL_DEPTH_ATTACHMENT, mShadowTex ).disableColor();
+	mShadowFbo = gl::Fbo::create( 1024, 1024, fboFormat );
 }
 
 void ProceduralGeometricDisplacementApp::createCubeMap()
 {
 	mSkyBox = gl::TextureCubeMap::create( loadImage( loadAsset( "env_map.jpg" ) ), gl::TextureCubeMap::Format().mipmap() );
+}
+
+void ProceduralGeometricDisplacementApp::createParams()
+{
+	static int whichCameraControl = 0;
+	static int whichCameraView = 0;
+	static float sResetFrequency = mFrequency;
+	static float sResetAmplitude = mAmplitude;
+	static float sResetOctaves = mOctaves;
+	static float sResetRoughness = mRoughness;
+	static float sResetLacunarity = mLacunarity;
+	static float sResetIncrement = mIncrement;
+	static float sResetPhaseIncrease = mPhaseIncrease;
+	mParams = params::InterfaceGl::create( "Compute", vec2( 200, 200 ) );
+	mParams->addText( "Render" );
+	mParams->addParam( "Render Room", &mRenderRoom );
+	mParams->addParam( "Control Camera", { "Camera", "Light" }, &whichCameraControl )
+	.updateFn( [&](){
+		switch ( whichCameraControl ) {
+			case 0:
+				mCameraControl.setCamera( &mCam );
+			break;
+			case 1:
+				mCameraControl.setCamera( &mLightCam );
+			default:
+			break;
+		}
+	} );
+	mParams->addParam( "View Camera", { "Camera", "Light" }, &whichCameraView )
+	.updateFn( [&](){
+		switch ( whichCameraView ) {
+			case 0:
+				mUseLightCam = false;
+				break;
+			case 1:
+				mUseLightCam = true;
+			default:
+				break;
+		}
+	} );
+	mParams->addParam( "Render Depth Texture", &mRenderDepthTex );
+	mParams->addParam( "Light Attenuation", &mLight.attenuation );
+	mParams->addParam( "Ambient Coefficient", &mLight.ambientCoefficient );
+	mParams->addParam( "Light Intensity", &mLight.intensity );
+	mParams->addSeparator();
+	mParams->addText( "Update" );
+	mParams->addParam( "Frequency", &mFrequency ).min( 0.0f ).step( 0.01f );
+	mParams->addParam( "Amplitude", &mAmplitude ).min( 0.0f ).max( 7.0f ).step( 0.01f );
+	mParams->addParam( "Octaves", &mOctaves ).min( 0.0f ).max( 7.0f ).step( 0.01f );
+	mParams->addParam( "Roughness", &mRoughness );
+	mParams->addParam( "Lacunarity", &mLacunarity );
+	mParams->addParam( "Increment", &mIncrement ).min( 0.01f ).step( 0.05f );
+	mParams->addParam( "Phase Increase", &mPhaseIncrease ).min( 0.0f ).step( 0.01f );
+	mParams->addButton( "Reset", [&]() {
+		mFrequency = sResetFrequency;
+		mAmplitude = sResetAmplitude;
+		mOctaves = sResetOctaves;
+		mRoughness = sResetRoughness;
+		mLacunarity = sResetLacunarity;
+		mIncrement = sResetIncrement;
+		mPhaseIncrease = sResetPhaseIncrease;
+	});
 }
 
 void ProceduralGeometricDisplacementApp::compute()
@@ -254,7 +337,7 @@ void ProceduralGeometricDisplacementApp::compute()
 								cl::NDRange( mSphereNumVertices ) );
 	
 	mQueue.enqueueReleaseGLObjects( &aqcuire );
-	mPhase += .01;
+	mPhase += mPhaseIncrease;
 }
 
 void ProceduralGeometricDisplacementApp::mouseDown( MouseEvent event )
@@ -272,34 +355,100 @@ void ProceduralGeometricDisplacementApp::update()
 	compute();
 }
 
+void ProceduralGeometricDisplacementApp::renderShadow()
+{
+	gl::ScopedFramebuffer scopeFrame( mShadowFbo );
+	gl::clear( GL_DEPTH_BUFFER_BIT );
+	gl::ScopedViewport		scopeView( vec2( 0 ), mShadowFbo->getSize() );
+	gl::ScopedMatrices		scopeMat;
+	gl::setMatrices( mLightCam );
+	{
+		gl::ScopedModelMatrix scopeModel;
+		gl::translate( vec3( 0, -10, 0 ) );
+		mFloorShadow->draw();
+	}
+	{
+		gl::ScopedModelMatrix scopeModel;
+		gl::translate( vec3( 0, 0, -10 ) );
+		mWallShadow->draw();
+	}
+	{
+		gl::ScopedModelMatrix scopeModel;
+		gl::scale( vec3( 2.0f ) );
+		mSphereShadow->draw();
+	}
+}
+
+void ProceduralGeometricDisplacementApp::renderRoom()
+{
+	gl::ScopedState scopeOffset( GL_POLYGON_OFFSET_FILL, true );
+	glPolygonOffset( mPolygonOffsetFactor, mPolygonOffsetUnits );
+	
+	renderShadow();
+	
+	gl::ScopedTextureBind scopeTex( mShadowFbo->getDepthTexture(), 0 );
+	mShadowGlsl->uniform( "uShadowMatrix", mLightCam.getProjectionMatrix() * mLightCam.getViewMatrix() );
+	mShadowGlsl->uniform( "light.position", vec3( gl::getModelView() * vec4( mLightCam.getEyePoint(), 1.0 ) ) );
+	mShadowGlsl->uniform( "light.intensities", mLight.intensity );
+	mShadowGlsl->uniform( "light.attenuation", mLight.attenuation );
+	mShadowGlsl->uniform( "light.ambientCoefficient", mLight.ambientCoefficient );
+	
+	mShadowGlsl->uniform( "uMatAmbient", mRoomMaterial.ambient );
+	mShadowGlsl->uniform( "uMatDiffuse", mRoomMaterial.diffuse );
+	mShadowGlsl->uniform( "uMatSpecular", mRoomMaterial.specular );
+	mShadowGlsl->uniform( "uMatShininess", mRoomMaterial.shininess );
+	{
+		gl::ScopedModelMatrix scopeModel;
+		gl::translate( vec3( 0, -10, 0 ) );
+		mFloorBatch->draw();
+	}
+	{
+		gl::ScopedModelMatrix scopeModel;
+		gl::translate( vec3( 0, 0, 10 ) );
+		mWallBatch->draw();
+	}
+	
+	mShadowGlsl->uniform( "uMatAmbient", mSphereMaterial.ambient );
+	mShadowGlsl->uniform( "uMatDiffuse", mSphereMaterial.diffuse );
+	mShadowGlsl->uniform( "uMatSpecular", mSphereMaterial.specular );
+	mShadowGlsl->uniform( "uMatShininess", mSphereMaterial.shininess );
+	{
+		gl::ScopedModelMatrix scopeModel;
+		gl::scale( vec3( 2.0f ) );
+		mSphereRoom->draw();
+	}
+}
+
+void ProceduralGeometricDisplacementApp::renderSkyBox()
+{
+	gl::ScopedTextureBind scopeTex( mSkyBox );
+	mSkyBatch->draw();
+	{
+		gl::ScopedModelMatrix scopeModel;
+		gl::scale( vec3( 2.0 ) );
+		mSphereEnv->draw();
+	}
+}
+
 void ProceduralGeometricDisplacementApp::draw()
 {
 	gl::clear( Color( 0, 0, 0 ) );
 	gl::ScopedMatrices scopeMat;
-	gl::setMatrices( mCam );
+	gl::setMatrices( mUseLightCam ? mLightCam : mCam );
 	
 	if( mRenderRoom ) {
-		gl::ScopedState scopeOffset( GL_POLYGON_OFFSET_FILL, true );
-		glPolygonOffset( mPolygonOffsetFactor, mPolygonOffsetUnits );
-		{
-			gl::ScopedFramebuffer	scopeFbo( mShadowFbo );
-			gl::ScopedViewport		scopeView( vec2( 0 ), mShadowFbo->getSize() );
-			gl::ScopedMatrices		scopeMat;
-			gl::setMatrices( mLightCam );
-			mSphereShadow->draw();
-		}
-		gl::ScopedTextureBind scopeTex( mShadowFbo->getDepthTexture() );
-		mShadowGlsl->uniform( "uShadowMatrix", mLightCam.getProjectionMatrix() * mLightCam.getViewMatrix() );
-		mShadowGlsl->uniform( "uLightPos", vec3( gl::getModelView() * vec4( mLightCam.getEyePoint(), 1.0 ) ) );
-		mRoomBatch->draw();
-		mSphereRoom->draw();
+		renderRoom();
 	}
 	else {
-		gl::ScopedTextureBind scopeTex( mSkyBox );
-		mSkyBatch->draw();
-		mSphereEnv->draw();
+		renderSkyBox();
 	}
 	
+	if( mRenderDepthTex ) {
+		gl::setMatricesWindow( getWindowSize() );
+		gl::draw( mShadowFbo->getDepthTexture() );
+	}
+	
+	mParams->draw();
 }
 
-CINDER_APP( ProceduralGeometricDisplacementApp, RendererGl )
+CINDER_APP( ProceduralGeometricDisplacementApp, RendererGl( RendererGl::Options().msaa( 16 ) ) )

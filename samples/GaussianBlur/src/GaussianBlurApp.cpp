@@ -7,31 +7,15 @@
 
 #include "Cinder-OpenCL.h"
 
+#include "GaussianNaive.hpp"
+
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
 #pragma OPENCL EXTENSION cl_khr_gl_event : enable
 
-float * createBlurMask(float sigma, int * maskSizePointer) {
-	int maskSize = (int)ceil(3.0f*sigma);
-	float * mask = new float[(maskSize*2+1)*(maskSize*2+1)];
-	float sum = 0.0f;
-	for(int a = -maskSize; a < maskSize+1; a++) {
-		for(int b = -maskSize; b < maskSize+1; b++) {
-			float temp = exp(-((float)(a*a+b*b) / (2*sigma*sigma)));
-			sum += temp;
-			mask[a+maskSize+(b+maskSize)*(maskSize*2+1)] = temp;
-		}
-	}
-	// Normalize the mask
-	for(int i = 0; i < (maskSize*2+1)*(maskSize*2+1); i++)
-		mask[i] = mask[i] / sum;
-	
-	*maskSizePointer = maskSize;
-	
-	return mask;
-}
+
 
 class GaussianBlurApp : public App {
   public:
@@ -61,16 +45,16 @@ class GaussianBlurApp : public App {
 	
 	void setupCl();
 	void setupGlTextureClImages();
-	void setupNaive();
+	void setupAlgorithms();
 	void setupParams();
 	
 	cl::Platform		mPlatform;
 	cl::Context			mContext;
 	cl::CommandQueue	mCommandQueue;
-	cl::Kernel			mGaussianKernel;
-	cl::Buffer			mMask;
 	cl::Image2D			mClImage;
 	cl::ImageGL			mClInteropResult;
+	
+	GaussianNaiveRef	mNaiveImpl;
 	
 	gl::Texture2dRef	mGlImageResult;
 	
@@ -79,7 +63,7 @@ class GaussianBlurApp : public App {
 	ivec2				mImageSize;
 	float				mSigma;
 	float				mCurrentOpPerf;
-	bool				mSigmaUpdated;
+	bool				mSigmaUpdated, mUseNaive;
 	
 	std::vector<cl::Event> mProfilingEvents;
 };
@@ -92,15 +76,13 @@ void GaussianBlurApp::setup()
 	
 	
 	setupCl();
-
 	setupGlTextureClImages();
-	
-	setupNaive();
+	setupAlgorithms();
 }
 
 void GaussianBlurApp::setupParams()
 {
-	mParams = params::InterfaceGl::create( "Gaussian Blur", ivec2( 200, 200 ) );
+	mParams = params::InterfaceGl::create( "Gaussian Blur", ivec2( 400, 400 ) );
 	mParams->addParam( "Sigma", &mSigma ).updateFn( [&](){ mSigmaUpdated = true; } );
 	mParams->addParam( "Cl Operation Performance", &mCurrentOpPerf );
 }
@@ -152,27 +134,10 @@ void GaussianBlurApp::setupGlTextureClImages()
 								   0, mGlImageResult->getId() );
 }
 
-void GaussianBlurApp::setupNaive()
+void GaussianBlurApp::setupAlgorithms()
 {
-	// Create Gaussian mask
-	int maskSize;
-	float * mask = createBlurMask( mSigma, &maskSize );
-	
-	// Create buffer for mask and transfer it to the device
-	mMask = cl::Buffer( mContext,
-					   CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-					   sizeof(float)*(maskSize*2+1)*(maskSize*2+1),
-					   mask );
-	
-	// Compile OpenCL code
-	cl::Program program = cl::Program( mContext, loadString( loadAsset( "gaussian_blur.cl" ) ), true );
-	
-	// Run Gaussian kernel
-	mGaussianKernel = cl::Kernel(program, "gaussian_blur");
-	mGaussianKernel.setArg(0, mClImage);
-	mGaussianKernel.setArg(1, mMask);
-	mGaussianKernel.setArg(2, mClInteropResult);
-	mGaussianKernel.setArg(3, maskSize);
+	mNaiveImpl = GaussianNaive::create( mCommandQueue, mClImage, mClInteropResult, mImageSize );
+	mNaiveImpl->setup( mContext );
 }
 
 void GaussianBlurApp::keyDown( KeyEvent event )
@@ -190,32 +155,23 @@ void GaussianBlurApp::keyDown( KeyEvent event )
 		break;
 	}
 	// reset with new sigma
-	int maskSize;
-	float * mask = createBlurMask( mSigma, &maskSize );
-	mMask = cl::Buffer( mContext,
-					   CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-					   sizeof(float)*(maskSize*2+1)*(maskSize*2+1),
-					   mask );
-	mGaussianKernel.setArg( 1, mMask );
-	mGaussianKernel.setArg( 3, maskSize );
+	if( mUseNaive )
+		mNaiveImpl->setupBlurMask( mContext, mSigma );
+	else
+		mNaiveImpl->setupBlurMask( mContext, mSigma );
 	mSigmaUpdated = true;
 }
 
 void GaussianBlurApp::update()
 {
 	if( mSigmaUpdated ) {
-		std::vector<cl::Memory> memory = { mClInteropResult };
-		mCommandQueue.enqueueAcquireGLObjects( &memory );
 		cl::Event perfEvent;
-		mCommandQueue.enqueueNDRangeKernel( mGaussianKernel,
-										   cl::NullRange,
-										   cl::NDRange( mImageSize.x, mImageSize.y ),
-										   cl::NullRange,
-										   nullptr,
-										   &perfEvent );
+		if( mUseNaive )
+			perfEvent = mNaiveImpl->compute();
+		else
+			perfEvent = mNaiveImpl->compute();
 		perfEvent.setCallback( CL_COMPLETE, &GaussianBlurApp::profileEventCallback, this );
 		mProfilingEvents.push_back( std::move( perfEvent ) );
-		mCommandQueue.enqueueReleaseGLObjects( &memory );
 		mSigmaUpdated = false;
 	}
 }

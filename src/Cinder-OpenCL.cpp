@@ -49,7 +49,6 @@ std::ostream& operator<<( std::ostream &lhs, const cl::Device &rhs )
 	
 cl_context_properties* getDefaultSharedGraphicsContextProperties()
 {
-	auto ctx = gl::context();
 	static cl_context_properties contextProperties[] = { 0, 0, 0 };
 #if defined (__APPLE__) || defined(MACOSX)
 	contextProperties[0] = CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE;
@@ -61,5 +60,40 @@ cl_context_properties* getDefaultSharedGraphicsContextProperties()
 	//TODO: DirectX Implementation
 	return contextProperties;
 }
+	
+void convertChannelOrder( cl_channel_order clChannelOrder, ImageIo::ColorModel *colorModel, ImageIo::ChannelOrder *channelOrder )
+{
+	switch ( clChannelOrder ) {
+		case CL_R:
+			*colorModel = ImageIo::CM_GRAY; *channelOrder = ImageIo::Y;
+		break;
+		case CL_RGB:
+			*colorModel = ImageIo::CM_RGB; *channelOrder = ImageIo::RGB;
+		break;
+		case CL_RGBA:
+			*colorModel = ImageIo::CM_RGB; *channelOrder = ImageIo::RGBA;
+		break;
+		default:
+			throw ImageIoException();
+	}
+}
+
+void convertChannelDataType( cl_channel_type type, ImageIo::DataType *dataType )
+{
+	switch ( type ) {
+		case CL_UNSIGNED_INT8:
+			*dataType = ImageIo::DataType::UINT8;
+		break;
+		case CL_UNSIGNED_INT16:
+			*dataType = ImageIo::DataType::UINT16;
+		break;
+		case CL_FLOAT:
+			*dataType = ImageIo::DataType::FLOAT32;
+		break;
+		default:
+			throw ImageIoExceptionIllegalDataType();
+	}
+}
+	
 	
 }

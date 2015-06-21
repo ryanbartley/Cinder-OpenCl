@@ -9,10 +9,22 @@ in vec4 vModelPosition;
 in vec3 vModelNormal;
 in vec4	vShadowCoord;
 
-uniform vec3			uLightPos;
-
 uniform sampler2DShadow	uShadowMap;
 uniform float			uDepthBias;
+
+uniform vec3	uMatAmbient;
+uniform vec3	uMatDiffuse;
+uniform vec3	uMatSpecular;
+uniform float   uMatShininess;
+
+uniform struct Light {
+	vec3 position;
+	vec3 intensities;
+	float attenuation;
+	float ambientCoefficient;
+};
+
+uniform Light light;
 
 out vec4 fragColor;
 
@@ -38,21 +50,28 @@ void main()
 	// Normal in view space
 	vec3	N = normalize( vNormal );
 	// Light direction
-	vec3	L = normalize( uLightPos - vPosition.xyz );
+	vec3	L = normalize( light.position - vPosition.xyz );
 	// To camera vector
 	vec3	C = normalize( -vPosition.xyz );
 	// Surface reflection vector
 	vec3	R = normalize( -reflect( L, N ) );
 	
-	// Modulated ambient (with fake red indirect lighting coming from the sphere)
-	vec3	sphereGlow = vec3( 0.6, 0.15, 0.15 );
-	vec3	indirectGlow = vec3( clamp( dot( 0.8 * normalize(vModelNormal), -normalize(vModelPosition.xyz) ), 0.0, 0.55 ), 0.0, 0.0 );
-	vec3	A = sphereGlow + vec3( 0.07, 0.05, 0.1 );
+	//ambient
+	vec3 ambient = light.ambientCoefficient * uMatAmbient * light.intensities;
+	
 	// Diffuse factor
-	float NdotL = max( dot( N, L ), 0.0 );
-	vec3	D = vec3( NdotL );
+	float diffuseCoefficient = max( dot( N, L ), 0.0 );
+	vec3 diffuse = diffuseCoefficient * uMatDiffuse * light.intensities;
+	
 	// Specular factor
-	vec3	S = pow( max( dot( R, C ), 0.0 ), 50.0 ) * vec3(1.0);
+	float specularCoefficient = 0.0;
+	if(diffuseCoefficient > 0.0)
+		specularCoefficient = pow( max( dot( R, C ), 0.0 ), uMatShininess );
+	vec3 specular = specularCoefficient * uMatSpecular * light.intensities;
+	
+	// Attenuation Factor
+	float distanceToLight = length(light.position - vPosition.xyz);
+	float attenuation = 1.0 / (1.0 + light.attenuation * pow(distanceToLight, 2));
 		
 	// Sample the shadowmap to compute the shadow value
 	float shadow = 1.0f;
@@ -60,6 +79,11 @@ void main()
 	sc.z += uDepthBias;
 	
 	shadow = samplePCF3x3( sc );
+
+	// linear color (color before gamma correction)
+	vec3 linearColor = ambient + ( shadow * ( attenuation * ( diffuse + specular ) ) );
 	
-	fragColor = vec4( ( ( D + S ) * shadow + A ) * vColor.rgb, 1.0 );
+	// final color (after gamma correction)
+	vec3 gamma = vec3( 1.0 / 2.2 );
+	fragColor = vec4( pow( linearColor, gamma ), 1.0f );
 }

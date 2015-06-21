@@ -48,6 +48,7 @@
 		B32862B71B3141BB00AAE085 /* Cinder-OpenCL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Cinder-OpenCL.cpp"; sourceTree = "<group>"; };
 		B32862B91B31595A00AAE085 /* gaussian_blur.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = gaussian_blur.cl; path = ../assets/gaussian_blur.cl; sourceTree = "<group>"; };
 		B32862BB1B315A5A00AAE085 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
+		B39C60161B361D8A00DA288C /* GaussianNaive.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GaussianNaive.hpp; path = ../include/GaussianNaive.hpp; sourceTree = "<group>"; };
 		B40F3322334F4881A7B0D084 /* GaussianBlurApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = GaussianBlurApp.cpp; path = ../src/GaussianBlurApp.cpp; sourceTree = "<group>"; };
 		EACC0D09221545019A6EA438 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				B40F3322334F4881A7B0D084 /* GaussianBlurApp.cpp */,
+				B39C60161B361D8A00DA288C /* GaussianNaive.hpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
