@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Cinder-OpenCL.h"
-#include "cinder/gl/Vbo.h"
+#include "cinder/gl/gl.h"
 
 const int width = 64;
 const int height = 64;

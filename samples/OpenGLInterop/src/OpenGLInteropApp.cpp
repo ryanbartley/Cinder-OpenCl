@@ -72,7 +72,7 @@ void OpenGLInteropApp::setupGl()
 										.fragment( loadAsset( "basic.frag" ) )
 										.attribLocation( "position", 0 )
 								   .uniform( gl::UniformSemantic::UNIFORM_MODEL_VIEW_PROJECTION, "mvp" ) );
-	mGlTexture = gl::Texture2d::create( getWindowWidth(), getWindowHeight(), gl::Texture2d::Format().internalFormat( GL_RGB32F ) );
+	mGlTexture = gl::Texture2d::create( getWindowWidth(), getWindowHeight(), gl::Texture2d::Format().internalFormat( GL_RGBA32F ) );
 	
 }
 
@@ -123,14 +123,10 @@ void OpenGLInteropApp::computeTexture()
     mTextureKernel.setArg( 2, sizeof(cl_int), &size.y );
     mTextureKernel.setArg( 3, sizeof(cl_int), &seq );
 	
-	std::vector<cl::Memory> glMemory = { mClImage };
-	mClCommandQueue.enqueueAcquireGLObjects( &glMemory );
-	
 	mClCommandQueue.enqueueNDRangeKernel( mTextureKernel,
 										 cl::NullRange,
 										 cl::NDRange( size.x, size.y ),
 										 cl::NDRange( 32, 4 ) );
-	mClCommandQueue.enqueueReleaseGLObjects( &glMemory );
 }
 
 void OpenGLInteropApp::computeVbo()
@@ -146,36 +142,34 @@ void OpenGLInteropApp::computeVbo()
 	mVboKernel.setArg( 2, sizeof(cl_int), &size.y );
 	mVboKernel.setArg( 3, sizeof(cl_int), &seq );
 	
-	
-	// Acquire the GL Object
-	// Note, we should ensure GL is completed with any commands that might affect this VBO
-	// before we issue OpenCL commands
-	
-	std::vector<cl::Memory> glMemory = { mClVbo };
-	mClCommandQueue.enqueueAcquireGLObjects( &glMemory );
-	
     // Queue the kernel up for execution across the array
 	mClCommandQueue.enqueueNDRangeKernel( mVboKernel,
 										 cl::NullRange,
 										 cl::NDRange( static_cast<size_t>(size.y) ),
 										 cl::NDRange( 32 ) );
-	
-	// Release the GL Object
-	// Note, we should ensure OpenCL is finished with any commands that might affect the VBO
-	mClCommandQueue.enqueueReleaseGLObjects( &glMemory );
 }
 
 void OpenGLInteropApp::update()
 {
+	// Acquire the GL Object
+	// Note, we should ensure GL is completed with any commands that might affect this VBO
+	// before we issue OpenCL commands
+	std::vector<cl::Memory> glMemory = { mClVbo, mClImage };
+	mClCommandQueue.enqueueAcquireGLObjects( &glMemory );
+
 	computeTexture();
 	computeVbo();
+
+	// Release the GL Object
+	// Note, we should ensure OpenCL is finished with any commands that might affect the VBO
+	mClCommandQueue.enqueueReleaseGLObjects( &glMemory );
 }
 
 void OpenGLInteropApp::draw()
 {
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) );
-	
+
 	gl::setMatricesWindow( getWindowSize() );
 	
 	gl::draw( mGlTexture );

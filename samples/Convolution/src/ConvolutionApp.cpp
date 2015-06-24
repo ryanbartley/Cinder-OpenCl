@@ -117,17 +117,18 @@ void ConvolutionApp::createWithBlock()
     
 	mCommandQueue.enqueueReadBuffer( mOutputSignalBuffer, CL_TRUE, 0, sizeof(cl_uint) * outputSignalHeight * outputSignalHeight, outputSignal);
 	
+	console() << std::endl << std::endl;
     // Output the result buffer
     for (int y = 0; y < outputSignalHeight; y++)
 	{
 		for (int x = 0; x < outputSignalWidth; x++)
 		{
-			std::cout << outputSignal[x][y] << " ";
+			console() << outputSignal[x][y] << " ";
 		}
-		std::cout << std::endl;
+		console() << std::endl;
 	}
 	
-    std::cout << std::endl << "Executed program succesfully." << std::endl;
+	console() << std::endl << "Executed program succesfully." << std::endl << std::endl;
 }
 
 void ConvolutionApp::setup()

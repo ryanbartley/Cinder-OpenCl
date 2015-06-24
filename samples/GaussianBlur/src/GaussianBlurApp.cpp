@@ -15,8 +15,6 @@ using namespace std;
 
 #pragma OPENCL EXTENSION cl_khr_gl_event : enable
 
-
-
 class GaussianBlurApp : public App {
   public:
 	void setup() override;
@@ -55,6 +53,7 @@ class GaussianBlurApp : public App {
 	cl::ImageGL			mClInteropResult;
 	
 	GaussianNaiveRef	mNaiveImpl;
+	bool				doThings = true;
 	
 	gl::Texture2dRef	mGlImageResult;
 	
@@ -100,7 +99,7 @@ void GaussianBlurApp::setupCl()
 	mPlatform.getDevices( CL_DEVICE_TYPE_GPU, &devices );
 	// Create an OpenCL context on first available platform
 	mContext = cl::Context( devices[0],
-						   getDefaultSharedGraphicsContextProperties(),
+						   getDefaultSharedGraphicsContextProperties( mPlatform ),
 						   &GaussianBlurApp::contextInfo );
 	
 	// Create a command-queue on the on the created context and allow for profiling
@@ -109,39 +108,54 @@ void GaussianBlurApp::setupCl()
 
 void GaussianBlurApp::setupGlTextureClImages()
 {
-	// Load image
-	auto surface = Surface32f::create( loadImage( loadAsset( "lena.jpg" ) ) );
-	mImageSize = surface->getSize();
-	
-	getWindow()->setSize( mImageSize );
-	
-	// Create an OpenCL Image / texture and transfer data to the device
-	// This cl image will hold the surface data as constant.
-	mClImage = cl::Image2D( mContext,
-						   CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-						   cl::ImageFormat(CL_RGB, CL_FLOAT),
-						   mImageSize.x, mImageSize.y,
-						   0, (void*)surface->getData());
-	
-	// Allocate an empty texture which will be the placeholder for the result.
-	mGlImageResult = gl::Texture2d::create( mImageSize.x, mImageSize.y,
-										   gl::Texture2d::Format().internalFormat( GL_RGB32F ) );
-	
-	// Create a buffer for the result
-	mClInteropResult = cl::ImageGL( mContext,
-								   CL_MEM_WRITE_ONLY,
-								   mGlImageResult->getTarget(),
-								   0, mGlImageResult->getId() );
+	try { 
+		// Load image
+		auto surface = Surface32f::create( loadImage( loadAsset( "lena.jpg" ) ), SurfaceConstraintsDefault(), true );
+		mImageSize = surface->getSize();
+
+		getWindow()->setSize( mImageSize );
+
+		std::vector<cl::ImageFormat> imageFormats;
+		mContext.getSupportedImageFormats( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, CL_MEM_OBJECT_IMAGE2D, &imageFormats );
+
+		for( auto & imageFormat : imageFormats ) {
+			console() << "Channel Order: " << constantToString( imageFormat.image_channel_order ) << " Channel Data Type: " << constantToString( imageFormat.image_channel_data_type ) << std::endl;
+		}
+
+		// Create an OpenCL Image / texture and transfer data to the device
+		// This cl image will hold the surface data as constant.
+		mClImage = cl::Image2D( mContext,
+								CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
+								cl::ImageFormat( CL_RGBA, CL_FLOAT ),
+								mImageSize.x, mImageSize.y,
+								0, (void*) surface->getData() );
+
+		// Allocate an empty texture which will be the placeholder for the result.
+		mGlImageResult = gl::Texture2d::create( mImageSize.x, mImageSize.y,
+												gl::Texture2d::Format().internalFormat( GL_RGBA8 ) );
+
+		// Create a buffer for the result
+		mClInteropResult = cl::ImageGL( mContext,
+										CL_MEM_WRITE_ONLY,
+										mGlImageResult->getTarget(),
+										0, mGlImageResult->getId() );
+	}
+	catch( const cl::Error &e ) {
+		CI_LOG_E( e.what() + errorToString( e.err() ) );
+		doThings = false;
+	}
 }
 
 void GaussianBlurApp::setupAlgorithms()
 {
+	if( !doThings ) return;
 	mNaiveImpl = GaussianNaive::create( mCommandQueue, mClImage, mClInteropResult, mImageSize );
 	mNaiveImpl->setup( mContext );
 }
 
 void GaussianBlurApp::keyDown( KeyEvent event )
 {
+	if( !doThings ) return;
 	switch ( event.getCode() ) {
 		case KeyEvent::KEY_UP: {
 			mSigma++;
@@ -164,6 +178,7 @@ void GaussianBlurApp::keyDown( KeyEvent event )
 
 void GaussianBlurApp::update()
 {
+	if( !doThings ) return;
 	if( mSigmaUpdated ) {
 		cl::Event perfEvent;
 		if( mUseNaive )
@@ -178,10 +193,11 @@ void GaussianBlurApp::update()
 
 void GaussianBlurApp::draw()
 {
+	if( !doThings ) return;
 	gl::clear( Color( 0, 0, 0 ) );
 	gl::setMatricesWindow( getWindowSize(), false );
 	gl::draw( mGlImageResult );
 	getWindow()->setTitle( to_string( getAverageFps() ) );
 }
 
-CINDER_APP( GaussianBlurApp, RendererGl )
+CINDER_APP( GaussianBlurApp, RendererGl, []( App::Settings * settings ) { settings->setConsoleWindowEnabled(); } )

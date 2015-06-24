@@ -13,12 +13,12 @@
 #include "cinder/gl/GlslProg.h"
 #include "cinder/Utilities.h"
 #include "MetaBallsController.h"
+#include "cinder/app/App.h"
 
 using namespace std;
 using namespace ci;
 using namespace ci::app;
 using namespace ci::gl;
-using namespace cl;
 
 ::size_t full_size = width * height * depth;
 
@@ -50,8 +50,8 @@ void MarchingCubes::setupGl()
 	
 	{
 		auto glsl = gl::GlslProg::create( gl::GlslProg::Format( )
-										 .vertex( loadAsset( "phong.vert" ) )
-										 .fragment( loadAsset( "phong.frag" ) ) );
+										 .vertex( ci::app::loadAsset( "phong.vert" ) )
+										 .fragment( ci::app::loadAsset( "phong.frag" ) ) );
 		auto vboMesh = gl::VboMesh::create( MAX_VERTS, GL_TRIANGLES, {
 			{ positionBufferLayout, mGlVertPositions },
 			{ normalBufferLayout, mGlVertNormals }

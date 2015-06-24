@@ -8,6 +8,7 @@
 #include "Cinder-OpenCL.h"
 #include "cinder/gl/ConstantConversions.h"
 #include "cinder/params/Params.h"
+#include "CL\cl_gl_ext.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -369,7 +370,7 @@ void ProceduralGeometricDisplacementApp::renderShadow()
 	}
 	{
 		gl::ScopedModelMatrix scopeModel;
-		gl::translate( vec3( 0, 0, -10 ) );
+		gl::translate( vec3( 0, 0, 10 ) );
 		mWallShadow->draw();
 	}
 	{

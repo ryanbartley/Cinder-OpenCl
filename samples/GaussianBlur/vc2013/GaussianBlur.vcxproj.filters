@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -12,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Blocks">
+      <UniqueIdentifier>{5592bdd2-b27a-4b06-83a9-6cdb5efef830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blocks\Cinder-OpenCL">
+      <UniqueIdentifier>{0b6651ea-2eaf-43b6-a227-9d67e25b324e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blocks\Cinder-OpenCL\include">
+      <UniqueIdentifier>{d845460a-5176-46c9-807f-4a706cdad6be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blocks\Cinder-OpenCL\src">
+      <UniqueIdentifier>{114b3b63-b7f5-4172-ba5e-240db3cbdf47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\GaussianBlurApp.cpp">
@@ -23,10 +36,19 @@
     <ClInclude Include="..\include\Resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\..\src\Cinder-OpenCL.cpp">
+      <Filter>Blocks\Cinder-OpenCL\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Cinder-OpenCL.h">
+      <Filter>Blocks\Cinder-OpenCL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\cl.hpp">
+      <Filter>Blocks\Cinder-OpenCL\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

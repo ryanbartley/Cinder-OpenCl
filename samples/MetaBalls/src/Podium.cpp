@@ -9,6 +9,8 @@
 #include "Podium.h"
 #include "cinder/TriMesh.h"
 #include "cinder/ObjLoader.h"
+#include "cinder/app/App.h"
+
 using namespace ci;
 using namespace ci::app;
 using namespace std;
