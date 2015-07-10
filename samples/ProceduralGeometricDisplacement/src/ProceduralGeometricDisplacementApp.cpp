@@ -137,7 +137,7 @@ void ProceduralGeometricDisplacementApp::setup()
 	mCam.lookAt( vec3( 0.0f, 5.0f, -7.0f ), vec3( 0 ) );
 	mCam.setPerspective( 55.0f, getWindowAspectRatio(), 0.1f, 10000.0f );
 	mLightCam.lookAt( vec3( -7.0f, 10.0f, -7.0f ), vec3( 0 ) );
-	mLightCam.setPerspective( 55.0f, getWindowAspectRatio(), 0.01f, 10000.0f );
+	mLightCam.setPerspective( 55.0f, getWindowAspectRatio(), 0.01f, 1000000.0f );
 	
 	mCameraControl.setCamera( &mCam );
 	
@@ -239,10 +239,13 @@ void ProceduralGeometricDisplacementApp::createShadowFbo()
 	depthFormat.setInternalFormat( GL_DEPTH_COMPONENT32F );
 	depthFormat.setMagFilter( GL_LINEAR );
 	depthFormat.setMinFilter( GL_LINEAR );
-	depthFormat.setWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
+	depthFormat.setWrap( GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER );
 	depthFormat.setCompareMode( GL_COMPARE_REF_TO_TEXTURE );
-	depthFormat.setCompareFunc( GL_LEQUAL );
+	depthFormat.setCompareFunc( GL_LESS );
 	mShadowTex = gl::Texture2d::create( 1024, 1024, depthFormat );
+	gl::ScopedTextureBind scopeTex( mShadowTex, 0 );
+	vec4 color = vec4( 1.0 );
+	glTexParameterfv( GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, glm::value_ptr( color ) );
 	
 	gl::Fbo::Format fboFormat;
 	fboFormat.attachment( GL_DEPTH_ATTACHMENT, mShadowTex ).disableColor();
@@ -369,7 +372,7 @@ void ProceduralGeometricDisplacementApp::renderShadow()
 	}
 	{
 		gl::ScopedModelMatrix scopeModel;
-		gl::translate( vec3( 0, 0, -10 ) );
+		gl::translate( vec3( 0, 0, 10 ) );
 		mWallShadow->draw();
 	}
 	{
@@ -441,6 +444,12 @@ void ProceduralGeometricDisplacementApp::draw()
 	}
 	else {
 		renderSkyBox();
+	}
+	
+	{
+		gl::ScopedModelMatrix scopeModel;
+		gl::translate( mLightCam.getEyePoint() );
+		gl::drawSolidCircle( vec2( 0 ), 1.0f );
 	}
 	
 	if( mRenderDepthTex ) {

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00399FC436CE47C7B4CCB639 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 46507D3A1BC94C10A552B02F /* CinderApp.icns */; };
 		006D720419952D00008149E2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D720219952D00008149E2 /* AVFoundation.framework */; };
 		006D720519952D00008149E2 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D720319952D00008149E2 /* CoreMedia.framework */; };
 		0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
@@ -15,14 +14,19 @@
 		00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
 		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
-		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
-		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
-		0832082FA1564C4A9D3185ED /* GaussianBlurApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B40F3322334F4881A7B0D084 /* GaussianBlurApp.cpp */; };
+		15C9B273034A4E93946D1422 /* BasicFlocking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44CF29DC08B3495CB6679BC8 /* BasicFlocking.cpp */; };
+		35690E951AC0E04B0077FD5E /* update.vert in Resources */ = {isa = PBXBuildFile; fileRef = 35690E941AC0E04B0077FD5E /* update.vert */; };
+		35690E971AC0E0550077FD5E /* render.vert in Resources */ = {isa = PBXBuildFile; fileRef = 35690E961AC0E0550077FD5E /* render.vert */; };
+		35690E991AC0E05C0077FD5E /* render.frag in Resources */ = {isa = PBXBuildFile; fileRef = 35690E981AC0E05C0077FD5E /* render.frag */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		B32862B81B3141BB00AAE085 /* Cinder-OpenCL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B32862B71B3141BB00AAE085 /* Cinder-OpenCL.cpp */; };
-		B32862BA1B31595A00AAE085 /* gaussian_blur.cl in Sources */ = {isa = PBXBuildFile; fileRef = B32862B91B31595A00AAE085 /* gaussian_blur.cl */; };
-		B32862BC1B315A5A00AAE085 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B32862BB1B315A5A00AAE085 /* OpenCL.framework */; };
+		B38603641B4EC3A300518683 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38603631B4EC3A300518683 /* IOKit.framework */; };
+		B38603661B4EC3AA00518683 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38603651B4EC3AA00518683 /* IOSurface.framework */; };
+		B386036D1B4EC6A100518683 /* Cinder-OpenCL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B386036C1B4EC6A100518683 /* Cinder-OpenCL.cpp */; };
+		B386036F1B4EC6DC00518683 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B386036E1B4EC6DC00518683 /* OpenCL.framework */; };
+		B38603711B4F564600518683 /* update.cl in Sources */ = {isa = PBXBuildFile; fileRef = B38603701B4F564600518683 /* update.cl */; };
+		D06324C423F847D183F50FFC /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 072CD6611B9F48AA90748A88 /* CinderApp.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,26 +37,27 @@
 		00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		00B784B10FF439BC000DE1D7 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		00B784B20FF439BC000DE1D7 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		00B995581B128DF400A5C623 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		00B995591B128DF400A5C623 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
+		072CD6611B9F48AA90748A88 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		0AA5DAA0A5814B9FB581119E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		46507D3A1BC94C10A552B02F /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		35690E941AC0E04B0077FD5E /* update.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = update.vert; sourceTree = "<group>"; };
+		35690E961AC0E0550077FD5E /* render.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = render.vert; sourceTree = "<group>"; };
+		35690E981AC0E05C0077FD5E /* render.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = render.frag; sourceTree = "<group>"; };
+		44CF29DC08B3495CB6679BC8 /* BasicFlocking.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BasicFlocking.cpp; path = ../src/BasicFlocking.cpp; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
-		59C98D9BC9EC4538A3D3E7B1 /* GaussianBlur_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = GaussianBlur_Prefix.pch; sourceTree = "<group>"; };
-		81C3769DAF144726A5776C31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* GaussianBlur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GaussianBlur.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B32862B41B3141B300AAE085 /* Cinder-OpenCL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cinder-OpenCL.h"; sourceTree = "<group>"; };
-		B32862B51B3141B300AAE085 /* cl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cl.hpp; sourceTree = "<group>"; };
-		B32862B71B3141BB00AAE085 /* Cinder-OpenCL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Cinder-OpenCL.cpp"; sourceTree = "<group>"; };
-		B32862B91B31595A00AAE085 /* gaussian_blur.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = gaussian_blur.cl; path = ../assets/gaussian_blur.cl; sourceTree = "<group>"; };
-		B32862BB1B315A5A00AAE085 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
-		B39C60161B361D8A00DA288C /* GaussianNaive.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GaussianNaive.hpp; path = ../include/GaussianNaive.hpp; sourceTree = "<group>"; };
-		B39C60171B39AFA000DA288C /* Timer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Timer.hpp; path = ../include/Timer.hpp; sourceTree = "<group>"; };
-		B39C60601B3A07E300DA288C /* GaussianRecursive.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GaussianRecursive.hpp; path = ../include/GaussianRecursive.hpp; sourceTree = "<group>"; };
-		B40F3322334F4881A7B0D084 /* GaussianBlurApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = GaussianBlurApp.cpp; path = ../src/GaussianBlurApp.cpp; sourceTree = "<group>"; };
-		EACC0D09221545019A6EA438 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		652743C24B084AF49D065C18 /* BasicFlocking_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BasicFlocking_Prefix.pch; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* BasicFlocking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasicFlocking.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B38603631B4EC3A300518683 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		B38603651B4EC3AA00518683 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
+		B38603691B4EC69900518683 /* Cinder-OpenCL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cinder-OpenCL.h"; sourceTree = "<group>"; };
+		B386036A1B4EC69900518683 /* cl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cl.hpp; sourceTree = "<group>"; };
+		B386036C1B4EC6A100518683 /* Cinder-OpenCL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Cinder-OpenCL.cpp"; sourceTree = "<group>"; };
+		B386036E1B4EC6DC00518683 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
+		B38603701B4F564600518683 /* update.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = update.cl; sourceTree = "<group>"; };
+		FF8589C3DAE2499D913D30EB /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,18 +65,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B32862BC1B315A5A00AAE085 /* OpenCL.framework in Frameworks */,
+				B386036F1B4EC6DC00518683 /* OpenCL.framework in Frameworks */,
+				B38603661B4EC3AA00518683 /* IOSurface.framework in Frameworks */,
+				B38603641B4EC3A300518683 /* IOKit.framework in Frameworks */,
 				006D720419952D00008149E2 /* AVFoundation.framework in Frameworks */,
 				006D720519952D00008149E2 /* CoreMedia.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
 				5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */,
+				5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */,
 				00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */,
 				00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */,
 				00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */,
 				00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */,
-				00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */,
-				00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,7 +87,7 @@
 		01B97315FEAEA392516A2CEA /* Blocks */ = {
 			isa = PBXGroup;
 			children = (
-				B32862B21B3141A600AAE085 /* Cinder-OpenCL */,
+				B38603671B4EC68700518683 /* Cinder-OpenCL */,
 			);
 			name = Blocks;
 			sourceTree = "<group>";
@@ -89,8 +95,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B40F3322334F4881A7B0D084 /* GaussianBlurApp.cpp */,
-				B39C60161B361D8A00DA288C /* GaussianNaive.hpp */,
+				44CF29DC08B3495CB6679BC8 /* BasicFlocking.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -104,11 +109,10 @@
 				00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */,
 				00B784B10FF439BC000DE1D7 /* AudioUnit.framework */,
 				00B784B20FF439BC000DE1D7 /* CoreAudio.framework */,
+				5323E6B50EAFCA7E003A9687 /* QTKit.framework */,
 				5323E6B10EAFCA74003A9687 /* CoreVideo.framework */,
 				0091D8F80E81B9330029341E /* OpenGL.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
-				00B995581B128DF400A5C623 /* IOKit.framework */,
-				00B995591B128DF400A5C623 /* IOSurface.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -125,12 +129,12 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* GaussianBlur.app */,
+				8D1107320486CEB800E47090 /* BasicFlocking.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		29B97314FDCFA39411CA2CEA /* GaussianBlur */ = {
+		29B97314FDCFA39411CA2CEA /* CinderProject */ = {
 			isa = PBXGroup;
 			children = (
 				01B97315FEAEA392516A2CEA /* Blocks */,
@@ -140,16 +144,14 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
-			name = GaussianBlur;
+			name = CinderProject;
 			sourceTree = "<group>";
 		};
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				B39C60171B39AFA000DA288C /* Timer.hpp */,
-				EACC0D09221545019A6EA438 /* Resources.h */,
-				B39C60601B3A07E300DA288C /* GaussianRecursive.hpp */,
-				59C98D9BC9EC4538A3D3E7B1 /* GaussianBlur_Prefix.pch */,
+				FF8589C3DAE2499D913D30EB /* Resources.h */,
+				652743C24B084AF49D065C18 /* BasicFlocking_Prefix.pch */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -157,9 +159,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				46507D3A1BC94C10A552B02F /* CinderApp.icns */,
-				81C3769DAF144726A5776C31 /* Info.plist */,
-				B32862B91B31595A00AAE085 /* gaussian_blur.cl */,
+				35690E931AC0E0300077FD5E /* assets */,
+				072CD6611B9F48AA90748A88 /* CinderApp.icns */,
+				0AA5DAA0A5814B9FB581119E /* Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -167,36 +169,50 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B32862BB1B315A5A00AAE085 /* OpenCL.framework */,
+				B386036E1B4EC6DC00518683 /* OpenCL.framework */,
+				B38603651B4EC3AA00518683 /* IOSurface.framework */,
+				B38603631B4EC3A300518683 /* IOKit.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B32862B21B3141A600AAE085 /* Cinder-OpenCL */ = {
+		35690E931AC0E0300077FD5E /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				B32862B31B3141B300AAE085 /* include */,
-				B32862B61B3141BB00AAE085 /* src */,
+				35690E941AC0E04B0077FD5E /* update.vert */,
+				35690E961AC0E0550077FD5E /* render.vert */,
+				35690E981AC0E05C0077FD5E /* render.frag */,
+				B38603701B4F564600518683 /* update.cl */,
+			);
+			name = assets;
+			path = ../assets;
+			sourceTree = "<group>";
+		};
+		B38603671B4EC68700518683 /* Cinder-OpenCL */ = {
+			isa = PBXGroup;
+			children = (
+				B38603681B4EC69900518683 /* include */,
+				B386036B1B4EC6A100518683 /* src */,
 			);
 			name = "Cinder-OpenCL";
 			sourceTree = "<group>";
 		};
-		B32862B31B3141B300AAE085 /* include */ = {
+		B38603681B4EC69900518683 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				B32862B41B3141B300AAE085 /* Cinder-OpenCL.h */,
-				B32862B51B3141B300AAE085 /* cl.hpp */,
+				B38603691B4EC69900518683 /* Cinder-OpenCL.h */,
+				B386036A1B4EC69900518683 /* cl.hpp */,
 			);
 			name = include;
 			path = ../../../include;
 			sourceTree = "<group>";
 		};
-		B32862B61B3141BB00AAE085 /* src */ = {
+		B386036B1B4EC6A100518683 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B32862B71B3141BB00AAE085 /* Cinder-OpenCL.cpp */,
+				B386036C1B4EC6A100518683 /* Cinder-OpenCL.cpp */,
 			);
 			name = src;
 			path = ../../../src;
@@ -205,9 +221,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D1107260486CEB800E47090 /* GaussianBlur */ = {
+		8D1107260486CEB800E47090 /* BasicFlocking */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "GaussianBlur" */;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "BasicFlocking" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
@@ -217,10 +233,10 @@
 			);
 			dependencies = (
 			);
-			name = GaussianBlur;
+			name = BasicFlocking;
 			productInstallPath = "$(HOME)/Applications";
-			productName = GaussianBlur;
-			productReference = 8D1107320486CEB800E47090 /* GaussianBlur.app */;
+			productName = CinderProject;
+			productReference = 8D1107320486CEB800E47090 /* BasicFlocking.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -229,8 +245,9 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0610;
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "GaussianBlur" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "BasicFlocking" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -240,11 +257,11 @@
 				French,
 				German,
 			);
-			mainGroup = 29B97314FDCFA39411CA2CEA /* GaussianBlur */;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CinderProject */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* GaussianBlur */,
+				8D1107260486CEB800E47090 /* BasicFlocking */,
 			);
 		};
 /* End PBXProject section */
@@ -254,7 +271,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00399FC436CE47C7B4CCB639 /* CinderApp.icns in Resources */,
+				D06324C423F847D183F50FFC /* CinderApp.icns in Resources */,
+				35690E991AC0E05C0077FD5E /* render.frag in Resources */,
+				35690E951AC0E04B0077FD5E /* update.vert in Resources */,
+				35690E971AC0E0550077FD5E /* render.vert in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,9 +285,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0832082FA1564C4A9D3185ED /* GaussianBlurApp.cpp in Sources */,
-				B32862B81B3141BB00AAE085 /* Cinder-OpenCL.cpp in Sources */,
-				B32862BA1B31595A00AAE085 /* gaussian_blur.cl in Sources */,
+				B38603711B4F564600518683 /* update.cl in Sources */,
+				15C9B273034A4E93946D1422 /* BasicFlocking.cpp in Sources */,
+				B386036D1B4EC6A100518683 /* Cinder-OpenCL.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +297,7 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CINDER_PATH = ../../../../..;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
@@ -284,16 +305,17 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = GaussianBlur_Prefix.pch;
+				GCC_PREFIX_HEADER = BasicFlocking_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
-				PRODUCT_NAME = GaussianBlur;
+				PRODUCT_NAME = BasicFlocking;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
 			};
@@ -302,6 +324,7 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CINDER_PATH = ../../../../..;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -310,16 +333,17 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = GaussianBlur_Prefix.pch;
+				GCC_PREFIX_HEADER = BasicFlocking_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
-				PRODUCT_NAME = GaussianBlur;
+				PRODUCT_NAME = BasicFlocking;
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
@@ -330,14 +354,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = x86_64;
-				CINDER_PATH = ../../../../..;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CINDER_PATH = ../../../../Cinder;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
 			};
@@ -347,13 +371,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = x86_64;
-				CINDER_PATH = ../../../../..;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CINDER_PATH = ../../../../Cinder;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
@@ -363,7 +386,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "GaussianBlur" */ = {
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "BasicFlocking" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
@@ -372,7 +395,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "GaussianBlur" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "BasicFlocking" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,

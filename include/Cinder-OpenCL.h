@@ -43,7 +43,7 @@ class ImageTargetCl : public ImageTarget {
 	
 class ImageSourceCl : public ImageSource {
   public:
-	ImageSourceCl( const cl::CommandQueue &commandQueue, const cl::Image2D &image )
+	ImageSourceCl( const cl::Image2D &image )
 	: ImageSource()
 	{
 		mWidth = image.getImageInfo<CL_IMAGE_WIDTH>();
@@ -62,12 +62,17 @@ class ImageSourceCl : public ImageSource {
 		setDataType( dataType );
 		
 		mRowBytes = image.getImageInfo<CL_IMAGE_ROW_PITCH>();
+		
 		cl::size_t<3> offset;
 		cl::size_t<3> region;
 		region[0] = mWidth;
 		region[0] = mHeight;
 		mData = new uint8_t[mWidth*mHeight*dataTypeBytes(mDataType)*channelOrderNumChannels(mChannelOrder)];
-		commandQueue.enqueueReadImage( image, true, offset, region, mRowBytes, 0, const_cast<uint8_t*>(mData) );
+		
+		auto context = image.getInfo<CL_MEM_CONTEXT>();
+		cl::CommandQueue queue( context );
+		
+		queue.enqueueReadImage( image, true, offset, region, mRowBytes, 0, const_cast<uint8_t*>(mData) );
 	}
 	
 	void load( ImageTargetRef target ) override {

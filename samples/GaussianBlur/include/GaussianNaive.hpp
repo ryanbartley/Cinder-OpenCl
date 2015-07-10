@@ -26,6 +26,7 @@ public:
 	void setupBlurMask( cl::Context context, float sigma );
 	void setup( cl::Context context );
 	cl::Event compute();
+	int getCurrentMaskSize() { return mCurrentMaskSize; }
 	
 private:
 	GaussianNaive( cl::CommandQueue command,
@@ -43,31 +44,32 @@ private:
 	cl::Buffer			mMask;
 	cl::Kernel			mNaiveKernel;
 	glm::ivec2			mImageSize;
+	int					mCurrentMaskSize;
 };
 
 inline void GaussianNaive::setupBlurMask( cl::Context context, float sigma )
 {
-	int maskSize = (int)ceil(3.0f*sigma);
-	float * mask = new float[(maskSize*2+1)*(maskSize*2+1)];
+	mCurrentMaskSize = (int)ceil(3.0f*sigma);
+	float * mask = new float[(mCurrentMaskSize*2+1)*(mCurrentMaskSize*2+1)];
 	float sum = 0.0f;
-	for(int a = -maskSize; a < maskSize+1; a++) {
-		for(int b = -maskSize; b < maskSize+1; b++) {
+	for(int a = -mCurrentMaskSize; a < mCurrentMaskSize+1; a++) {
+		for(int b = -mCurrentMaskSize; b < mCurrentMaskSize+1; b++) {
 			float temp = exp(-((float)(a*a+b*b) / (2*sigma*sigma)));
 			sum += temp;
-			mask[a+maskSize+(b+maskSize)*(maskSize*2+1)] = temp;
+			mask[a+mCurrentMaskSize+(b+mCurrentMaskSize)*(mCurrentMaskSize*2+1)] = temp;
 		}
 	}
 	// Normalize the mask
-	for(int i = 0; i < (maskSize*2+1)*(maskSize*2+1); i++)
+	for(int i = 0; i < (mCurrentMaskSize*2+1)*(mCurrentMaskSize*2+1); i++)
 		mask[i] = mask[i] / sum;
 	
 	mMask = cl::Buffer( context,
 					   CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-					   sizeof(float)*(maskSize*2+1)*(maskSize*2+1),
+					   sizeof(float)*(mCurrentMaskSize*2+1)*(mCurrentMaskSize*2+1),
 					   mask );
 	
 	mNaiveKernel.setArg(1, mMask);
-	mNaiveKernel.setArg(3, maskSize);
+	mNaiveKernel.setArg(3, mCurrentMaskSize);
 }
 
 inline void GaussianNaive::setup( cl::Context context )
