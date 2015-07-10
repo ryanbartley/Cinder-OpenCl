@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -45,7 +46,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;"..\..\..\..\..\include";..\..\..\src;..\..\..\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\..\..\..\..\include;..\..\..\src;..\..\..\include;..\..\..\..\..\..\..\..\..\Program Files (x86)\AMD APP SDK\3.0-0-Beta\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;NOMINMAX;_WIN32_WINNT=0x0502;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -58,8 +59,8 @@
       <AdditionalIncludeDirectories>"..\..\..\..\..\include";..\include</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>cinder-$(PlatformToolset)_d.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"..\..\..\..\..\lib\msw\$(PlatformTarget)"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cinder-$(PlatformToolset)_d.lib;OpenGL32.lib;%(AdditionalDependencies);OpenCL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\..\lib\msw\$(PlatformTarget)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -69,7 +70,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\include;"..\..\..\..\..\include";..\..\..\src;..\..\..\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;"..\..\..\..\..\include";..\..\..\src;..\..\..\include;..\..\..\..\..\..\..\..\..\Program Files (x86)\AMD APP SDK\3.0-0-Beta\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;NOMINMAX;_WIN32_WINNT=0x0502;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader />
@@ -84,8 +85,8 @@
       <AdditionalIncludeDirectories>"..\..\..\..\..\include";..\include</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>cinder-$(PlatformToolset).lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"..\..\..\..\..\lib\msw\$(PlatformTarget)"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cinder-$(PlatformToolset).lib;OpenGL32.lib;%(AdditionalDependencies);OpenCL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"..\..\..\..\..\lib\msw\$(PlatformTarget)";..\..\..\..\..\..\..\..\..\Program Files (x86)\AMD APP SDK\3.0-0-Beta\lib\x86_64;..\..\..\..\..\..\..\..\..\Program Files (x86)\AMD APP SDK\3.0-0-Beta\lib\x86_64</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
@@ -101,32 +102,13 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\Cinder-OpenCL.cpp" />
     <ClCompile Include="..\src\ProceduralGeometricDisplacementApp.cpp" />
-    <ClCompile Include="..\..\..\src\BufferObj.cpp" />
-    <ClCompile Include="..\..\..\src\Cl.cpp" />
-    <ClCompile Include="..\..\..\src\CommandQueue.cpp" />
-    <ClCompile Include="..\..\..\src\ConstantConversion.cpp" />
-    <ClCompile Include="..\..\..\src\Context.cpp" />
-    <ClCompile Include="..\..\..\src\Device.cpp" />
-    <ClCompile Include="..\..\..\src\Event.cpp" />
-    <ClCompile Include="..\..\..\src\Image.cpp" />
-    <ClCompile Include="..\..\..\src\MemoryObj.cpp" />
-    <ClCompile Include="..\..\..\src\Platform.cpp" />
-    <ClCompile Include="..\..\..\src\Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\Cinder-OpenCL.h" />
+    <ClInclude Include="..\..\..\include\cl.hpp" />
     <ClInclude Include="..\include\Resources.h" />
-    <ClInclude Include="..\..\..\include\BufferObj.h" />
-    <ClInclude Include="..\..\..\include\Cl.h" />
-    <ClInclude Include="..\..\..\include\CommandQueue.h" />
-    <ClInclude Include="..\..\..\include\ConstantConversion.h" />
-    <ClInclude Include="..\..\..\include\Context.h" />
-    <ClInclude Include="..\..\..\include\Device.h" />
-    <ClInclude Include="..\..\..\include\Event.h" />
-    <ClInclude Include="..\..\..\include\Image.h" />
-    <ClInclude Include="..\..\..\include\MemoryObj.h" />
-    <ClInclude Include="..\..\..\include\Platform.h" />
-    <ClInclude Include="..\..\..\include\Program.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

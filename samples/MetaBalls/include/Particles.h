@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Cinder-OpenCL.h"
-#include "cinder/gl/Vbo.h"
+#include "cinder/gl/gl.h"
 
 using ParticlesRef = std::shared_ptr<class Particles>;
 

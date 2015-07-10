@@ -10,6 +10,7 @@
 #include "cinder/gl/Vao.h"
 #include "cinder/gl/GlslProg.h"
 #include "cinder/Utilities.h"
+#include "cinder/app/App.h"
 
 #include "MetaBallsController.h"
 
@@ -17,7 +18,6 @@ const int Particles::sParticleCount = 64;
 
 using namespace ci;
 using namespace ci::app;
-using namespace cl;
 using namespace ci::gl;
 using namespace std;
 
@@ -79,8 +79,8 @@ void Particles::setupGl()
 	}
 	
 	mGlProgram = gl::GlslProg::create( gl::GlslProg::Format()
-									  .vertex( loadAsset( "basic.vert" ) )
-									  .fragment( loadAsset( "basic.frag" ) )
+									  .vertex( ci::app::loadAsset( "basic.vert" ) )
+									  .fragment( ci::app::loadAsset( "basic.frag" ) )
 									  .attribLocation( "ciPosition", 0 )
 									  .attribLocation( "ciColor", 1 ) );
 }
@@ -126,8 +126,8 @@ void Particles::update()
 	float time = 1.0f / 60.0f;
 	
 	mClUpdateKernel.setArg( 6, sizeof(float), &time );
-	mClUpdateKernel.setArg( 7, sizeof(bool), &mShouldReset );
-	mClUpdateKernel.setArg( 8, sizeof(int), &random );
+	mClUpdateKernel.setArg( 7, sizeof(int32_t), &mShouldReset );
+	mClUpdateKernel.setArg( 8, sizeof(int32_t), &random );
 	
 	mShouldReset = false;
 	

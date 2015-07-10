@@ -2,6 +2,7 @@
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Utilities.h"
+#include "cinder/Log.h"
 
 #include "Cinder-OpenCL.h"
 
@@ -20,7 +21,7 @@ class HelloWorldApp : public App {
 								::size_t cb,
 								void *user_data)
 	{
-		cout << "ERROR: " << errinfo << endl;
+		CI_LOG_I( errinfo );
 	}
 	
 	cl::Platform		mClPlatform;
@@ -40,14 +41,14 @@ void HelloWorldApp::setup()
 	
 	// Print the information for each platform
 	for( auto & platform : platforms ){
-		cout << platform << endl;
+		console() << platform << endl;
 	}
 	
 	// Get the GPU devices from the platform
 	std::vector<cl::Device> devices;
 	mClPlatform.getDevices( CL_DEVICE_TYPE_GPU, &devices );
 	for( auto & device : devices ) {
-		cout << "DEVICE NAME: " << device.getInfo<CL_DEVICE_NAME>() << endl;
+		console() << device << endl;
 	}
 	// Create an OpenCL context on first available platform
 	mContext = cl::Context( devices, nullptr, &HelloWorldApp::contextErrorCallback );
@@ -63,9 +64,9 @@ void HelloWorldApp::setup()
 	std::vector<cl::Kernel> kernels;
 	mProgram.createKernels( &kernels );
 	for( auto & kernel : kernels ) {
-		cout << "KERNEL NAME: " << kernel.getInfo<CL_KERNEL_FUNCTION_NAME>() << endl;
+		console() << "KERNEL NAME: " << kernel.getInfo<CL_KERNEL_FUNCTION_NAME>() << endl;
 	}
-	cout << endl;
+	console() << endl;
 	
     // Create memory objects that will be used as arguments to
     // kernel.  First create host memory arrays that will be
@@ -99,13 +100,14 @@ void HelloWorldApp::setup()
 	std::vector<cl::Event> waitEvents = { event };
 	mCommandQueue.enqueueReadBuffer( mMemObjects[2], true, 0, ARRAY_SIZE * sizeof(float), result, &waitEvents );
 	
+	console() << std::endl;
     // Output the result buffer
     for (int i = 0; i < ARRAY_SIZE; i++)
     {
-        std::cout << result[i] << " ";
+        console() << result[i] << " ";
     }
-    std::cout << std::endl;
-    std::cout << "Executed program succesfully." << std::endl;
+    console() << std::endl;
+    console() << "Executed program succesfully." << std::endl << std::endl;
 	quit();
 }
 

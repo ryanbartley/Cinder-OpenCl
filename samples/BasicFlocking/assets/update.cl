@@ -12,11 +12,11 @@ __kernel void  update( __global float3 *positions,
 					  float		uMaxThresh,
 					  float		uTimeDelta)
 {
-	const float minSpeed = 0.5;
-	const float maxSpeed = 1.0;
+	const float minSpeed = 0.5f;
+	const float maxSpeed = 1.0f;
 	float3 acc = float3( 0.0f );
 	float3 newVel;
-	float crowded = 1.0;
+	float crowded = 1.0f;
 	
 	int index = get_global_id(0);
 	
@@ -27,7 +27,7 @@ __kernel void  update( __global float3 *positions,
 	for( int i=0; i<uFlockSize; i++ ){
 		if( i != index ) {
 			//			if( crowded > 10.0 ) break;
-			float3 theirPosition	= positions[index];
+			float3 theirPosition	= positions[i];
 			
 			float3 dir			= myPosition - theirPosition;
 			float dist			= length( dir );
@@ -48,7 +48,7 @@ __kernel void  update( __global float3 *positions,
 					float3 theirVelocity		= velocities[i];
 					float threshDelta		= uMaxThresh - uMinThresh;
 					float adjustedPercent	= ( percent - uMinThresh )/threshDelta;
-					float F					= ( 1.0f - ( cos( adjustedPercent * 6.28318f ) * -0.5f + 0.5 ) ) * uAlignStrength;
+					float F					= ( 1.0f - ( cos( adjustedPercent * 6.28318f ) * -0.5f + 0.5f ) ) * uAlignStrength;
 					acc						+= normalize( theirVelocity ) * F * uTimeDelta;
 					crowded					+= ( 1.0f - percent ) * 0.5f;
 				}
@@ -56,7 +56,7 @@ __kernel void  update( __global float3 *positions,
 				{	// attraction
 					float threshDelta		= 1.0f - uMaxThresh;
 					float adjustedPercent	= ( percent - uMaxThresh )/threshDelta;
-					float F					= ( 1.0f - ( cos( adjustedPercent * 6.28318f ) * -0.5f + 0.5 ) ) * uAttractStrength;
+					float F					= ( 1.0f - ( cos( adjustedPercent * 6.28318f ) * -0.5f + 0.5f ) ) * uAttractStrength;
 					acc						-= dirNorm * F * uTimeDelta;
 					crowded					+= ( 1.0f - percent ) * 0.25f;
 				}

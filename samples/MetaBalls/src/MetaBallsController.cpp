@@ -7,7 +7,7 @@
 //
 
 #include "MetaBallsController.h"
-
+#include "cinder/app/App.h"
 #include "cinder/Log.h"
 
 using namespace ci;
@@ -40,15 +40,20 @@ void MetaBallsController::contextCallback( const char *errinfo, const void *priv
 
 void MetaBallsController::setup()
 {
-	setupCl();
-	setupScene();
-	
-	mCam.setPerspective( 60, getWindowAspectRatio(), 0.01, 1000 );
-	mCam.lookAt( vec3( 50, 50, 50 ), vec3( 32, 15, 32 ) );
-	mCamUI.setCamera( &mCam );
-	
-	gl::enableDepthRead();
-	gl::enableDepthWrite();
+	try {
+		setupCl();
+		setupScene();
+
+		mCam.setPerspective( 60, ci::app::getWindowAspectRatio(), 0.01, 1000 );
+		mCam.lookAt( vec3( 50, 50, 50 ), vec3( 32, 15, 32 ) );
+		mCamUI.setCamera( &mCam );
+
+		gl::enableDepthRead();
+		gl::enableDepthWrite();
+	}
+	catch( const cl::Error &e ) {
+		CI_LOG_E( e.what() << " " << errorToString( e.err() ) );
+	}
 }
 
 void MetaBallsController::update()
@@ -73,6 +78,11 @@ void MetaBallsController::draw()
 	gl::setMatrices( mCam );
 	mPodium->draw();
 	mMarchingCubes->render();
+	gl::disableDepthRead();
+	gl::disableDepthWrite();
+	mParticles->render();
+	gl::enableDepthRead();
+	gl::enableDepthWrite();
 }
 
 void MetaBallsController::mouseDown( MouseEvent event )

@@ -19,11 +19,12 @@ namespace cinder {
 	
 std::ostream& operator<<( std::ostream &lhs, const cl::Platform &rhs );
 std::ostream& operator<<( std::ostream &lhs, const cl::Device &rhs );
-cl_context_properties* getDefaultSharedGraphicsContextProperties();
+cl_context_properties* getDefaultSharedGraphicsContextProperties( cl::Platform platform = cl::Platform() );
 
 void convertChannelOrder( cl_channel_order channel, ImageIo::ColorModel *colorModel, ImageIo::ChannelOrder *channelOrder );
 void convertChannelDataType( cl_channel_type type, ImageIo::DataType *dataType );
 
+std::string errorToString( cl_int error );
 std::string constantToString( cl_int constant );
 
 class ImageTargetCl : public ImageTarget {

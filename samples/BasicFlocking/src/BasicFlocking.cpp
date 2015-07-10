@@ -23,7 +23,7 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-const int FLOCK_SIZE = 3000;
+const int FLOCK_SIZE = 10000;
 
 class BasicFlockingApp : public App {
   public:
@@ -133,7 +133,7 @@ void BasicFlockingApp::setup()
 	mFlockVelocity = gl::Vbo::create( GL_ARRAY_BUFFER, FLOCK_SIZE * sizeof( vec3 ), velocityData, GL_STATIC_DRAW );
 	
 	mFlockPositionBuffer = cl::BufferGL( mContext, CL_MEM_READ_WRITE, mFlockPosition->getId() );
-	mFlockVelocityBuffer = cl::BufferGL( mContext, CL_MEM_READ_WRITE, mFlockPosition->getId() );
+	mFlockVelocityBuffer = cl::BufferGL( mContext, CL_MEM_READ_WRITE, mFlockVelocity->getId() );
 	
 	// Setup Update Vaos
 	
@@ -162,7 +162,7 @@ void BasicFlockingApp::setup()
 	cl::Program program = cl::Program( mContext, programString, true );
 	
 	mUpdateKernel = cl::Kernel( program, "update" );
-	mUpdateKernel.setArg( 2, FLOCK_SIZE );
+	mUpdateKernel.setArg( 2, sizeof(int), &FLOCK_SIZE );
 	
 	mRenderShader = gl::GlslProg::create( gl::GlslProg::Format().vertex( loadAsset( "render.vert" ) )
 										 .fragment( loadAsset( "render.frag" ) ) );
@@ -236,7 +236,7 @@ void BasicFlockingApp::update()
 {
 	double prevTime = mTime;
 	mTime			= getElapsedSeconds();
-//	float dt		= ( mTime - prevTime ) * mTimeMulti;
+	//	float dt		= ( mTime - prevTime ) * mTimeMulti;
 	float dt		= ( 1.0f/10.0f ) * mTimeMulti;
 	
 	mZoneRadiusSqrd = mZoneRadius * mZoneRadius;
@@ -244,26 +244,27 @@ void BasicFlockingApp::update()
 	
 	std::vector<cl::Memory> glObjects = { mFlockPositionBuffer, mFlockVelocityBuffer };
 	try {
-	// Update particles on the GPU
-	mCommandQueue.enqueueAcquireGLObjects( &glObjects );
-	
-	// Bind the source data (Attributes refer to specific buffers).
-	mUpdateKernel.setArg( 0, mFlockPositionBuffer );
-	mUpdateKernel.setArg( 1, mFlockVelocityBuffer );
-	mUpdateKernel.setArg( 3, mDamping );
-	mUpdateKernel.setArg( 4, mZoneRadiusSqrd );
-	mUpdateKernel.setArg( 5, mRepelStrength );
-	mUpdateKernel.setArg( 6, mAlignStrength );
-	mUpdateKernel.setArg( 7, mAttractStrength );
-	mUpdateKernel.setArg( 8, mMinThresh );
-	mUpdateKernel.setArg( 9, dt );
-	
-	mCommandQueue.enqueueNDRangeKernel( mUpdateKernel, cl::NullRange, cl::NDRange( FLOCK_SIZE ) );
-	
-	mCommandQueue.enqueueReleaseGLObjects( &glObjects );
+		// Update particles on the GPU
+		mCommandQueue.enqueueAcquireGLObjects( &glObjects );
+		
+		// Bind the source data (Attributes refer to specific buffers).
+		mUpdateKernel.setArg( 0, mFlockPositionBuffer );
+		mUpdateKernel.setArg( 1, mFlockVelocityBuffer );
+		mUpdateKernel.setArg( 3, sizeof(float), &mDamping );
+		mUpdateKernel.setArg( 4, sizeof(float), &mZoneRadiusSqrd );
+		mUpdateKernel.setArg( 5, sizeof(float), &mRepelStrength );
+		mUpdateKernel.setArg( 6, sizeof(float), &mAlignStrength );
+		mUpdateKernel.setArg( 7, sizeof(float), &mAttractStrength );
+		mUpdateKernel.setArg( 8, sizeof(float), &mMinThresh );
+		mUpdateKernel.setArg( 9, sizeof(float), &mMaxThresh );
+		mUpdateKernel.setArg( 10, sizeof(float), &dt );
+		
+		mCommandQueue.enqueueNDRangeKernel( mUpdateKernel, cl::NullRange, cl::NDRange( FLOCK_SIZE ) );
+		
+		mCommandQueue.enqueueReleaseGLObjects( &glObjects );
 	}
 	catch( const cl::Error &e ) {
-		CI_LOG_E( e.what() << " and error " <<  e.err() );
+		CI_LOG_E( e.what() << " and error " << errorToString( e.err() ) );
 	}
 	
 }
