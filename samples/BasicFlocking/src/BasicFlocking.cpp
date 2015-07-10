@@ -23,7 +23,10 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-const int FLOCK_SIZE = 10000;
+#pragma OPENCL EXTENSION cl_khr_gl_event : enable
+
+const int FLOCK_SIZE = 8192;
+const int NUM_THREADS = 256;
 
 class BasicFlockingApp : public App {
   public:
@@ -156,12 +159,19 @@ void BasicFlockingApp::setup()
 	auto programString = loadString( ci::app::loadAsset( "update.cl" ) );
 	
 	// Compile OpenCL code
-	cl::Program program = cl::Program( mContext, programString, true );
+	cl::Program program = cl::Program( mContext, programString );
 	
-	mUpdateKernel = cl::Kernel( program, "update" );
+	program.build("-cl-fast-relaxed-math");
+	
+	mUpdateKernel = cl::Kernel( program, "smartUpdate" );
+	mUpdateKernel.setArg( 0, mFlockPositionBuffer );
+	mUpdateKernel.setArg( 1, mFlockVelocityBuffer );
 	mUpdateKernel.setArg( 2, sizeof(int), &FLOCK_SIZE );
+	mUpdateKernel.setArg( 11, sizeof(vec4)*NUM_THREADS, nullptr );
+	mUpdateKernel.setArg( 12, sizeof(vec4)*NUM_THREADS, nullptr );
 	
-	mRenderShader = gl::GlslProg::create( gl::GlslProg::Format().vertex( loadAsset( "render.vert" ) )
+	mRenderShader = gl::GlslProg::create( gl::GlslProg::Format()
+										 .vertex( loadAsset( "render.vert" ) )
 										 .fragment( loadAsset( "render.frag" ) ) );
 //										 .attribLocation( "vInstancePosition", 0 )
 //										 .attribLocation( "vInstanceVelocity", 1 ) );
@@ -233,8 +243,8 @@ void BasicFlockingApp::update()
 {
 	double prevTime = mTime;
 	mTime			= getElapsedSeconds();
-	//	float dt		= ( mTime - prevTime ) * mTimeMulti;
-	float dt		= ( 1.0f/10.0f ) * mTimeMulti;
+	float dt		= ( mTime - prevTime ) * mTimeMulti;
+//	float dt		= ( 1.0f/10.0f ) * mTimeMulti;
 	
 	mZoneRadiusSqrd = mZoneRadius * mZoneRadius;
 	if( mMinThresh >= mMaxThresh ) mMinThresh = mMaxThresh - 0.01f;
@@ -245,8 +255,6 @@ void BasicFlockingApp::update()
 		mCommandQueue.enqueueAcquireGLObjects( &glObjects );
 		
 		// Bind the source data (Attributes refer to specific buffers).
-		mUpdateKernel.setArg( 0, mFlockPositionBuffer );
-		mUpdateKernel.setArg( 1, mFlockVelocityBuffer );
 		mUpdateKernel.setArg( 3, sizeof(float), &mDamping );
 		mUpdateKernel.setArg( 4, sizeof(float), &mZoneRadiusSqrd );
 		mUpdateKernel.setArg( 5, sizeof(float), &mRepelStrength );
@@ -256,7 +264,7 @@ void BasicFlockingApp::update()
 		mUpdateKernel.setArg( 9, sizeof(float), &mMaxThresh );
 		mUpdateKernel.setArg( 10, sizeof(float), &dt );
 		
-		mCommandQueue.enqueueNDRangeKernel( mUpdateKernel, cl::NullRange, cl::NDRange( FLOCK_SIZE ) );
+		mCommandQueue.enqueueNDRangeKernel( mUpdateKernel, cl::NullRange, cl::NDRange( FLOCK_SIZE ), cl::NDRange( NUM_THREADS ) );
 		
 		mCommandQueue.enqueueReleaseGLObjects( &glObjects );
 	}
@@ -280,10 +288,7 @@ void BasicFlockingApp::draw()
 	gl::drawArrays( GL_POINTS, 0, FLOCK_SIZE );
 //	mBatch->drawInstanced( FLOCK_SIZE );
 	
-	// Swap source and destination for next loop
-	std::swap( mCurrIndex, mDestIndex );
-	
-	mParams->draw();
+//	mParams->draw();
 	
 	if( getElapsedFrames() % 60 == 59 ) std::cout << "FPS: " << getAverageFps() << std::endl;
 }
