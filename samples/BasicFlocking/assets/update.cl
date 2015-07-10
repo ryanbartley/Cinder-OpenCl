@@ -1,7 +1,7 @@
 
 
-__kernel void  update( __global float3 *positions,
-					  __global float3 *velocities,
+__kernel void  update( __global float4 *positions,
+					  __global float4 *velocities,
 					  int		uFlockSize,
 					  float		uDamping,
 					  float		uZoneRadiusSqrd,
@@ -15,23 +15,22 @@ __kernel void  update( __global float3 *positions,
 	const float minSpeed = 0.5f;
 	const float maxSpeed = 1.0f;
 	float3 acc = float3( 0.0f );
-	float3 newVel;
+	float3 newVel = float3( 0.0f );
 	float crowded = 1.0f;
 	
 	int index = get_global_id(0);
 	
-	float3 myPosition = positions[index];
-	float3 myVelocity = velocities[index];
+	float3 myPosition = positions[index].xyz;
+	float3 myVelocity = velocities[index].xyz;
 	// Apply rules 1 and 2 for my member in the flock (based on all other
 	// members)
 	for( int i=0; i<uFlockSize; i++ ){
 		if( i != index ) {
 			//			if( crowded > 10.0 ) break;
-			float3 theirPosition	= positions[i];
+			float3 theirPosition	= positions[i].xyz;
 			
 			float3 dir			= myPosition - theirPosition;
-			float dist			= length( dir );
-			float distSqrd		= dist * dist;
+			float distSqrd		= dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
 			
 			if( distSqrd < uZoneRadiusSqrd - crowded * 0.01f ){
 				float percent		= distSqrd/uZoneRadiusSqrd;
@@ -45,7 +44,7 @@ __kernel void  update( __global float3 *positions,
 				}
 				else if( percent < uMaxThresh )
 				{	// alignment
-					float3 theirVelocity		= velocities[i];
+					float3 theirVelocity	= velocities[i].xyz;
 					float threshDelta		= uMaxThresh - uMinThresh;
 					float adjustedPercent	= ( percent - uMinThresh )/threshDelta;
 					float F					= ( 1.0f - ( cos( adjustedPercent * 6.28318f ) * -0.5f + 0.5f ) ) * uAlignStrength;
@@ -76,16 +75,16 @@ __kernel void  update( __global float3 *positions,
 	
 	// Hard clamp speed (mag(velocity) to 10 to prevent insanity
 	float newMaxSpeed = maxSpeed + crowded * 0.02f;
-	float velLen = length( newVel );
-	if( velLen > maxSpeed )
+	float velLenSq = newVel.x * newVel.x + newVel.y * newVel.y + newVel.z * newVel.z;
+	if( velLenSq > maxSpeed )
 		newVel = normalize( newVel ) * newMaxSpeed;
-	else if( velLen < minSpeed )
+	else if( velLenSq < minSpeed )
 		newVel = normalize( newVel ) * minSpeed;
 	
 	
 	float3 outVelocity = newVel;
 	
-	positions[index] = outPosition;
-	velocities[index] = outVelocity;
+	positions[index].xyz = outPosition;
+	velocities[index].xyz = outVelocity;
 	
 }

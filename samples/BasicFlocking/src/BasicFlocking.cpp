@@ -84,13 +84,13 @@ void BasicFlockingApp::resize()
 }
 
 // For generating initial position and velocity data
-static void GenerateInitialData( vec3 *posData, vec3 *velData, unsigned int num, float scale )
+static void GenerateInitialData( vec4 *posData, vec4 *velData, unsigned int num, float scale )
 {
-	vec3 *p = posData;
-	vec3 *v = velData;
+	vec4 *p = posData;
+	vec4 *v = velData;
 	for( int n = 0; n < num; n++ ){
-		*p++ = Rand::randVec3() * scale;//randFloat( scale * 0.5f, scale );
-		*v++ = Rand::randVec3() * 0.2f;
+		*p++ = vec4( Rand::randVec3() * scale, 1.0f );//randFloat( scale * 0.5f, scale );
+		*v++ = vec4( Rand::randVec3() * 0.2f, 0.0f );
 	}
 }
 
@@ -124,20 +124,17 @@ void BasicFlockingApp::setup()
 	mTime = getElapsedSeconds();
 	
 	// Create initial data for buffers
-	vec3 *positionData = new vec3[ FLOCK_SIZE ];
-	vec3 *velocityData = new vec3[ FLOCK_SIZE ];
+	vec4 *positionData = new vec4[ FLOCK_SIZE ];
+	vec4 *velocityData = new vec4[ FLOCK_SIZE ];
 	GenerateInitialData( positionData, velocityData, FLOCK_SIZE, 30.0f );
 	
 	// Create buffers
-	mFlockPosition = gl::Vbo::create( GL_ARRAY_BUFFER, FLOCK_SIZE * sizeof( vec3 ), positionData, GL_STATIC_DRAW );
-	mFlockVelocity = gl::Vbo::create( GL_ARRAY_BUFFER, FLOCK_SIZE * sizeof( vec3 ), velocityData, GL_STATIC_DRAW );
+	mFlockPosition = gl::Vbo::create( GL_ARRAY_BUFFER, FLOCK_SIZE * sizeof( vec4 ), positionData, GL_STATIC_DRAW );
+	mFlockVelocity = gl::Vbo::create( GL_ARRAY_BUFFER, FLOCK_SIZE * sizeof( vec4 ), velocityData, GL_STATIC_DRAW );
 	
 	mFlockPositionBuffer = cl::BufferGL( mContext, CL_MEM_READ_WRITE, mFlockPosition->getId() );
 	mFlockVelocityBuffer = cl::BufferGL( mContext, CL_MEM_READ_WRITE, mFlockVelocity->getId() );
-	
-	// Setup Update Vaos
-	
-	
+
 	// Setup Render Vaos
 	for( int i=0; i<2; i++ )
 	{
@@ -146,13 +143,13 @@ void BasicFlockingApp::setup()
 		{
 			gl::ScopedBuffer buffer( mFlockPosition );
 			gl::enableVertexAttribArray( 0 );
-			gl::vertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+			gl::vertexAttribPointer( 0, 4, GL_FLOAT, GL_FALSE, 0, nullptr );
 		}
 		
 		{
 			gl::ScopedBuffer buffer( mFlockVelocity );
 			gl::enableVertexAttribArray( 1 );
-			gl::vertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+			gl::vertexAttribPointer( 1, 4, GL_FLOAT, GL_FALSE, 0, nullptr );
 		}
 	}
 	// Open up the file
