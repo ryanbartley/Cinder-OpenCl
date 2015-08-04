@@ -15,9 +15,6 @@
 		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
 		15C9B273034A4E93946D1422 /* BasicFlocking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44CF29DC08B3495CB6679BC8 /* BasicFlocking.cpp */; };
-		35690E951AC0E04B0077FD5E /* update.vert in Resources */ = {isa = PBXBuildFile; fileRef = 35690E941AC0E04B0077FD5E /* update.vert */; };
-		35690E971AC0E0550077FD5E /* render.vert in Resources */ = {isa = PBXBuildFile; fileRef = 35690E961AC0E0550077FD5E /* render.vert */; };
-		35690E991AC0E05C0077FD5E /* render.frag in Resources */ = {isa = PBXBuildFile; fileRef = 35690E981AC0E05C0077FD5E /* render.frag */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -25,7 +22,10 @@
 		B38603661B4EC3AA00518683 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38603651B4EC3AA00518683 /* IOSurface.framework */; };
 		B386036D1B4EC6A100518683 /* Cinder-OpenCL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B386036C1B4EC6A100518683 /* Cinder-OpenCL.cpp */; };
 		B386036F1B4EC6DC00518683 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B386036E1B4EC6DC00518683 /* OpenCL.framework */; };
-		B38603711B4F564600518683 /* update.cl in Sources */ = {isa = PBXBuildFile; fileRef = B38603701B4F564600518683 /* update.cl */; };
+		B3E170FD1B5069290059F240 /* render.frag in Resources */ = {isa = PBXBuildFile; fileRef = B3E170F91B5069290059F240 /* render.frag */; };
+		B3E170FE1B5069290059F240 /* render.vert in Resources */ = {isa = PBXBuildFile; fileRef = B3E170FA1B5069290059F240 /* render.vert */; };
+		B3E170FF1B5069290059F240 /* update.cl in Sources */ = {isa = PBXBuildFile; fileRef = B3E170FB1B5069290059F240 /* update.cl */; };
+		B3E171001B5069290059F240 /* update.vert in Resources */ = {isa = PBXBuildFile; fileRef = B3E170FC1B5069290059F240 /* update.vert */; };
 		D06324C423F847D183F50FFC /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 072CD6611B9F48AA90748A88 /* CinderApp.icns */; };
 /* End PBXBuildFile section */
 
@@ -42,9 +42,6 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		35690E941AC0E04B0077FD5E /* update.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = update.vert; sourceTree = "<group>"; };
-		35690E961AC0E0550077FD5E /* render.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = render.vert; sourceTree = "<group>"; };
-		35690E981AC0E05C0077FD5E /* render.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = render.frag; sourceTree = "<group>"; };
 		44CF29DC08B3495CB6679BC8 /* BasicFlocking.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BasicFlocking.cpp; path = ../src/BasicFlocking.cpp; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
@@ -56,7 +53,10 @@
 		B386036A1B4EC69900518683 /* cl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cl.hpp; sourceTree = "<group>"; };
 		B386036C1B4EC6A100518683 /* Cinder-OpenCL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Cinder-OpenCL.cpp"; sourceTree = "<group>"; };
 		B386036E1B4EC6DC00518683 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
-		B38603701B4F564600518683 /* update.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = update.cl; sourceTree = "<group>"; };
+		B3E170F91B5069290059F240 /* render.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = render.frag; sourceTree = "<group>"; };
+		B3E170FA1B5069290059F240 /* render.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = render.vert; sourceTree = "<group>"; };
+		B3E170FB1B5069290059F240 /* update.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = update.cl; sourceTree = "<group>"; };
+		B3E170FC1B5069290059F240 /* update.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = update.vert; sourceTree = "<group>"; };
 		FF8589C3DAE2499D913D30EB /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -181,10 +181,10 @@
 		35690E931AC0E0300077FD5E /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				35690E941AC0E04B0077FD5E /* update.vert */,
-				35690E961AC0E0550077FD5E /* render.vert */,
-				35690E981AC0E05C0077FD5E /* render.frag */,
-				B38603701B4F564600518683 /* update.cl */,
+				B3E170F91B5069290059F240 /* render.frag */,
+				B3E170FA1B5069290059F240 /* render.vert */,
+				B3E170FB1B5069290059F240 /* update.cl */,
+				B3E170FC1B5069290059F240 /* update.vert */,
 			);
 			name = assets;
 			path = ../assets;
@@ -272,9 +272,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D06324C423F847D183F50FFC /* CinderApp.icns in Resources */,
-				35690E991AC0E05C0077FD5E /* render.frag in Resources */,
-				35690E951AC0E04B0077FD5E /* update.vert in Resources */,
-				35690E971AC0E0550077FD5E /* render.vert in Resources */,
+				B3E170FE1B5069290059F240 /* render.vert in Resources */,
+				B3E171001B5069290059F240 /* update.vert in Resources */,
+				B3E170FD1B5069290059F240 /* render.frag in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,7 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B38603711B4F564600518683 /* update.cl in Sources */,
+				B3E170FF1B5069290059F240 /* update.cl in Sources */,
 				15C9B273034A4E93946D1422 /* BasicFlocking.cpp in Sources */,
 				B386036D1B4EC6A100518683 /* Cinder-OpenCL.cpp in Sources */,
 			);

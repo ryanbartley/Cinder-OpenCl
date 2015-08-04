@@ -25,8 +25,8 @@ using namespace std;
 
 #pragma OPENCL EXTENSION cl_khr_gl_event : enable
 
-const int FLOCK_SIZE = 8192;
-const int NUM_THREADS = 256;
+const int FLOCK_SIZE	= 10240;
+const int NUM_THREADS	= 256;
 
 class BasicFlockingApp : public App {
   public:
@@ -113,6 +113,10 @@ void BasicFlockingApp::setupCl()
 						   getDefaultSharedGraphicsContextProperties(),
 						   &BasicFlockingApp::contextInfo );
 	
+	cout << "max compute units: " << devices[0].getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>() << endl;
+	cout << "max local memory: " << devices[0].getInfo<CL_DEVICE_LOCAL_MEM_SIZE>() << endl;
+	cout << "max compute units: " << devices[0].getInfo<CL_DEVICE_MAX_WORK_GROUP_SIZE>() << endl;
+	
 	// Create a command-queue on the on the created context and allow for profiling
 	mCommandQueue = cl::CommandQueue( mContext, CL_QUEUE_PROFILING_ENABLE );
 }
@@ -156,19 +160,18 @@ void BasicFlockingApp::setup()
 		}
 	}
 	// Open up the file
-	auto programString = loadString( ci::app::loadAsset( "update.cl" ) );
+	auto programString = loadString( loadAsset( "update.cl" ) );
 	
 	// Compile OpenCL code
 	cl::Program program = cl::Program( mContext, programString );
 	
 	program.build("-cl-fast-relaxed-math");
 	
-	mUpdateKernel = cl::Kernel( program, "smartUpdate" );
+	mUpdateKernel = cl::Kernel( program, "update" );
 	mUpdateKernel.setArg( 0, mFlockPositionBuffer );
 	mUpdateKernel.setArg( 1, mFlockVelocityBuffer );
 	mUpdateKernel.setArg( 2, sizeof(int), &FLOCK_SIZE );
-	mUpdateKernel.setArg( 11, sizeof(vec4)*NUM_THREADS, nullptr );
-	mUpdateKernel.setArg( 12, sizeof(vec4)*NUM_THREADS, nullptr );
+//	mUpdateKernel.setArg( 11, sizeof(vec4)*NUM_THREADS, nullptr );
 	
 	mRenderShader = gl::GlslProg::create( gl::GlslProg::Format()
 										 .vertex( loadAsset( "render.vert" ) )
@@ -278,7 +281,7 @@ void BasicFlockingApp::draw()
 {
 	gl::clear( Color( 0, 0, 0 ) );
 	gl::ScopedMatrices push;
-	gl::setMatrices( mMayaCam.getCamera() );
+	gl::setMatrices( mCam );
 	gl::enableDepthRead();
 	gl::enableDepthWrite();
 	
@@ -288,7 +291,7 @@ void BasicFlockingApp::draw()
 	gl::drawArrays( GL_POINTS, 0, FLOCK_SIZE );
 //	mBatch->drawInstanced( FLOCK_SIZE );
 	
-//	mParams->draw();
+	mParams->draw();
 	
 	if( getElapsedFrames() % 60 == 59 ) std::cout << "FPS: " << getAverageFps() << std::endl;
 }

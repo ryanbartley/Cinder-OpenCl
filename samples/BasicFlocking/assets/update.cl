@@ -1,5 +1,3 @@
-
-
 __kernel void  update( __global float4 *positions,
 					  __global float4 *velocities,
 					  int		uFlockSize,
@@ -102,8 +100,7 @@ __kernel void  smartUpdate( __global float4 *positions,
 					  float		uMinThresh,
 					  float		uMaxThresh,
 					  float		uTimeDelta,
-					__local float4* pBlock,
-					__local float4* vBlock)
+					__local float4* pBlock)
 {
 	const float minSpeed = 0.5f;
 	const float maxSpeed = 1.0f;
@@ -124,7 +121,6 @@ __kernel void  smartUpdate( __global float4 *positions,
 	// members)
 	for( int i = 0; i < totalBlocks; i++ ) {
 		pBlock[localIndex] = positions[i*localSize+localIndex];
-		vBlock[localIndex] = velocities[i*localSize+localIndex];
 		barrier(CLK_LOCAL_MEM_FENCE);
 		for( int j = 0; j < localSize; j++ ) {
 			if( globalIndex == (i*localSize+j)) continue;
@@ -137,28 +133,28 @@ __kernel void  smartUpdate( __global float4 *positions,
 				float3 dirNorm		= normalize( dir );
 				
 				// repulsion
-				if( percent < uMinThresh ){
+//				if( percent < uMinThresh ){
 					float F			= ( uMinThresh/percent - 1.0f ) * uRepelStrength;
 					acc				+= dirNorm * F * uTimeDelta;
 					crowded			+= ( 1.0f - percent ) * 2.0f;
-				}
-				else if( percent < uMaxThresh )
-				{	// alignment
-					float3 theirVelocity	= vBlock[j].xyz;
+//				}
+//				else if( percent < uMaxThresh )
+//				{	// alignment
+					float3 theirVelocity	= velocities[i*localSize+j].xyz;
 					float threshDelta		= uMaxThresh - uMinThresh;
 					float adjustedPercent	= ( percent - uMinThresh )/threshDelta;
-					float F					= ( 1.0f - ( cos( adjustedPercent * 6.28318f ) * -0.5f + 0.5f ) ) * uAlignStrength;
+					F					= ( 1.0f - ( cos( adjustedPercent * 6.28318f ) * -0.5f + 0.5f ) ) * uAlignStrength;
 					acc						+= normalize( theirVelocity ) * F * uTimeDelta;
 					crowded					+= ( 1.0f - percent ) * 0.5f;
-				}
-				else
-				{	// attraction
-					float threshDelta		= 1.0f - uMaxThresh;
-					float adjustedPercent	= ( percent - uMaxThresh )/threshDelta;
-					float F					= ( 1.0f - ( cos( adjustedPercent * 6.28318f ) * -0.5f + 0.5f ) ) * uAttractStrength;
+//				}
+//				else
+//				{	// attraction
+					threshDelta		= 1.0f - uMaxThresh;
+					adjustedPercent	= ( percent - uMaxThresh )/threshDelta;
+					F					= ( 1.0f - ( cos( adjustedPercent * 6.28318f ) * -0.5f + 0.5f ) ) * uAttractStrength;
 					acc						-= dirNorm * F * uTimeDelta;
 					crowded					+= ( 1.0f - percent ) * 0.25f;
-				}
+//				}
 			}
 
 		}

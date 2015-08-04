@@ -1,7 +1,7 @@
 #pragma once
 #include "cinder/CinderResources.h"
 
-//#define RES_MY_RES			CINDER_RESOURCE( ../resources/, image_name.png, 128, IMAGE )
+#define UpdateCL			CINDER_RESOURCE( ../resources/, update.cl, 0, CL )
 
 
 
