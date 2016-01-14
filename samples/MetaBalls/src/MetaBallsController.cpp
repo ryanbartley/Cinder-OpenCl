@@ -52,7 +52,7 @@ void MetaBallsController::setup()
 		gl::enableDepthWrite();
 	}
 	catch( const cl::Error &e ) {
-		CI_LOG_E( e.what() << " " << errorToString( e.err() ) );
+		CI_LOG_E( e.what() << " " << ocl::errorToString( e.err() ) );
 	}
 }
 
@@ -120,7 +120,7 @@ void MetaBallsController::setupCl()
 	// The true tells Context to create a sharing context and
 	// then caches the device associated with gl
 	mClContext = cl::Context( devices,
-							 getDefaultSharedGraphicsContextProperties(),
+							 ocl::getDefaultSharedGraphicsContextProperties( mClPlatform ),
 							 &MetaBallsController::contextCallback );
 	
 	

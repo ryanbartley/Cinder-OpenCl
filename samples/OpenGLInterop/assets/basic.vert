@@ -1,9 +1,9 @@
 #version 330
 
-in vec2 position;
+in vec4 ciPosition;
 
-uniform mat4 mvp;
+uniform mat4 ciModelViewProjection;
 
 void main() {
-	gl_Position = mvp * vec4(position, 0, 1);
+	gl_Position = ciModelViewProjection * ciPosition;
 }

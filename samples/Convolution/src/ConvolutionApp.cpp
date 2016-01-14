@@ -2,6 +2,7 @@
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Utilities.h"
+#include "cinder/Log.h"
 
 #include "Cinder-OpenCl.h"
 
@@ -41,8 +42,6 @@ using namespace std;
 class ConvolutionApp : public App {
   public:
 	void setup() override;
-
-	void createWithBlock();
 	
 	static void CL_CALLBACK contextCallback(
 									 const char * errInfo,
@@ -55,53 +54,52 @@ class ConvolutionApp : public App {
 		// but for simplicitly just exit.
 	}
 	
-	cl::Platform		mClPlatform;
-	cl::Context			mContext;
-	cl::Program			mProgram;
-	cl::Kernel			mConvolveKernel;
-	cl::Buffer			mInputSignalBuffer, mMaskBuffer, mOutputSignalBuffer;
-	cl::CommandQueue	mCommandQueue;
+	ocl::Context			mContext;
+	ocl::Program			mProgram;
+	ocl::Kernel			mConvolveKernel;
+	ocl::Buffer			mInputSignalBuffer, mMaskBuffer, mOutputSignalBuffer;
+	ocl::CommandQueue	mCommandQueue;
 };
 
-void ConvolutionApp::createWithBlock()
+void ConvolutionApp::setup()
 {
 	// Get all of the platforms on this system
-	std::vector<cl::Platform> platforms;
-	cl::Platform::get( &platforms );
+	std::vector<ocl::Platform> platforms;
+	ocl::Platform::get( &platforms );
 	// Assign the platform that we need
-	mClPlatform = platforms[0];
+	auto platform = platforms[0];
 	
 	// Get the CPU Device
-	std::vector<cl::Device> devices;
-	mClPlatform.getDevices( CL_DEVICE_TYPE_CPU, &devices );
+	std::vector<ocl::Device> devices;
+	platform.getDevices( CL_DEVICE_TYPE_CPU, &devices );
 	
-    // Next, create an OpenCL context on the selected platform.
-	mContext = cl::Context( devices[0], nullptr, &ConvolutionApp::contextCallback );
+	// Next, create an OpenCL context on the selected platform.
+	mContext = ocl::Context( devices[0], nullptr, &ConvolutionApp::contextCallback );
 	
 	// Create program from source
-	mProgram = cl::Program( mContext, loadString( loadAsset( "Convolution.cl" ) ), true );
+	mProgram = ocl::Program( mContext, loadString( loadAsset( "Convolution.cl" ) ), true );
 	
 	// Create kernel object
-	mConvolveKernel = cl::Kernel( mProgram, "convolve" );
+	mConvolveKernel = ocl::Kernel( mProgram, "convolve" );
 	
 	// Now allocate buffers
-	mInputSignalBuffer = cl::Buffer( mContext,
+	mInputSignalBuffer = ocl::Buffer( mContext,
 									CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
 									sizeof(cl_uint) * inputSignalHeight * inputSignalWidth,
 									static_cast<void *>(inputSignal) );
 	
-	mMaskBuffer = cl::Buffer( mContext,
+	mMaskBuffer = ocl::Buffer( mContext,
 							 CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
 							 sizeof(cl_uint) * maskHeight * maskWidth,
 							 static_cast<void *>(mask) );
 	
-	mOutputSignalBuffer = cl::Buffer( mContext,
+	mOutputSignalBuffer = ocl::Buffer( mContext,
 									 CL_MEM_WRITE_ONLY,
 									 sizeof(cl_uint) * outputSignalHeight * outputSignalWidth,
 									 nullptr );
 	
 	// Pick the first device and create command queue.
-	mCommandQueue = cl::CommandQueue( mContext );
+	mCommandQueue = ocl::CommandQueue( mContext );
 	
 	mConvolveKernel.setArg( 0, mInputSignalBuffer );
 	mConvolveKernel.setArg( 1, mMaskBuffer );
@@ -109,17 +107,17 @@ void ConvolutionApp::createWithBlock()
 	mConvolveKernel.setArg( 3, sizeof(cl_uint), (void*)&inputSignalWidth );
 	mConvolveKernel.setArg( 4, sizeof(cl_uint), (void*)&maskWidth );
 	
-    // Queue the kernel up for execution across the array
+	// Queue the kernel up for execution across the array
 	mCommandQueue.enqueueNDRangeKernel( mConvolveKernel,
-									   cl::NullRange,
-									   cl::NDRange( outputSignalWidth * outputSignalHeight ),
-									   cl::NDRange( 1 ) );
-    
+									   ocl::NullRange,
+									   ocl::NDRange( outputSignalWidth * outputSignalHeight ),
+									   ocl::NDRange( 1 ) );
+	
 	mCommandQueue.enqueueReadBuffer( mOutputSignalBuffer, CL_TRUE, 0, sizeof(cl_uint) * outputSignalHeight * outputSignalHeight, outputSignal);
 	
 	console() << std::endl << std::endl;
-    // Output the result buffer
-    for (int y = 0; y < outputSignalHeight; y++)
+	// Output the result buffer
+	for (int y = 0; y < outputSignalHeight; y++)
 	{
 		for (int x = 0; x < outputSignalWidth; x++)
 		{
@@ -129,11 +127,6 @@ void ConvolutionApp::createWithBlock()
 	}
 	
 	console() << std::endl << "Executed program succesfully." << std::endl << std::endl;
-}
-
-void ConvolutionApp::setup()
-{
-	createWithBlock();
 	quit();
 }
 

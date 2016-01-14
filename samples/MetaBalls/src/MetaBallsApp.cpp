@@ -45,4 +45,8 @@ void MetaBallsApp::draw()
 	getWindow()->setTitle( to_string( getAverageFps() ) );
 }
 
-CINDER_APP( MetaBallsApp, RendererGl, []( App::Settings *settings ) { settings->setConsoleWindowEnabled();  } )
+CINDER_APP( MetaBallsApp, RendererGl, []( App::Settings *settings ) {
+#if defined( CINDER_MSW )
+	settings->setConsoleWindowEnabled();
+#endif
+})

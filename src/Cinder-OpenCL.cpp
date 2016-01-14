@@ -15,8 +15,34 @@
 #include "Cinder-OpenCL.h"
 #include "cinder/Utilities.h"
 
+using namespace ci;
+using namespace ci::app;
+using namespace std;
 
-namespace cinder {
+
+namespace cinder { namespace ocl {
+	
+std::vector<cl::ImageFormat>& getSupportedImageFormats( cl::Context context, cl_mem_object_type type )
+{
+	using ImageFormatCache = std::map<cl_mem_object_type, std::vector<cl::ImageFormat>>;
+	using ContextImageFormatCache = std::map<cl_context, ImageFormatCache>;
+	static ContextImageFormatCache contextImageFormatCache;
+	
+	ContextImageFormatCache::iterator conIt = contextImageFormatCache.find( context() );
+	if( conIt == contextImageFormatCache.end() ) {
+		auto createdCache = contextImageFormatCache.insert( { context(), ImageFormatCache() } );
+		conIt = createdCache.first;
+	}
+	
+	ImageFormatCache::iterator imageIt = conIt->second.find( type );
+	if( imageIt == conIt->second.end() ) {
+		std::vector<cl::ImageFormat> imageFormats;
+		context.getSupportedImageFormats( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, type, &imageFormats );
+		auto createdImageFormat = conIt->second.insert( { type, move( imageFormats ) } );
+		imageIt = createdImageFormat.first;
+	}
+	return imageIt->second;
+}
 	
 std::string errorToString( cl_int error )
 {
@@ -83,7 +109,7 @@ std::string errorToString( cl_int error )
 		case CL_INVALID_DEVICE_PARTITION_COUNT: return "CL_INVALID_DEVICE_PARTITION_COUNT";
 //		case CL_INVALID_PIPE_SIZE: return "CL_INVALID_PIPE_SIZE";
 //		case CL_INVALID_DEVICE_QUEUE: return "CL_INVALID_DEVICE_QUEUE";
-		default: return "Unknown Error";
+		default: return "Unknown Constant";
 	}
 }
 
@@ -101,8 +127,13 @@ std::string constantToString( cl_int constant )
 		case CL_RGBx: return "CL_RGBx";
 		case CL_RGBA: return "CL_RGBA";
 		case CL_BGRA: return "CL_BGRA";
+#if defined (__APPLE__) || defined( MACOSX )
+		case CL_ABGR_APPLE: return "CL_ABGR_APPLE";
+#endif
 		case CL_ARGB: return "CL_ARGB";
 		case CL_LUMINANCE: return "CL_LUMINANCE";
+		case CL_DEPTH: return "CL_DEPTH";
+		case CL_DEPTH_STENCIL: return "CL_DEPTH_STENCIL";
 		case CL_SNORM_INT8: return "CL_SNORM_INT8";
 		case CL_SNORM_INT16: return "CL_SNORM_INT16";
 		case CL_UNORM_INT8: return "CL_UNORM_INT8";
@@ -118,44 +149,34 @@ std::string constantToString( cl_int constant )
 		case CL_UNORM_SHORT_565: return "CL_UNORM_SHORT_565";
 		case CL_UNORM_SHORT_555: return "CL_UNORM_SHORT_555";
 		case CL_UNORM_INT_101010: return "CL_UNORM_INT_101010";
+		case CL_KERNEL_ARG_ADDRESS_GLOBAL: return "CL_KERNEL_ARG_ADDRESS_GLOBAL";
+		case CL_KERNEL_ARG_ADDRESS_LOCAL: return "CL_KERNEL_ARG_ADDRESS_LOCAL";
+		case CL_KERNEL_ARG_ADDRESS_CONSTANT: return "CL_KERNEL_ARG_ADDRESS_CONSTANT";
+		case CL_KERNEL_ARG_ADDRESS_PRIVATE: return "CL_KERNEL_ARG_ADDRESS_PRIVATE";
+		case CL_KERNEL_ARG_ACCESS_READ_ONLY: return "CL_KERNEL_ARG_ACCESS_READ_ONLY";
+		case CL_KERNEL_ARG_ACCESS_WRITE_ONLY: return "CL_KERNEL_ARG_ACCESS_WRITE_ONLY";
+		case CL_KERNEL_ARG_ACCESS_READ_WRITE: return "CL_KERNEL_ARG_ACCESS_READ_WRITE";
+		case CL_KERNEL_ARG_ACCESS_NONE: return "CL_KERNEL_ARG_ACCESS_NONE";
+		default: return errorToString( constant );
 	}
-}
-
-std::ostream& operator<<( std::ostream &lhs, const cl::Platform &rhs )
-{
-	lhs << "CL_PLATFORM_NAME:   " << rhs.getInfo<CL_PLATFORM_NAME>() << std::endl;
-	lhs << "CL_PLATFORM_VENDOR: " << rhs.getInfo<CL_PLATFORM_VENDOR>() << std::endl;
-	lhs << "CL_PLATFORM_VERSION:" << rhs.getInfo<CL_PLATFORM_VERSION>() << std::endl;
-	lhs	<< "CL_PLATFORM_PROFILE:"	<< rhs.getInfo<CL_PLATFORM_PROFILE>() << std::endl;
-	auto extensions = std::string( rhs.getInfo<CL_PLATFORM_EXTENSIONS>() );
-	auto extensionList = split( extensions, ' ' );
-	int i = 0;
-	lhs << "CL_PLATFORM_EXTENSIONS:\t" << extensionList[i++] << std::endl;
-	for( ; i < extensionList.size(); i++ ) {
-		lhs << "                    \t" << extensionList[i] << std::endl;
-	}
-	return lhs;
 }
 	
-std::ostream& operator<<( std::ostream &lhs, const cl::Device &rhs )
+void printSupportedImageFormats( const cl::Context &context, cl_mem_object_type type )
 {
-	lhs << "CL_DEVICE_NAME:      " << rhs.getInfo<CL_DEVICE_NAME>() << std::endl;
-	lhs << "CL_DEVICE_VENDOR:    " << rhs.getInfo<CL_DEVICE_VENDOR>() << std::endl;
-	lhs << "CL_DRIVER_VERSION:   " << rhs.getInfo<CL_DRIVER_VERSION>() << std::endl;
-	lhs << "CL_DEVICE_PROFILE1:  " << rhs.getInfo<CL_DEVICE_PROFILE>() << std::endl;
-	lhs << "CL_DEVICE_VERSION:   " << rhs.getInfo<CL_DEVICE_VERSION>() << std::endl;
-	lhs	<< "CL_DEVICE_MAX_COMPUTE_UNITS:" << rhs.getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>() << std::endl;
-	auto extensions = std::string( rhs.getInfo<CL_DEVICE_EXTENSIONS>() );
-	auto extensionList = split( extensions, ' ' );
-	int i = 0;
-	lhs << "CL_DEVICE_EXTENSIONS:" << extensionList[i++] << std::endl;
-	for( ; i < extensionList.size(); i++ ) {
-		lhs << "                    " << extensionList[i] << std::endl;
+	auto & imageFormats = getSupportedImageFormats( context, type );
+	
+	for( auto & imageFormat : imageFormats ) {
+		console() << "Channel Order: " << ocl::constantToString( imageFormat.image_channel_order )
+		<< " Channel Data Type: " << constantToString( imageFormat.image_channel_data_type ) << std::endl;
 	}
-	return lhs;
 }
 	
-cl_context_properties* getDefaultSharedGraphicsContextProperties( cl::Platform platform )
+Program createProgram( Context &context, const DataSourceRef &dataSource, bool build )
+{
+	return Program( context, loadString( dataSource ), build );
+}
+	
+cl_context_properties* getDefaultSharedGraphicsContextProperties( const cl::Platform &platform )
 {
 #if defined (__APPLE__) || defined(MACOSX)
 	static cl_context_properties contextProperties[] = { 0, 0, 0 };
@@ -177,36 +198,363 @@ cl_context_properties* getDefaultSharedGraphicsContextProperties( cl::Platform p
 void convertChannelOrder( cl_channel_order clChannelOrder, ImageIo::ColorModel *colorModel, ImageIo::ChannelOrder *channelOrder )
 {
 	switch ( clChannelOrder ) {
-		case CL_R:
-			*colorModel = ImageIo::CM_GRAY; *channelOrder = ImageIo::Y;
-		break;
-		case CL_RGB:
-			*colorModel = ImageIo::CM_RGB; *channelOrder = ImageIo::RGB;
-		break;
-		case CL_RGBA:
-			*colorModel = ImageIo::CM_RGB; *channelOrder = ImageIo::RGBA;
-		break;
-		default:
-			throw ImageIoException();
+		case CL_R: *colorModel = ImageIo::CM_GRAY; *channelOrder = ImageIo::Y; break;
+		case CL_RGB: *colorModel = ImageIo::CM_RGB; *channelOrder = ImageIo::RGB; break;
+		case CL_RGBA: *colorModel = ImageIo::CM_RGB; *channelOrder = ImageIo::RGBA; break;
+		default: throw ImageIoExceptionIllegalChannelOrder();
 	}
 }
 
 void convertChannelDataType( cl_channel_type type, ImageIo::DataType *dataType )
 {
 	switch ( type ) {
-		case CL_UNSIGNED_INT8:
-			*dataType = ImageIo::DataType::UINT8;
-		break;
-		case CL_UNSIGNED_INT16:
-			*dataType = ImageIo::DataType::UINT16;
-		break;
-		case CL_FLOAT:
-			*dataType = ImageIo::DataType::FLOAT32;
-		break;
-		default:
-			throw ImageIoExceptionIllegalDataType();
+		case CL_UNORM_INT8: *dataType = ImageIo::DataType::UINT8; break;
+		case CL_UNSIGNED_INT8: *dataType = ImageIo::DataType::UINT8; break;
+		case CL_UNSIGNED_INT16: *dataType = ImageIo::DataType::UINT16; break;
+		case CL_HALF_FLOAT: *dataType = ImageIo::DataType::FLOAT16; break;
+		case CL_FLOAT: *dataType = ImageIo::DataType::FLOAT32; break;
+		default: throw ImageIoExceptionIllegalDataType();
 	}
 }
 	
+cl::ImageFormat getImageFormat( ImageIo::ChannelOrder channelOrder, ImageIo::DataType dataType )
+{
+	cl::ImageFormat ret;
 	
+	switch ( channelOrder ) {
+		case ImageIo::ChannelOrder::RGBA: ret.image_channel_order = CL_RGBA; break;
+		case ImageIo::ChannelOrder::RGB: ret.image_channel_order = CL_RGB; break;
+		case ImageIo::ChannelOrder::Y: ret.image_channel_order = CL_R; break;
+		case ImageIo::ChannelOrder::YA: ret.image_channel_order = CL_RA; break;
+		case ImageIo::ChannelOrder::BGRA: ret.image_channel_order = CL_BGRA; break;
+		case ImageIo::ChannelOrder::ARGB: ret.image_channel_order = CL_ARGB; break;
+		default: throw ImageIoExceptionIllegalChannelOrder(); break;
+	}
+	
+	switch ( dataType ) {
+		case ImageIo::DataType::UINT8: ret.image_channel_data_type = CL_UNORM_INT8; break;
+		case ImageIo::DataType::UINT16: ret.image_channel_data_type = CL_UNSIGNED_INT16; break;
+		// TODO: Test this format.
+		case ImageIo::DataType::FLOAT16: ret.image_channel_data_type = CL_HALF_FLOAT; break;
+		case ImageIo::DataType::FLOAT32: ret.image_channel_data_type = CL_FLOAT; break;
+		default: throw ImageIoExceptionIllegalDataType(); break;
+	}
+
+	return ret;
 }
+	
+class ImageTargetClImage : public ImageTarget {
+public:
+	static std::shared_ptr<ImageTargetClImage> create( Image2D *image, Context context, cl_mem_flags flags, const ci::ivec2 &size, ImageIo::ChannelOrder &channelOrder, ImageIo::DataType dataType, bool isGray, bool hasAlpha );
+	
+	bool	hasAlpha() const override { return mHasAlpha; }
+	void*	getRowPointer( int32_t row ) override;
+	void	finalize() override;
+	
+private:
+	ImageTargetClImage( Image2D *image, Context context, cl_mem_flags flags, const ci::ivec2 &size, ImageIo::ChannelOrder &channelOrder, ImageIo::DataType dataType, bool isGray, bool hasAlpha );
+	
+	Image2D			*mImage;
+	cl::Context		mContext;
+	cl_mem_flags	mFlags;
+	
+	ci::ivec2		mSize;
+	
+	unique_ptr<uint8_t[]>	mDataStore; // may be NULL
+	
+	int32_t		mRowInc;
+	bool		mHasAlpha;
+	uint8_t		mPixelInc, mNumBytesPerPixel;
+};
+
+std::shared_ptr<ImageTargetClImage> ImageTargetClImage::create( Image2D *image, Context context, cl_mem_flags flags, const ci::ivec2 &size, ImageIo::ChannelOrder &channelOrder, ImageIo::DataType dataType, bool isGray, bool hasAlpha )
+{
+	return std::shared_ptr<ImageTargetClImage>( new ImageTargetClImage( image, context, flags, size, channelOrder, dataType, isGray, hasAlpha ) );
+}
+
+ImageTargetClImage::ImageTargetClImage( Image2D *image, Context context, cl_mem_flags flags, const ci::ivec2 &size, ImageIo::ChannelOrder &channelOrder, ImageIo::DataType dataType, bool isGray, bool hasAlpha )
+: mImage( image ), mContext( context ), mFlags( flags ), mSize( size ), mNumBytesPerPixel( 1 )
+{
+	setDataType( dataType );
+	
+	if( isGray ) {
+		mPixelInc = mHasAlpha ? 2 : 1;
+	}
+	else {
+		mPixelInc = mHasAlpha ? 4 : 3;
+	}
+	mRowInc = mSize.x * mPixelInc;
+	
+	switch ( dataType) {
+		case ImageIo::UINT8: mNumBytesPerPixel = 1; break;
+		case ImageIo::UINT16: mNumBytesPerPixel = 2; break;
+		case ImageIo::FLOAT16: mNumBytesPerPixel = 2; break;
+		case ImageIo::FLOAT32: mNumBytesPerPixel = 4; break;
+		case ImageIo::DATA_UNKNOWN: throw ImageIoExceptionIllegalDataType(); break;
+	}
+	
+	mDataStore = std::unique_ptr<uint8_t[]>( new uint8_t[mSize.y * mRowInc * mNumBytesPerPixel] );
+	
+	setChannelOrder( channelOrder );
+	setColorModel( isGray ? ImageIo::CM_GRAY : ImageIo::CM_RGB );
+}
+	
+void* ImageTargetClImage::getRowPointer( int32_t row )
+{
+	return mDataStore.get() + (row * mRowInc * mNumBytesPerPixel);
+}
+	
+void ImageTargetClImage::finalize()
+{
+	auto imageFormat = getImageFormat( getChannelOrder(), getDataType() );
+	*mImage = Image2D( mContext, mFlags, imageFormat, mSize.x, mSize.y, mRowInc * mNumBytesPerPixel, mDataStore.get() );
+}
+
+class ImageTargetCLBuffer : public ImageTarget {
+public:
+	static std::shared_ptr<ImageTargetCLBuffer> create( cl::Buffer *buffer, Context context, cl_mem_flags flags, const ci::ivec2 &size, ImageIo::ChannelOrder &channelOrder, ImageIo::DataType dataType, bool isGray, bool hasAlpha );
+	
+	bool	hasAlpha() const override { return mHasAlpha; }
+	void*	getRowPointer( int32_t row ) override;
+	void	finalize() override;
+	
+private:
+	ImageTargetCLBuffer( cl::Buffer *buffer, Context context, cl_mem_flags flags, const ci::ivec2 &size, ImageIo::ChannelOrder &channelOrder, ImageIo::DataType dataType, bool isGray, bool hasAlpha );
+	
+	cl::Buffer		*mBuffer;
+	cl::Context		mContext;
+	cl_mem_flags	mFlags;
+	
+	ci::ivec2		mSize;
+	
+	unique_ptr<uint8_t[]>	mDataStore; // may be NULL
+	
+	int32_t		mRowInc;
+	bool		mHasAlpha;
+	uint8_t		mPixelInc, mNumBytesPerPixel;
+};
+
+std::shared_ptr<ImageTargetCLBuffer> ImageTargetCLBuffer::create( cl::Buffer *buffer, Context context, cl_mem_flags flags, const ci::ivec2 &size, ImageIo::ChannelOrder &channelOrder, ImageIo::DataType dataType, bool isGray, bool hasAlpha )
+{
+	return std::shared_ptr<ImageTargetCLBuffer>( new ImageTargetCLBuffer( buffer, context, flags, size, channelOrder, dataType, isGray, hasAlpha ) );
+}
+
+ImageTargetCLBuffer::ImageTargetCLBuffer( cl::Buffer *buffer, Context context, cl_mem_flags flags, const ci::ivec2 &size, ImageIo::ChannelOrder &channelOrder, ImageIo::DataType dataType, bool isGray, bool hasAlpha )
+: mBuffer( buffer ), mContext( context ), mFlags( flags ), mSize( size ), mNumBytesPerPixel( 1 )
+{
+	setDataType( dataType );
+	
+	if( isGray ) {
+		mPixelInc = mHasAlpha ? 2 : 1;
+	}
+	else {
+		mPixelInc = mHasAlpha ? 4 : 3;
+	}
+	mRowInc = mSize.x * mPixelInc;
+	
+	switch ( dataType) {
+		case ImageIo::UINT8: mNumBytesPerPixel = 1; break;
+		case ImageIo::UINT16: mNumBytesPerPixel = 2; break;
+		case ImageIo::FLOAT16: mNumBytesPerPixel = 2; break;
+		case ImageIo::FLOAT32: mNumBytesPerPixel = 4; break;
+		case ImageIo::DATA_UNKNOWN: throw ImageIoExceptionIllegalDataType(); break;
+	}
+	
+	mDataStore = std::unique_ptr<uint8_t[]>( new uint8_t[mSize.y * mRowInc * mNumBytesPerPixel] );
+	
+	setChannelOrder( channelOrder );
+	setColorModel( isGray ? ImageIo::CM_GRAY : ImageIo::CM_RGB );
+}
+
+void* ImageTargetCLBuffer::getRowPointer( int32_t row )
+{
+	return mDataStore.get() + (row * mRowInc * mNumBytesPerPixel);
+}
+
+void ImageTargetCLBuffer::finalize()
+{
+	*mBuffer = cl::Buffer( mContext, mFlags, mRowInc * mNumBytesPerPixel * mSize.y, mDataStore.get() );
+}
+	
+class ImageSourceCl : public ImageSource {
+public:
+	ImageSourceCl( Image2D image )
+	: ImageSource()
+	{
+		mWidth = image.getImageInfo<CL_IMAGE_WIDTH>();
+		mHeight = image.getImageInfo<CL_IMAGE_HEIGHT>();
+		auto imageFormat = image.getImageInfo<CL_IMAGE_FORMAT>();
+		
+		// Convert the color model and channel order
+		ColorModel colorModel; ChannelOrder channelOrder;
+		convertChannelOrder( imageFormat.image_channel_order, &colorModel, &channelOrder );
+		setColorModel( colorModel );
+		setChannelOrder( channelOrder );
+		
+		// Convert the data type
+		DataType dataType;
+		convertChannelDataType( imageFormat.image_channel_data_type, &dataType );
+		setDataType( dataType );
+		
+		mRowBytes = image.getImageInfo<CL_IMAGE_ROW_PITCH>();
+		
+		cl::size_t<3> offset;
+		cl::size_t<3> region;
+		region[0] = mWidth;
+		region[1] = mHeight;
+		region[2] = 1; // it'll break if this isn't true
+		mData.reset( new uint8_t[ mWidth * mHeight *
+							  dataTypeBytes( mDataType ) *
+							  channelOrderNumChannels( mChannelOrder ) ] );
+		
+		auto context = image.getInfo<CL_MEM_CONTEXT>();
+		cl::CommandQueue queue( context );
+		
+		queue.enqueueReadImage( image, CL_BLOCKING, offset, region, mRowBytes, 0, mData.get() );
+	}
+	
+	void load( ImageTargetRef target ) override {
+		// get a pointer to the ImageSource function appropriate for handling our data configuration
+		ImageSource::RowFunc func = setupRowFunc( target );
+	
+		const uint8_t *data = mData.get();
+		for( int32_t row = 0; row < mHeight; ++row ) {
+			((*this).*func)( target, row, data );
+			data += mRowBytes;
+		}
+	}
+	
+private:
+	
+	std::unique_ptr<uint8_t[]>	mData;
+	uint32_t					mRowBytes;
+};
+	
+Image2D createImage2D( ImageSourceRef imageSource, cl::Context context, cl_mem_flags flags )
+{
+	cl::Image2D image;
+	// setup an appropriate dataFormat/ImageTargetTexture based on the image's color space
+	ImageIo::ChannelOrder channelOrder;
+	bool isGray = false;
+	switch( imageSource->getColorModel() ) {
+		case ImageSource::CM_RGB:
+			channelOrder = ( imageSource->hasAlpha() ) ? ImageIo::RGBA : ImageIo::RGB;
+			break;
+		case ImageSource::CM_GRAY:
+			channelOrder = ( imageSource->hasAlpha() ) ? ImageIo::YA : ImageIo::Y;
+			isGray = true;
+			break;
+		default: // if this is some other color space, we'll have to punt and go w/ RGB
+			channelOrder = ( imageSource->hasAlpha() ) ? ImageIo::RGBA : ImageIo::RGB;
+			break;
+	}
+	auto imageSize = ivec2( imageSource->getWidth(), imageSource->getHeight() );
+	auto target = ImageTargetClImage::create( &image, context, flags, imageSize, channelOrder, imageSource->getDataType(), isGray, imageSource->hasAlpha() );
+	imageSource->load( target );
+	target->finalize();
+	return image;
+}
+	
+cl::Buffer createBuffer( ImageSourceRef imageSource, cl::Context context, cl_mem_flags flags )
+{
+	cl::Buffer ret;
+	// setup an appropriate dataFormat/ImageTargetTexture based on the image's color space
+	ImageIo::ChannelOrder channelOrder;
+	bool isGray = false;
+	switch( imageSource->getColorModel() ) {
+		case ImageSource::CM_RGB:
+			channelOrder = ( imageSource->hasAlpha() ) ? ImageIo::RGBA : ImageIo::RGB;
+			break;
+		case ImageSource::CM_GRAY:
+			channelOrder = ( imageSource->hasAlpha() ) ? ImageIo::YA : ImageIo::Y;
+			isGray = true;
+			break;
+		default: // if this is some other color space, we'll have to punt and go w/ RGB
+			channelOrder = ( imageSource->hasAlpha() ) ? ImageIo::RGBA : ImageIo::RGB;
+			break;
+	}
+	auto imageSize = ivec2( imageSource->getWidth(), imageSource->getHeight() );
+	auto target = ImageTargetCLBuffer::create( &ret, context, flags, imageSize, channelOrder, imageSource->getDataType(), isGray, imageSource->hasAlpha() );
+	imageSource->load( target );
+	target->finalize();
+	return ret;
+}
+	
+ImageSourceRef createSource( Image2D image )
+{
+	return ImageSourceRef( new ImageSourceCl( image ) );
+}
+	
+	
+} // namespace ocl
+	
+std::ostream& operator<<( std::ostream &lhs, const cl::Platform &rhs )
+{
+	lhs << "CL_PLATFORM_NAME:   " << rhs.getInfo<CL_PLATFORM_NAME>() << std::endl;
+	lhs << "CL_PLATFORM_VENDOR: " << rhs.getInfo<CL_PLATFORM_VENDOR>() << std::endl;
+	lhs << "CL_PLATFORM_VERSION:" << rhs.getInfo<CL_PLATFORM_VERSION>() << std::endl;
+	lhs	<< "CL_PLATFORM_PROFILE:"	<< rhs.getInfo<CL_PLATFORM_PROFILE>() << std::endl;
+	auto extensions = std::string( rhs.getInfo<CL_PLATFORM_EXTENSIONS>() );
+	auto extensionList = split( extensions, ' ' );
+	int i = 0;
+	lhs << "CL_PLATFORM_EXTENSIONS:\t" << extensionList[i++] << std::endl;
+	for( ; i < extensionList.size(); i++ ) {
+		lhs << "                    \t" << extensionList[i] << std::endl;
+	}
+	return lhs;
+}
+
+std::ostream& operator<<( std::ostream &lhs, const cl::Device &rhs )
+{
+	lhs << "CL_DEVICE_NAME:      " << rhs.getInfo<CL_DEVICE_NAME>() << std::endl;
+	lhs << "CL_DEVICE_VENDOR:    " << rhs.getInfo<CL_DEVICE_VENDOR>() << std::endl;
+	lhs << "CL_DRIVER_VERSION:   " << rhs.getInfo<CL_DRIVER_VERSION>() << std::endl;
+	lhs << "CL_DEVICE_PROFILE1:  " << rhs.getInfo<CL_DEVICE_PROFILE>() << std::endl;
+	lhs << "CL_DEVICE_VERSION:   " << rhs.getInfo<CL_DEVICE_VERSION>() << std::endl;
+	lhs	<< "CL_DEVICE_MAX_COMPUTE_UNITS:" << rhs.getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>() << std::endl;
+	auto extensions = std::string( rhs.getInfo<CL_DEVICE_EXTENSIONS>() );
+	auto extensionList = split( extensions, ' ' );
+	int i = 0;
+	lhs << "CL_DEVICE_EXTENSIONS:" << extensionList[i++] << std::endl;
+	for( ; i < extensionList.size(); i++ ) {
+		lhs << "                    " << extensionList[i] << std::endl;
+	}
+	return lhs;
+}
+
+std::ostream& operator<<( std::ostream &lhs, const cl::Program &rhs )
+{
+	lhs << "PROGRAM SOURCE: " << std::endl;
+	lhs << rhs.getInfo<CL_PROGRAM_SOURCE>() << std::endl;
+	return lhs;
+}
+
+std::ostream& operator<<( std::ostream &lhs, const cl::Kernel &rhs )
+{
+	lhs << "KERNEL NAME:	" << rhs.getInfo<CL_KERNEL_FUNCTION_NAME>() << endl;
+	auto numArgs = rhs.getInfo<CL_KERNEL_NUM_ARGS>();
+	lhs << "NUM ARGUMENTS	" << numArgs << endl;
+	for( int i = 0; i < numArgs; i++ ) {
+		lhs << "ARG " << i << " INFO:" << endl;
+		auto addQualifier = rhs.getArgInfo<CL_KERNEL_ARG_ADDRESS_QUALIFIER>( i );
+		auto accQualifier = rhs.getArgInfo<CL_KERNEL_ARG_ACCESS_QUALIFIER>( i );
+		
+		lhs << "\t ARG ADDRESS QUALIFIER: " << ocl::constantToString( addQualifier ) << endl;
+		lhs << "\t ARG ACCESS QUALIFIER: " << ocl::constantToString( accQualifier ) << endl;
+		
+		
+		auto typeName = rhs.getArgInfo<CL_KERNEL_ARG_TYPE_NAME>( i );
+		auto name = rhs.getArgInfo<CL_KERNEL_ARG_NAME>( i );
+		if( typeName.empty() && name.empty() ) {
+			lhs << "\t Arg Type and Name not available, to see Type and Name,"
+					"pass -cl-kernel-arg-info option in to ocl::Program::build." << endl;
+		}
+		else {
+			lhs << "\t ARG TYPENAME: " << typeName << endl;
+			lhs << "\t ARG NAME: " << name << endl;
+		}
+	}
+	return lhs;
+}
+
+} // namespace cinder

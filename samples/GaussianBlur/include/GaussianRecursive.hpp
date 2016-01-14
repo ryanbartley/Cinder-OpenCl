@@ -22,5 +22,5 @@ private:
 	cl::Buffer			mOriginal;
 	cl::ImageGL			mOutput;
 	cl::Kernel			mSimpleRecursive;
-	
+
 };

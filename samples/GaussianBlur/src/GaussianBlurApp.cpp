@@ -119,12 +119,7 @@ void GaussianBlurApp::setupGlTextureClImages()
 
 		getWindow()->setSize( mImageSize );
 
-		std::vector<cl::ImageFormat> imageFormats;
-		mContext.getSupportedImageFormats( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, CL_MEM_OBJECT_IMAGE2D, &imageFormats );
-
-		for( auto & imageFormat : imageFormats ) {
-			console() << "Channel Order: " << constantToString( imageFormat.image_channel_order ) << " Channel Data Type: " << constantToString( imageFormat.image_channel_data_type ) << std::endl;
-		}
+		ocl::printSupportedImageFormats( mContext, CL_MEM_OBJECT_IMAGE2D );
 
 		// Create an OpenCL Image / texture and transfer data to the device
 		// This cl image will hold the surface data as constant.
@@ -176,6 +171,7 @@ void GaussianBlurApp::keyDown( KeyEvent event )
 		default:
 		break;
 	}
+	
 }
 
 void GaussianBlurApp::changeSigma()
