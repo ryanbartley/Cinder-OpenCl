@@ -7,51 +7,55 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		006D720419952D00008149E2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D720219952D00008149E2 /* AVFoundation.framework */; };
+		006D720519952D00008149E2 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D720319952D00008149E2 /* CoreMedia.framework */; };
 		0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
 		00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
 		00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
 		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
-		0AA9A419071F4D89A69547BA /* ConvolutionApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D49DCBE42F0C4CAF80624693 /* ConvolutionApp.cpp */; };
+		15C9B273034A4E93946D1422 /* SimpleFlocking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44CF29DC08B3495CB6679BC8 /* SimpleFlocking.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		B30CAA201B2BF90C002DB285 /* Cinder-OpenCL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B30CAA1F1B2BF90C002DB285 /* Cinder-OpenCL.cpp */; };
-		B30CAA221B2BFCF2002DB285 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B30CAA211B2BFCF2002DB285 /* IOKit.framework */; };
-		B30CAA241B2BFCF9002DB285 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B30CAA231B2BFCF9002DB285 /* IOSurface.framework */; };
-		B3B6638F19A85EBF0097005F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B6638E19A85EBF0097005F /* CoreMedia.framework */; };
-		B3B6639119A85EC70097005F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B6639019A85EC70097005F /* AVFoundation.framework */; };
-		B3B6674A19AFDA970097005F /* Convolution.cl in Sources */ = {isa = PBXBuildFile; fileRef = B3B6674919AFDA970097005F /* Convolution.cl */; };
-		B3F78F8218DFB2C7009D9951 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3F78F8118DFB2C7009D9951 /* OpenCL.framework */; };
-		C3B4955446B640ECBA3559EB /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 605875650F3046FA9FC78BBC /* CinderApp.icns */; };
+		B38603641B4EC3A300518683 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38603631B4EC3A300518683 /* IOKit.framework */; };
+		B38603661B4EC3AA00518683 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38603651B4EC3AA00518683 /* IOSurface.framework */; };
+		B386036D1B4EC6A100518683 /* Cinder-OpenCL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B386036C1B4EC6A100518683 /* Cinder-OpenCL.cpp */; };
+		B386036F1B4EC6DC00518683 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B386036E1B4EC6DC00518683 /* OpenCL.framework */; };
+		B3E170FD1B5069290059F240 /* render.frag in Resources */ = {isa = PBXBuildFile; fileRef = B3E170F91B5069290059F240 /* render.frag */; };
+		B3E170FE1B5069290059F240 /* render.vert in Resources */ = {isa = PBXBuildFile; fileRef = B3E170FA1B5069290059F240 /* render.vert */; };
+		B3E170FF1B5069290059F240 /* update.cl in Sources */ = {isa = PBXBuildFile; fileRef = B3E170FB1B5069290059F240 /* update.cl */; };
+		D06324C423F847D183F50FFC /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 072CD6611B9F48AA90748A88 /* CinderApp.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		006D720219952D00008149E2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		006D720319952D00008149E2 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		0091D8F80E81B9330029341E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		00B784AF0FF439BC000DE1D7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		00B784B10FF439BC000DE1D7 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		00B784B20FF439BC000DE1D7 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		072CD6611B9F48AA90748A88 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		0AA5DAA0A5814B9FB581119E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		44CF29DC08B3495CB6679BC8 /* SimpleFlocking.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SimpleFlocking.cpp; path = ../src/SimpleFlocking.cpp; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
-		5486ED79859448BAB079E610 /* Convolution_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = Convolution_Prefix.pch; sourceTree = "<group>"; };
-		605875650F3046FA9FC78BBC /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
-		6A913F966EB9493FB28B0B4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* Convolution.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Convolution.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9711FE5C28824F07AD9B53AA /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
-		B30CAA1C1B2BF90C002DB285 /* Cinder-OpenCL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cinder-OpenCL.h"; sourceTree = "<group>"; };
-		B30CAA1D1B2BF90C002DB285 /* cl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cl.hpp; sourceTree = "<group>"; };
-		B30CAA1F1B2BF90C002DB285 /* Cinder-OpenCL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Cinder-OpenCL.cpp"; sourceTree = "<group>"; };
-		B30CAA211B2BFCF2002DB285 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		B30CAA231B2BFCF9002DB285 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
-		B3B6638E19A85EBF0097005F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		B3B6639019A85EC70097005F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		B3B6674919AFDA970097005F /* Convolution.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = Convolution.cl; path = "../../../../Cinder-OpenCL/samples/Convolution/assets/Convolution.cl"; sourceTree = "<group>"; };
-		B3F78F8118DFB2C7009D9951 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
-		D49DCBE42F0C4CAF80624693 /* ConvolutionApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ConvolutionApp.cpp; path = ../src/ConvolutionApp.cpp; sourceTree = "<group>"; };
+		652743C24B084AF49D065C18 /* SimpleFlocking_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleFlocking_Prefix.pch; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* SimpleFlocking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleFlocking.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B38603631B4EC3A300518683 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		B38603651B4EC3AA00518683 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
+		B38603691B4EC69900518683 /* Cinder-OpenCL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cinder-OpenCL.h"; sourceTree = "<group>"; };
+		B386036A1B4EC69900518683 /* cl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cl.hpp; sourceTree = "<group>"; };
+		B386036C1B4EC6A100518683 /* Cinder-OpenCL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Cinder-OpenCL.cpp"; sourceTree = "<group>"; };
+		B386036E1B4EC6DC00518683 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
+		B3E170F91B5069290059F240 /* render.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = render.frag; sourceTree = "<group>"; };
+		B3E170FA1B5069290059F240 /* render.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = render.vert; sourceTree = "<group>"; };
+		B3E170FB1B5069290059F240 /* update.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = update.cl; sourceTree = "<group>"; };
+		FF8589C3DAE2499D913D30EB /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,11 +63,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B30CAA241B2BFCF9002DB285 /* IOSurface.framework in Frameworks */,
-				B30CAA221B2BFCF2002DB285 /* IOKit.framework in Frameworks */,
-				B3B6639119A85EC70097005F /* AVFoundation.framework in Frameworks */,
-				B3B6638F19A85EBF0097005F /* CoreMedia.framework in Frameworks */,
-				B3F78F8218DFB2C7009D9951 /* OpenCL.framework in Frameworks */,
+				B386036F1B4EC6DC00518683 /* OpenCL.framework in Frameworks */,
+				B38603661B4EC3AA00518683 /* IOSurface.framework in Frameworks */,
+				B38603641B4EC3A300518683 /* IOKit.framework in Frameworks */,
+				006D720419952D00008149E2 /* AVFoundation.framework in Frameworks */,
+				006D720519952D00008149E2 /* CoreMedia.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
 				5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */,
@@ -81,7 +85,7 @@
 		01B97315FEAEA392516A2CEA /* Blocks */ = {
 			isa = PBXGroup;
 			children = (
-				B37E8A921AEE9DDD00AE1F73 /* Cinder-OpenCL */,
+				B38603671B4EC68700518683 /* Cinder-OpenCL */,
 			);
 			name = Blocks;
 			sourceTree = "<group>";
@@ -89,7 +93,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				D49DCBE42F0C4CAF80624693 /* ConvolutionApp.cpp */,
+				44CF29DC08B3495CB6679BC8 /* SimpleFlocking.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -97,6 +101,8 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				006D720219952D00008149E2 /* AVFoundation.framework */,
+				006D720319952D00008149E2 /* CoreMedia.framework */,
 				00B784AF0FF439BC000DE1D7 /* Accelerate.framework */,
 				00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */,
 				00B784B10FF439BC000DE1D7 /* AudioUnit.framework */,
@@ -121,12 +127,12 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* Convolution.app */,
+				8D1107320486CEB800E47090 /* SimpleFlocking.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		29B97314FDCFA39411CA2CEA /* Convolution */ = {
+		29B97314FDCFA39411CA2CEA /* CinderProject */ = {
 			isa = PBXGroup;
 			children = (
 				01B97315FEAEA392516A2CEA /* Blocks */,
@@ -136,14 +142,14 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
-			name = Convolution;
+			name = CinderProject;
 			sourceTree = "<group>";
 		};
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				9711FE5C28824F07AD9B53AA /* Resources.h */,
-				5486ED79859448BAB079E610 /* Convolution_Prefix.pch */,
+				FF8589C3DAE2499D913D30EB /* Resources.h */,
+				652743C24B084AF49D065C18 /* SimpleFlocking_Prefix.pch */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -151,9 +157,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				B3B6674919AFDA970097005F /* Convolution.cl */,
-				605875650F3046FA9FC78BBC /* CinderApp.icns */,
-				6A913F966EB9493FB28B0B4A /* Info.plist */,
+				35690E931AC0E0300077FD5E /* assets */,
+				072CD6611B9F48AA90748A88 /* CinderApp.icns */,
+				0AA5DAA0A5814B9FB581119E /* Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -161,51 +167,60 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B30CAA231B2BFCF9002DB285 /* IOSurface.framework */,
-				B30CAA211B2BFCF2002DB285 /* IOKit.framework */,
-				B3B6639019A85EC70097005F /* AVFoundation.framework */,
-				B3B6638E19A85EBF0097005F /* CoreMedia.framework */,
-				B3F78F8118DFB2C7009D9951 /* OpenCL.framework */,
+				B386036E1B4EC6DC00518683 /* OpenCL.framework */,
+				B38603651B4EC3AA00518683 /* IOSurface.framework */,
+				B38603631B4EC3A300518683 /* IOKit.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B30CAA1B1B2BF90C002DB285 /* include */ = {
+		35690E931AC0E0300077FD5E /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				B30CAA1C1B2BF90C002DB285 /* Cinder-OpenCL.h */,
-				B30CAA1D1B2BF90C002DB285 /* cl.hpp */,
+				B3E170F91B5069290059F240 /* render.frag */,
+				B3E170FA1B5069290059F240 /* render.vert */,
+				B3E170FB1B5069290059F240 /* update.cl */,
+			);
+			name = assets;
+			path = ../assets;
+			sourceTree = "<group>";
+		};
+		B38603671B4EC68700518683 /* Cinder-OpenCL */ = {
+			isa = PBXGroup;
+			children = (
+				B38603681B4EC69900518683 /* include */,
+				B386036B1B4EC6A100518683 /* src */,
+			);
+			name = "Cinder-OpenCL";
+			sourceTree = "<group>";
+		};
+		B38603681B4EC69900518683 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				B38603691B4EC69900518683 /* Cinder-OpenCL.h */,
+				B386036A1B4EC69900518683 /* cl.hpp */,
 			);
 			name = include;
 			path = ../../../include;
 			sourceTree = "<group>";
 		};
-		B30CAA1E1B2BF90C002DB285 /* src */ = {
+		B386036B1B4EC6A100518683 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B30CAA1F1B2BF90C002DB285 /* Cinder-OpenCL.cpp */,
+				B386036C1B4EC6A100518683 /* Cinder-OpenCL.cpp */,
 			);
 			name = src;
 			path = ../../../src;
 			sourceTree = "<group>";
 		};
-		B37E8A921AEE9DDD00AE1F73 /* Cinder-OpenCL */ = {
-			isa = PBXGroup;
-			children = (
-				B30CAA1B1B2BF90C002DB285 /* include */,
-				B30CAA1E1B2BF90C002DB285 /* src */,
-			);
-			name = "Cinder-OpenCL";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D1107260486CEB800E47090 /* Convolution */ = {
+		8D1107260486CEB800E47090 /* SimpleFlocking */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Convolution" */;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "SimpleFlocking" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
@@ -215,10 +230,10 @@
 			);
 			dependencies = (
 			);
-			name = Convolution;
+			name = SimpleFlocking;
 			productInstallPath = "$(HOME)/Applications";
-			productName = Convolution;
-			productReference = 8D1107320486CEB800E47090 /* Convolution.app */;
+			productName = CinderProject;
+			productReference = 8D1107320486CEB800E47090 /* SimpleFlocking.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -227,8 +242,9 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0610;
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Convolution" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "SimpleFlocking" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -238,11 +254,11 @@
 				French,
 				German,
 			);
-			mainGroup = 29B97314FDCFA39411CA2CEA /* Convolution */;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CinderProject */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* Convolution */,
+				8D1107260486CEB800E47090 /* SimpleFlocking */,
 			);
 		};
 /* End PBXProject section */
@@ -252,7 +268,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3B4955446B640ECBA3559EB /* CinderApp.icns in Resources */,
+				D06324C423F847D183F50FFC /* CinderApp.icns in Resources */,
+				B3E170FE1B5069290059F240 /* render.vert in Resources */,
+				B3E170FD1B5069290059F240 /* render.frag in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,9 +281,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3B6674A19AFDA970097005F /* Convolution.cl in Sources */,
-				B30CAA201B2BF90C002DB285 /* Cinder-OpenCL.cpp in Sources */,
-				0AA9A419071F4D89A69547BA /* ConvolutionApp.cpp in Sources */,
+				B3E170FF1B5069290059F240 /* update.cl in Sources */,
+				15C9B273034A4E93946D1422 /* SimpleFlocking.cpp in Sources */,
+				B386036D1B4EC6A100518683 /* Cinder-OpenCL.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,8 +293,7 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = x86_64;
-				CINDER_PATH = ../../../../../;
+				CINDER_PATH = ../../../../..;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
@@ -284,7 +301,7 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Convolution_Prefix.pch;
+				GCC_PREFIX_HEADER = SimpleFlocking_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -294,7 +311,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
-				PRODUCT_NAME = Convolution;
+				PRODUCT_NAME = SimpleFlocking;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
 			};
@@ -303,8 +320,7 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = x86_64;
-				CINDER_PATH = ../../../../../;
+				CINDER_PATH = ../../../../..;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -313,13 +329,17 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Convolution_Prefix.pch;
+				GCC_PREFIX_HEADER = SimpleFlocking_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NDEBUG=1",
+					"$(inherited)",
+				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
-				PRODUCT_NAME = Convolution;
+				PRODUCT_NAME = SimpleFlocking;
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
@@ -330,14 +350,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
-				CINDER_PATH = ../../../../../clean_cinder_dev;
+				CINDER_PATH = ../../../../Cinder;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
 			};
@@ -347,14 +367,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
-				CINDER_PATH = ../../../../../clean_cinder_dev;
+				CINDER_PATH = ../../../../Cinder;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
 			};
@@ -363,7 +382,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Convolution" */ = {
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "SimpleFlocking" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
@@ -372,7 +391,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Convolution" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "SimpleFlocking" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,

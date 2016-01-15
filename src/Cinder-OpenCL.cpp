@@ -430,7 +430,7 @@ private:
 	uint32_t					mRowBytes;
 };
 	
-Image2D createImage2D( ImageSourceRef imageSource, cl::Context context, cl_mem_flags flags )
+Image2D createImage2D( const ImageSourceRef &imageSource, cl::Context context, cl_mem_flags flags )
 {
 	cl::Image2D image;
 	// setup an appropriate dataFormat/ImageTargetTexture based on the image's color space
@@ -455,7 +455,7 @@ Image2D createImage2D( ImageSourceRef imageSource, cl::Context context, cl_mem_f
 	return image;
 }
 	
-cl::Buffer createBuffer( ImageSourceRef imageSource, cl::Context context, cl_mem_flags flags )
+cl::Buffer createBuffer( const ImageSourceRef &imageSource, cl::Context context, cl_mem_flags flags )
 {
 	cl::Buffer ret;
 	// setup an appropriate dataFormat/ImageTargetTexture based on the image's color space
@@ -478,6 +478,11 @@ cl::Buffer createBuffer( ImageSourceRef imageSource, cl::Context context, cl_mem
 	imageSource->load( target );
 	target->finalize();
 	return ret;
+}
+	
+cl::ImageGL createImageGL( const gl::Texture2dRef &texture, cl::Context context, cl_mem_flags flags )
+{
+	return ImageGL( context, flags, texture->getTarget(), 0, texture->getId() );
 }
 	
 ImageSourceRef createSource( Image2D image )
@@ -535,24 +540,24 @@ std::ostream& operator<<( std::ostream &lhs, const cl::Kernel &rhs )
 	auto numArgs = rhs.getInfo<CL_KERNEL_NUM_ARGS>();
 	lhs << "NUM ARGUMENTS	" << numArgs << endl;
 	for( int i = 0; i < numArgs; i++ ) {
-		lhs << "ARG " << i << " INFO:" << endl;
-		auto addQualifier = rhs.getArgInfo<CL_KERNEL_ARG_ADDRESS_QUALIFIER>( i );
-		auto accQualifier = rhs.getArgInfo<CL_KERNEL_ARG_ACCESS_QUALIFIER>( i );
-		
-		lhs << "\t ARG ADDRESS QUALIFIER: " << ocl::constantToString( addQualifier ) << endl;
-		lhs << "\t ARG ACCESS QUALIFIER: " << ocl::constantToString( accQualifier ) << endl;
-		
+		lhs << "ARG " << i << ":" << endl;
 		
 		auto typeName = rhs.getArgInfo<CL_KERNEL_ARG_TYPE_NAME>( i );
 		auto name = rhs.getArgInfo<CL_KERNEL_ARG_NAME>( i );
 		if( typeName.empty() && name.empty() ) {
 			lhs << "\t Arg Type and Name not available, to see Type and Name,"
-					"pass -cl-kernel-arg-info option in to ocl::Program::build." << endl;
+			"pass -cl-kernel-arg-info option in to ocl::Program::build." << endl;
 		}
 		else {
-			lhs << "\t ARG TYPENAME: " << typeName << endl;
-			lhs << "\t ARG NAME: " << name << endl;
+			lhs << "\t ARG: " << typeName << " " << name << endl;
 		}
+		
+		auto addQualifier = rhs.getArgInfo<CL_KERNEL_ARG_ADDRESS_QUALIFIER>( i );
+		auto accQualifier = rhs.getArgInfo<CL_KERNEL_ARG_ACCESS_QUALIFIER>( i );
+		
+		lhs << "\t ADDRESS QUALIFIER: " << ocl::constantToString( addQualifier ) << endl;
+		if( accQualifier != CL_KERNEL_ARG_ACCESS_NONE )
+			lhs << "\t ACCESS QUALIFIER: " << ocl::constantToString( accQualifier ) << endl;
 	}
 	return lhs;
 }

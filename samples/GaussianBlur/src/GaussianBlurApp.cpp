@@ -190,6 +190,7 @@ void GaussianBlurApp::changeSigma()
 void GaussianBlurApp::update()
 {
 	if( !doThings ) return;
+	
 	if( mSigmaUpdated ) {
 		cl::Event perfEvent;
 		if( mUseNaive )

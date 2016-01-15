@@ -1,5 +1,9 @@
-__kernel void  update( __global float4 *positions,
-					  __global float4 *velocities,
+struct Particle {
+	float4 pos;
+	float4 vel;
+};
+
+__kernel void  update( __global struct Particle *particles,
 					  int		uFlockSize,
 					  float		uDamping,
 					  float		uZoneRadiusSqrd,
@@ -10,7 +14,7 @@ __kernel void  update( __global float4 *positions,
 					  float		uMaxThresh,
 					  float		uTimeDelta)
 {
-	const float minSpeed = 0.5f;
+	const float minSpeed = 0.00025f;
 	const float maxSpeed = 1.0f;
 	float3 acc = float3( 0.0f );
 	float3 newVel = float3( 0.0f );
@@ -18,14 +22,14 @@ __kernel void  update( __global float4 *positions,
 	
 	int index = get_global_id(0);
 	
-	float3 myPosition = positions[index].xyz;
-	float3 myVelocity = velocities[index].xyz;
+	float3 myPosition = particles[index].pos.xyz;
+	float3 myVelocity = particles[index].vel.xyz;
 	// Apply rules 1 and 2 for my member in the flock (based on all other
 	// members)
 	for( int i=0; i<uFlockSize; i++ ){
 		if( i != index ) {
 			//			if( crowded > 10.0 ) break;
-			float3 theirPosition	= positions[i].xyz;
+			float3 theirPosition	= particles[i].pos.xyz;
 			
 			float3 dir			= myPosition - theirPosition;
 			float distSqrd		= dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
@@ -42,7 +46,7 @@ __kernel void  update( __global float4 *positions,
 				}
 				else if( percent < uMaxThresh )
 				{	// alignment
-					float3 theirVelocity	= velocities[i].xyz;
+					float3 theirVelocity	= particles[i].vel.xyz;
 					float threshDelta		= uMaxThresh - uMinThresh;
 					float adjustedPercent	= ( percent - uMinThresh )/threshDelta;
 					float F					= ( 1.0f - ( cos( adjustedPercent * 6.28318f ) * -0.5f + 0.5f ) ) * uAlignStrength;
@@ -82,8 +86,8 @@ __kernel void  update( __global float4 *positions,
 	
 	float3 outVelocity = newVel;
 	
-	positions[index].xyz = outPosition;
-	velocities[index].xyz = outVelocity;
+	particles[index].pos.xyz = outPosition;
+	particles[index].vel.xyz = outVelocity;
 	
 }
 
