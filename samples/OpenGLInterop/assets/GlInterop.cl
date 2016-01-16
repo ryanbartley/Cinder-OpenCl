@@ -1,5 +1,3 @@
-#pragma OPENCL EXTENSION cl_khr_gl_event : enable
-
 __kernel void init_vbo_kernel(__global float4 *vbo, int w, int h, int seq)
 {
     int gid = get_global_id(0);

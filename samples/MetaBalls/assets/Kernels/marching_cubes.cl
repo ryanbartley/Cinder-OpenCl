@@ -59,7 +59,8 @@ kernel void write_metaballs(global float* volume, int3 size, global float4* meta
 
 }
 
-kernel void write_point_color_back(global float* volume, global float4* point_color) {
+kernel void write_point_color_back(global float* volume, global float4* point_color)
+{
   float color = volume[get_global_id(0)];
   point_color[get_global_id(0)] = (float4)(color, 0, 0, 1);
 }
@@ -144,8 +145,8 @@ kernel void construct_surface(global float* volume,
 	
 }
 
-kernel void generate_flat_normals(global float4* vertex_positions, global float4* vertex_normals) {
-  
+kernel void generate_flat_normals(global float4* vertex_positions, global float4* vertex_normals)
+{
   int id = get_global_id(0);
   
   float4 pos1 = vertex_positions[id * 3 + 0];
@@ -163,8 +164,8 @@ kernel void generate_flat_normals(global float4* vertex_positions, global float4
   vertex_normals[id * 3 + 2] = (float4)(normal, 0);
 }
 
-kernel void generate_smooth_normals(global float4* vertex_positions, global float4* vertex_normals, global float4* metaball_positions, int num_metaballs) {
-  
+kernel void generate_smooth_normals(global float4* vertex_positions, global float4* vertex_normals, global float4* metaball_positions, int num_metaballs)
+{  
   const float METABALL_SIZE = 5;
   
   int id = get_global_id(0);

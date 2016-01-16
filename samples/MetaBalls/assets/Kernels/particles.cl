@@ -1,42 +1,43 @@
-kernel void particle_update(__global float4* positions, 
-                            __global float4* velocities, 
-                            __global float* lifetimes,  
-                            __global float4* randoms, 
-                             float max_life,
-                             float min_velocity, 
-                             float time_difference,
-                             int reset, 
-                             int random,
-                             int particle_count  ) {
-  
-  const int i = get_global_id(0);
-  
-  lifetimes[i] = lifetimes[i] + time_difference;
-  
-  if ((lifetimes[i] > max_life) || ( length(velocities[i]) < min_velocity ) || reset) {
-    
-    lifetimes[i] = 0.0f;
-    
-    //positions[i] = (float4)(0,0,0,1);
-    positions[i] = (float4)(32,15,32,1);
-    
-    int random_index = (random + i) % particle_count;
-    float rx = randoms[random_index].x;
-    float ry = randoms[random_index].y;
-    float rz = randoms[random_index].z;
-    velocities[i] = (float4)(rx, ry, rz, 0) * 5;
-  
-  } else {
-  
-    /* Update positions and velocity */
-    positions[i].xyz = positions[i].xyz + (velocities[i].xyz * time_difference);
-    velocities[i].y = velocities[i].y - (9.81f * time_difference);
-    
-    /* Bounce on floors */
-    if (positions[i].y < 15.0f) {
-      velocities[i].xyz = velocities[i].xyz * 0.75f;
-      velocities[i].y = -velocities[i].y;
-    }
+struct Particle {
+	float4 pos;
+	float4 vel;
+	float4 rand_life;
+};
 
-  }
+__kernel void particle_update(__global struct Particle *particles,
+                             float maxLife,
+                             float minVelSqd,
+                             float timeDelta,
+                             int random,
+                             int totalParticles )
+{
+  
+	const int i = get_global_id(0);
+	
+	struct Particle myPart = particles[i];
+	myPart.rand_life.w += timeDelta;
+	
+	float3 vel = myPart.vel.xyz;
+	float lengthSqd = vel.x * vel.x + vel.y * vel.y + vel.z * vel.z;
+	
+	if ((myPart.rand_life.w > maxLife) || ( lengthSqd < minVelSqd ) ) {
+		int random_index = (random + i) % totalParticles;
+		float3 randomVals = particles[random_index].rand_life.xyz;
+		myPart.vel = (float4)(randomVals, 0) * 5;
+		myPart.rand_life.w = 0.0f;
+		myPart.pos = (float4)(0,0,0,1);
+	}
+	else {
+		/* Update positions and velocity */
+		myPart.pos.xyz = myPart.pos.xyz + ( myPart.vel.xyz * timeDelta );
+		myPart.vel.y = myPart.vel.y - (9.81f * timeDelta);
+		
+		/* Bounce on floors */
+		if ( myPart.pos.y <= 0.0f) {
+			myPart.vel.xyz *= 0.75f;
+			myPart.vel.y = -myPart.vel.y;
+		}
+	}
+	
+	particles[i] = myPart;
 }

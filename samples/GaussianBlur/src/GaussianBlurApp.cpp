@@ -16,8 +16,6 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-#pragma OPENCL EXTENSION cl_khr_gl_event : enable
-
 class GaussianBlurApp : public App {
   public:
 	void setup() override;

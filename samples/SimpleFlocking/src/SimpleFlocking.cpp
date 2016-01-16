@@ -1,20 +1,10 @@
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
+#include "cinder/gl/gl.h"
 
 #include "cinder/Rand.h"
-
-#include "cinder/gl/gl.h"
-#include "cinder/gl/Context.h"
-#include "cinder/gl/Shader.h"
-#include "cinder/gl/Vbo.h"
-#include "cinder/gl/Vao.h"
-#include "cinder/gl/Batch.h"
-#include "cinder/gl/BufferTexture.h"
-#include "cinder/gl/GlslProg.h"
 #include "cinder/CameraUi.h"
-#include "cinder/Camera.h"
 #include "cinder/params/Params.h"
-#include "Cinder/Utilities.h"
 #include "Cinder/Log.h"
 
 #include "Cinder-OpenCL.h"
@@ -22,8 +12,6 @@
 using namespace ci;
 using namespace ci::app;
 using namespace std;
-
-#pragma OPENCL EXTENSION cl_khr_gl_event : enable
 
 const int FLOCK_SIZE	= 2560;
 const int NUM_THREADS	= 256;
