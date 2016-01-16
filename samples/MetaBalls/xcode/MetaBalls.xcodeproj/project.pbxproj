@@ -29,8 +29,6 @@
 		B3445BAF197ADAD40085228D /* metaballs.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BA7197ADAD40085228D /* metaballs.c */; };
 		B3445BB0197ADAD40085228D /* particles.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BA9197ADAD40085228D /* particles.c */; };
 		B3445BB1197ADAD40085228D /* volume_renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BAB197ADAD40085228D /* volume_renderer.c */; };
-		B3445BB7197ADBC90085228D /* MarchingCubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3445BB6197ADBC90085228D /* MarchingCubes.cpp */; };
-		B3445BBA197ADC040085228D /* VolumeRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3445BB9197ADC040085228D /* VolumeRenderer.cpp */; };
 		B3445BBC197ADEAE0085228D /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3445BBB197ADEAE0085228D /* OpenCL.framework */; };
 		B3445BBE197AFD2B0085228D /* basic.vert in Resources */ = {isa = PBXBuildFile; fileRef = B3445BBD197AFD2B0085228D /* basic.vert */; };
 		B3445BC0197AFD400085228D /* basic.frag in Resources */ = {isa = PBXBuildFile; fileRef = B3445BBF197AFD400085228D /* basic.frag */; };
@@ -78,10 +76,6 @@
 		B3445BAA197ADAD40085228D /* particles.hc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = particles.hc; sourceTree = "<group>"; };
 		B3445BAB197ADAD40085228D /* volume_renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = volume_renderer.c; sourceTree = "<group>"; };
 		B3445BAC197ADAD40085228D /* volume_renderer.hc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = volume_renderer.hc; sourceTree = "<group>"; };
-		B3445BB5197ADBB10085228D /* MarchingCubes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MarchingCubes.h; path = ../include/MarchingCubes.h; sourceTree = "<group>"; };
-		B3445BB6197ADBC90085228D /* MarchingCubes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MarchingCubes.cpp; path = ../src/MarchingCubes.cpp; sourceTree = "<group>"; };
-		B3445BB8197ADBF00085228D /* VolumeRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VolumeRenderer.h; path = ../include/VolumeRenderer.h; sourceTree = "<group>"; };
-		B3445BB9197ADC040085228D /* VolumeRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VolumeRenderer.cpp; path = ../src/VolumeRenderer.cpp; sourceTree = "<group>"; };
 		B3445BBB197ADEAE0085228D /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 		B3445BBD197AFD2B0085228D /* basic.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.vert; path = ../assets/basic.vert; sourceTree = "<group>"; };
 		B3445BBF197AFD400085228D /* basic.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.frag; path = ../assets/basic.frag; sourceTree = "<group>"; };
@@ -126,9 +120,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B3445BB6197ADBC90085228D /* MarchingCubes.cpp */,
 				CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */,
-				B3445BB9197ADC040085228D /* VolumeRenderer.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -182,10 +174,8 @@
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				B3445BB5197ADBB10085228D /* MarchingCubes.h */,
 				158B6D20AAA440AD96606452 /* MetaBalls_Prefix.pch */,
 				27BE53E96BE34E8B8898325E /* Resources.h */,
-				B3445BB8197ADBF00085228D /* VolumeRenderer.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -356,13 +346,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3445BBA197ADC040085228D /* VolumeRenderer.cpp in Sources */,
 				B3445BAE197ADAD40085228D /* marching_cubes.c in Sources */,
 				B3445BAF197ADAD40085228D /* metaballs.c in Sources */,
 				B30CAA341B2C0ACB002DB285 /* Cinder-OpenCL.cpp in Sources */,
 				B3E100451C48D86200D60349 /* particles.cl in Sources */,
 				B3445BB0197ADAD40085228D /* particles.c in Sources */,
-				B3445BB7197ADBC90085228D /* MarchingCubes.cpp in Sources */,
 				B3445BAD197ADAD40085228D /* kernel.c in Sources */,
 				B3445BB1197ADAD40085228D /* volume_renderer.c in Sources */,
 				EE64BE15612548199A62E999 /* MetaBallsApp.cpp in Sources */,
