@@ -19,7 +19,7 @@ const int VOLUME_DEPTH			= 64;
 const size_t VOLUME_SIZE		= VOLUME_WIDTH * VOLUME_HEIGHT * VOLUME_DEPTH;
 
 const int MAX_MARCHING_VERTS	= 100000;
-const int NUM_PARTICLES			= 64;
+const int NUM_PARTICLES			= 1000;
 
 class MetaBallsApp : public App {
   public:
@@ -98,6 +98,8 @@ void MetaBallsApp::setupScene()
 {
 	setupParticleBuffers();
 	setupParticleKernel();
+	setupMarchingBuffers();
+	setupMarchingKernels();
 	setupPodium();
 }
 
@@ -173,7 +175,7 @@ void MetaBallsApp::setupMarchingBuffers()
 		for(y = 0; y < VOLUME_HEIGHT; y++)
 			for(z = 0; z < VOLUME_DEPTH; z++) {
 				int id = x + y * VOLUME_WIDTH + z * VOLUME_WIDTH * VOLUME_HEIGHT;
-				volumeData[id].pos_vol = ocl::toCl( vec4(x, y, z, 0.0) );
+				volumeData[id].pos_vol = ocl::toCl( vec4( x, y, z, 0.0f ) );
 			}
 	
 	// Create Position Indices Buffer
@@ -200,8 +202,8 @@ void MetaBallsApp::setupMarchingKernels()
 	
 	mKernWriteMetaballs = cl::Kernel( program, "write_metaballs" );
 	mKernWriteMetaballs.setArg( 0, mClMarchingVolume );
-	mKernWriteMetaballs.setArg( 1, sizeof(cl_int3), &size );
-	mKernWriteMetaballs.setArg( 2, mClParticleBuf );
+	mKernWriteMetaballs.setArg( 1, mClParticleBuf );
+	mKernWriteMetaballs.setArg( 2, sizeof(cl_int3), &size );
 	mKernWriteMetaballs.setArg( 3, sizeof(cl_int), &NUM_PARTICLES );
 	
 	mKernWriteClear = cl::Kernel( program, "write_clear" );
@@ -279,13 +281,19 @@ void MetaBallsApp::updateMarching()
 	if (mMarchingVertsWritten > 0) {
 		bool smooth = true;
 		if( ! smooth )
-			mClCommandQueue.enqueueNDRangeKernel( mKernGenNormals, cl::NullRange, cl::NDRange( mMarchingVertsWritten ) );
+			mClCommandQueue.enqueueNDRangeKernel( mKernGenNormals,
+												  cl::NullRange,
+												  cl::NDRange( mMarchingVertsWritten ) );
 		else
-			mClCommandQueue.enqueueNDRangeKernel( mKernGenNormalsSmooth, cl::NullRange, cl::NDRange( mMarchingVertsWritten ) );
+			mClCommandQueue.enqueueNDRangeKernel( mKernGenNormalsSmooth,
+												  cl::NullRange,
+												  cl::NDRange( mMarchingVertsWritten ) );
 	}
 	
-	if( mDebugDraw )
-		mClCommandQueue.enqueueNDRangeKernel( mKernWritePointColorBack, cl::NullRange, cl::NDRange( VOLUME_SIZE ) );
+	//if( mDebugDraw )
+		mClCommandQueue.enqueueNDRangeKernel( mKernWritePointColorBack,
+											  cl::NullRange,
+											  cl::NDRange( VOLUME_SIZE ) );
 }
 
 
@@ -314,6 +322,11 @@ void MetaBallsApp::drawMarching()
 	mGlMarchingRenderBatch->draw( 0, mMarchingVertsWritten );
 }
 
+void MetaBallsApp::drawMarchingDebug()
+{
+	mGlMarchingDebugBatch->draw();
+}
+
 void MetaBallsApp::setup()
 {
 	try {
@@ -326,15 +339,17 @@ void MetaBallsApp::setup()
 	
 	mCam.setPerspective( 60, ci::app::getWindowAspectRatio(), 0.01, 1000 );
 	mCam.lookAt( vec3( 10, 10, 10 ), vec3( 0, 0, 0 ) );
+	
 	mCamUI.setCamera( &mCam );
 	mCamUI.connect( getWindow() );
 }
 
 void MetaBallsApp::update()
 {
-	std::vector<cl::Memory> acquire( { mClParticleBuf } );
+	std::vector<cl::Memory> acquire( { mClParticleBuf, mClMarchingRenderBuffer, mClMarchingDebugBuffer } );
 	mClCommandQueue.enqueueAcquireGLObjects( &acquire );
 	updateParticles();
+	updateMarching();
 	mClCommandQueue.enqueueReleaseGLObjects( &acquire );
 }
 
@@ -347,8 +362,13 @@ void MetaBallsApp::draw()
 	gl::enableDepthRead();
 	gl::enableDepthWrite();
 	drawPodium();
+	drawMarching();
+	
 	gl::disableDepthWrite();
+	gl::disableDepthRead();
+	gl::ScopedState	stateScope( GL_PROGRAM_POINT_SIZE, true );
 	drawParticleDebug();
+	drawMarchingDebug();
 }
 
 CINDER_APP( MetaBallsApp, RendererGl, []( App::Settings *settings ) {
