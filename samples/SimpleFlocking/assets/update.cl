@@ -16,8 +16,8 @@ __kernel void  update( __global struct Particle *particles,
 {
 	const float minSpeed = 0.00025f;
 	const float maxSpeed = 1.0f;
-	float3 acc = float3( 0.0f );
-	float3 newVel = float3( 0.0f );
+	float3 acc = (float3) 0.0f;
+	float3 newVel = (float3) 0.0f;
 	float crowded = 1.0f;
 	
 	int index = get_global_id(0);
@@ -108,8 +108,8 @@ __kernel void  smartUpdate( __global float4 *positions,
 {
 	const float minSpeed = 0.5f;
 	const float maxSpeed = 1.0f;
-	float3 acc = float3( 0.0f );
-	float3 newVel = float3( 0.0f );
+	float3 acc = (float3) 0.0f;
+	float3 newVel = (float3) 0.0f;
 	float crowded = 1.0f;
 	
 	int globalIndex = get_global_id(0);

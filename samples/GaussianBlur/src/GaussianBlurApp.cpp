@@ -101,7 +101,7 @@ void GaussianBlurApp::setupCl()
 	mPlatform.getDevices( CL_DEVICE_TYPE_GPU, &devices );
 	// Create an OpenCL context on first available platform
 	mContext = cl::Context( devices[0],
-						   getDefaultSharedGraphicsContextProperties( mPlatform ),
+						   ocl::getDefaultSharedGraphicsContextProperties( mPlatform ),
 						   &GaussianBlurApp::contextInfo );
 	
 	// Create a command-queue on the on the created context and allow for profiling
