@@ -1,17 +1,46 @@
+/*
+ Copyright (c) 2016, The Cinder Project, All rights reserved.
+ 
+ This code is intended for use with the Cinder C++ library: http://libcinder.org
+ 
+ Redistribution and use in source and binary forms, with or without modification, are permitted provided that
+ the following conditions are met:
+ 
+ * Redistributions of source code must retain the above copyright notice, this list of conditions and
+	the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+	the following disclaimer in the documentation and/or other materials provided with the distribution.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+ WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*
+ Sample from page 46 of the OpenCL Programming Guide
+ Aaftab Munshi
+ Benedict R. Gaster
+ Timothy G. Mattson
+ James Fung
+ Dan Ginsburg
+ Portions Copyright (c) 2012
+ */
+
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
+#include "cinder/Log.h"
 
 #include "cinder/gl/Vao.h"
 #include "cinder/gl/GlslProg.h"
 #include "cinder/gl/Vbo.h"
 
-#include "BufferObj.h"
-#include "Platform.h"
-#include "Device.h"
-#include "Context.h"
-#include "Program.h"
-#include "CommandQueue.h"
+#include "Cinder-OpenCl.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -20,211 +49,181 @@ using namespace std;
 class OpenGLInteropApp : public App {
   public:
 	void setup();
-	void mouseDown( MouseEvent event );	
 	void update();
 	void draw();
+	
+	void setupClContext();
 	void setupCl();
 	void setupGl();
 	void performQueries();
-	void computeTexture();
-	void computeVbo();
+	void computeTexture( const vec2 &size, cl_int seq );
+	void computeBuffer( const vec2 &size, cl_int seq );
 	
-	gl::VaoRef			mGlVao;
-	gl::VboRef			mGlVbo;
-	gl::GlslProgRef		mGlGlsl;
-	cl::BufferObjRef	mClVbo;
-	cl::PlatformRef		mClPlatform;
-	cl::ContextRef		mClContext;
-	cl::CommandQueueRef	mClCommandQueue;
-	cl::ProgramRef		mClProgram;
+	static void contextErrorCallback( const char *errinfo, const void *private_info,
+									 ::size_t cb, void *user_data )
+	{
+		CI_LOG_E( errinfo );
+	}
+	
+	gl::BatchRef		mGlBatch;
+	gl::VboRef			mGlBuffer;
+	gl::Texture2dRef	mGlTexture;
+	
+	ocl::BufferGL		mClBuffer;
+	ocl::ImageGL		mClImage;
+	ocl::Context		mClContext;
+	ocl::CommandQueue	mClCommandQueue;
+	ocl::Kernel			mVboKernel, mTextureKernel;
 };
 
 void OpenGLInteropApp::setup()
 {
+	// First, we setup the context that's going to share resources with OpenGL.
+	setupClContext();
+	// Next, we can create our OpenGL resources.
 	setupGl();
+	// Finally, we create the resources that depend on OpenGL.
 	setupCl();
+}
+
+void OpenGLInteropApp::setupClContext()
+{
+	// This is all the same as within the HelloWorld sample. Except where notated.
+	std::vector<ocl::Platform> platforms;
+	ocl::Platform::get( &platforms );
+	
+	std::vector<ocl::Device> devices;
+	platforms[0].getDevices( CL_DEVICE_TYPE_GPU, &devices );
+	
+	// Here's the big difference in setup. When creating the ocl::Context, we want to share
+	// recources with the OpenGL Context (Note: that's not the same as the ci::gl::Context).
+	// There's an easy helper function within the ci::ocl wrapper called, long-windedly,
+	// getDefaultSharedGraphicsContextProperties, which takes a platform. This will set up
+	// the properties correctly to share with what Cinder believes your properties are.
+	mClContext = ocl::Context( devices,
+							 ocl::getDefaultSharedGraphicsContextProperties( platforms[0] ),
+							 &OpenGLInteropApp::contextErrorCallback );
+	
+	mClCommandQueue = ocl::CommandQueue( mClContext );
 }
 
 void OpenGLInteropApp::setupGl()
 {
-	mGlVbo = gl::Vbo::create( GL_ARRAY_BUFFER, getWindowHeight() * sizeof(vec4), NULL, GL_STREAM_DRAW );
+	// Create our texture that we're going to share with cl.
+	auto texFormat = gl::Texture2d::Format().internalFormat( GL_RGBA32F );
+	mGlTexture = gl::Texture2d::create( getWindowWidth(), getWindowHeight(), texFormat );
 	
-	mGlVao = gl::Vao::create();
+	auto numVertices = getWindowWidth() * 2;
 	
-	mGlVao->bind();
-	mGlVbo->bind();
+	// Create the buffer that we're going to share with cl.
+	mGlBuffer = gl::Vbo::create( GL_ARRAY_BUFFER, numVertices * sizeof(vec2), nullptr, GL_STREAM_DRAW );
+	// Describe the buffer and create the batch.
+	auto attrib = geom::AttribInfo( geom::POSITION, geom::DataType::FLOAT, 2, sizeof(vec2), 0 );
+	auto vboMesh = gl::VboMesh::create( numVertices, GL_LINES,
+									   { { geom::BufferLayout( { attrib } ), mGlBuffer } } );
+	auto glsl = gl::GlslProg::create( gl::GlslProg::Format()
+									 .vertex( loadAsset( "basic.vert" ) )
+									 .fragment( loadAsset( "basic.frag" ) ) );
+	mGlBatch = gl::Batch::create( vboMesh, glsl );
 	
-	gl::enableVertexAttribArray(0);
-	gl::vertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	
-	mGlGlsl = gl::GlslProg::create( gl::GlslProg::Format()
-										.vertex( loadAsset( "basic.vert" ) )
-										.fragment( loadAsset( "basic.frag" ) )
-										.attribLocation( "position", 0 )
-								   .uniform( gl::UniformSemantic::UNIFORM_MODEL_VIEW_PROJECTION, "mvp" ) );
-	//	initTexture(imWidth,imHeight);
 }
 
 void OpenGLInteropApp::setupCl()
 {
-    // First, select an OpenCL platform to run on.
-	auto platforms = cl::Platform::getAvailablePlatforms();
+	// Link the gl buffer and the cl buffer.
+	mClBuffer = ocl::BufferGL( mClContext, CL_MEM_READ_WRITE,  mGlBuffer->getId() );
+	// An image is similar to a buffer, a memory object. But it is akin to Textures.
+	// Here we're going to link the gl texture and the cl image.
+	mClImage = ocl::ImageGL( mClContext, CL_MEM_READ_WRITE, mGlTexture->getTarget(), 0, mGlTexture->getId() );
+
+	// Create program from source. This time we're not going to store it as we only need
+	// the kernels. By creating the kernels, we're implicitly storing the program.
+	auto program = ocl::createProgram( mClContext, loadAsset( "GlInterop.cl" ), true );
+
+	auto size = getWindowSize();
 	
-	// Iterate through the list of platforms until we find one that supports
-	// a GPU device, otherwise fail with an error.
-	mClPlatform = cl::Platform::create( platforms[0], CL_DEVICE_TYPE_GPU );
+    // Create kernel objects...
+	mVboKernel = ocl::Kernel( program, "init_vbo_kernel" );
+	// Similar to uniforms, kernel arguments can be set once if they're not going to
+	// change for the lifetime of the kernel. If they are going to change, you'll
+	// need to set them each time they change. Which is what we're doing for the 'seq'
+	// arg below.
+	mVboKernel.setArg( 0, mClBuffer );
+	mVboKernel.setArg( 1, sizeof(cl_int), &size.x );
+	mVboKernel.setArg( 2, sizeof(cl_int), &size.y );
 	
-    // Next, create an OpenCL context on the selected platform.
-	// And authorize creation of the sharing context
-    mClContext = cl::Context::create( mClPlatform, true );
+	// Same as before.
+	mTextureKernel = ocl::Kernel( program, "init_texture_kernel" );
+	mTextureKernel.setArg( 0, mClImage );
+	mTextureKernel.setArg( 1, sizeof(cl_int), &size.x );
+	mTextureKernel.setArg( 2, sizeof(cl_int), &size.y );
 	
-    // Create a command-queue on the first device available
-    // on the created context
-    mClCommandQueue = cl::CommandQueue::create( mClPlatform->getDevices()[0] );
-	
-    // Create program from source
-	mClProgram = cl::Program::create( loadAsset( "GlInterop.cl" ) );
-	
-    // Create kernel object
-	mClProgram->createKernel( "init_vbo_kernel" );
-	
-//	tex_kernel = clCreateKernel(program, "init_texture_kernel", NULL);
-//    if (tex_kernel == NULL)
-//    {
-//        std::cerr << "Failed to create kernel" << std::endl;
-//        Cleanup();
-//        return 1;
-//    }
-	
-    // Create memory objects that will be used as arguments to
-    // kernel
-//    if (!CreateMemObjects(context, tex, vbo, &cl_vbo_mem, &cl_tex_mem))
-//    {
-//        Cleanup();
-//        return 1;
-//    }
-	
-	mClVbo = cl::BufferObj::create( mGlVbo, CL_MEM_READ_WRITE );
-	
-	// Perform some queries to get information about the OpenGL objects
-	performQueries();
 }
 
-void OpenGLInteropApp::performQueries() {
-//	cl_int errNum;
-//	std::cout << "Performing queries on OpenGL objects:" << std::endl;
-//	// example usage of getting information about a GL memory object
-//	cl_gl_object_type obj_type;
-//	GLuint objname;
-////	errNum = clGetGLObjectInfo( cl_tex_mem,  &obj_type, &objname );
-//	if( errNum != CL_SUCCESS ) {
-//		std::cerr << "Failed to get object information" << std::endl;
-//	} else {
-//		if( obj_type == CL_GL_OBJECT_TEXTURE2D ) {
-//			std::cout << "Queried a texture object succesfully." << std::endl;
-//			std::cout << "Object name is: " << objname << std::endl;
-//		}
-//		
-//	}
-//	
-//	// Example usage of how to get information about the texture object
-//	GLenum param;
-//	size_t param_ret_size;
-//	errNum = clGetGLTextureInfo( cl_tex_mem, CL_GL_TEXTURE_TARGET, sizeof( GLenum ), &param, &param_ret_size );
-//	if( errNum != CL_SUCCESS ) {
-//		std::cerr << "Failed to get texture information" << std::endl;
-//	} else {
-//		// we have set it to use GL_TEXTURE_RECTANGLE_ARB.  We expect it to be reflectedin the query here
-//		if( param == GL_TEXTURE_RECTANGLE_ARB ) {
-//			std::cout << "Texture rectangle ARB is being used." << std::endl;
-//		}
-//	}
-}
-
-void OpenGLInteropApp::computeTexture()
+void OpenGLInteropApp::computeTexture( const vec2 &size, cl_int seq )
 {
-//	cl_int errNum;
-//	
-//	static cl_int seq =0;
-//	seq = (seq+1)%(imWidth*2);
-//	
-//    errNum = clSetKernelArg(tex_kernel, 0, sizeof(cl_mem), &cl_tex_mem);
-//    errNum = clSetKernelArg(tex_kernel, 1, sizeof(cl_int), &imWidth);
-//    errNum = clSetKernelArg(tex_kernel, 2, sizeof(cl_int), &imHeight);
-//    errNum = clSetKernelArg(tex_kernel, 3, sizeof(cl_int), &seq);
-//	
-//	size_t tex_globalWorkSize[2] = { imWidth, imHeight };
-//	size_t tex_localWorkSize[2] = { 32, 4 } ;
-//	
-//	glFinish();
-//	errNum = clEnqueueAcquireGLObjects(commandQueue, 1, &cl_tex_mem, 0, NULL, NULL );
-//	
-//    errNum = clEnqueueNDRangeKernel(commandQueue, tex_kernel, 2, NULL,
-//                                    tex_globalWorkSize, tex_localWorkSize,
-//                                    0, NULL, NULL);
-//    if (errNum != CL_SUCCESS)
-//    {
-//        std::cerr << "Error queuing kernel for execution." << std::endl;
-//    }
-//	errNum = clEnqueueReleaseGLObjects(commandQueue, 1, &cl_tex_mem, 0, NULL, NULL );
-//	clFinish(commandQueue);
-//	return 0;
+	// This argument changes every frame. So we're going to need to send it to
+	// the kernel every time we're going to process the kernel.
+    mTextureKernel.setArg( 3, sizeof(cl_int), &seq );
+	
+	try {
+		// Here's were we queue the execution of the kernel. The offset is null. The
+		// Range is the size of the texture or width and height. Because each kernel
+		// is going to execute one pixel of the texture.
+		mClCommandQueue.enqueueNDRangeKernel( mTextureKernel,
+											 ocl::NullRange,
+											 ocl::NDRange( size.x, size.y ) );
+	}
+	catch( const ocl::Error &e ) {
+		CI_LOG_E( e.what() << ": Value: " << ocl::errorToString( e.err() ) );
+	}
 }
 
-void OpenGLInteropApp::computeVbo()
+void OpenGLInteropApp::computeBuffer( const vec2 &size, cl_int seq )
 {
-	cl_int errNum;
-	static auto size = getWindowSize();
-	// a small internal counter for animation
-	static cl_int seq = 0;
-	seq = (seq+1)%(size.x);
-
-    // Set the kernel arguments, send the cl_mem object for the VBO
-	auto kernel = mClProgram->getKernelByName("init_vbo_kernel");
+	// This argument changes every frame. So we're going to need to send it to
+	// the kernel every time we're going to process the kernel.
+	mVboKernel.setArg( 3, sizeof(cl_int), &seq );
 	
-    kernel->setKernelArg( 0, mClVbo );
-	kernel->setKernelArg( 1, sizeof(cl_int), &size.x );
-	kernel->setKernelArg( 2, sizeof(cl_int), &size.y );
-	kernel->setKernelArg( 3, sizeof(cl_int), &seq );
-	
-    size_t globalWorkSize[1] = { static_cast<size_t>(size.y) };
-    size_t localWorkSize[1] = { 32 };
-	
-	// Acquire the GL Object
-	// Note, we should ensure GL is completed with any commands that might affect this VBO
-	// before we issue OpenCL commands
-	auto vboMem = mClVbo->getId();
-
-	errNum = clEnqueueAcquireGLObjects( mClCommandQueue->getId(), 1, &vboMem, 0, NULL, NULL );
-	
-    // Queue the kernel up for execution across the array
-    errNum = clEnqueueNDRangeKernel(mClCommandQueue->getId(), kernel->getId(), 1, NULL,
-                                    globalWorkSize, localWorkSize,
-                                    0, NULL, NULL);
-    if (errNum != CL_SUCCESS)
-    {
-        std::cerr << "Error queuing kernel for execution." << std::endl;
-    }
-	
-	// Release the GL Object
-	// Note, we should ensure OpenCL is finished with any commands that might affect the VBO
-	errNum = clEnqueueReleaseGLObjects( mClCommandQueue->getId(), 1, &vboMem, 0, NULL, NULL );
-}
-
-void OpenGLInteropApp::mouseDown( MouseEvent event )
-{
+	try {
+		// Here's where we're executing the kernel. The offset is null. The Range is
+		// over the total number of vertices divided by two or width. That's because
+		// in each kernel, we're going to process two vertices.
+		mClCommandQueue.enqueueNDRangeKernel( mVboKernel,
+											 ocl::NullRange,
+											 ocl::NDRange( size.x ) );
+	}
+	catch( const ocl::Error &e ) {
+		CI_LOG_E( e.what() << ": Value: " << ocl::errorToString( e.err() ) );
+	}
 }
 
 void OpenGLInteropApp::update()
 {
-//	computeTexture();
-	computeVbo();
+	static auto size = getWindowSize();
+	static cl_int seq = 0;
+	// process for the next frame.
+	seq = ( seq + 1 ) % ( size.x * 2 );
 	
-//	auto map = (Vec2f*)mGlVbo->map( GL_READ_ONLY );
-//	for( int i = 0; i < mGlVbo->getSize() / 2; ++i ) {
-//		std::cout << " Vert: " << *map << endl;
-//	}
-//	mGlVbo->unmap();
+	// Below is the major difference between sharing items between OpenGL and OpenCL, and just
+	// processing data with OpenCL. You have to acquire and release objects. There are many
+	// ways to do this. The easiest way is, if you have cl_khr_gl_sharing as an active extension
+	// to just enqueueAcquire and enqueueRelease GL-initialized CL objects. You can read more
+	// about this here...
+	// https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/cl_khr_gl_sharing.html
+	
+	// First we acquire the CL Object that was created by a GL Object. Calling enqueue will
+	// implicitly wait for any OpenGL operations being performed on this object.
+	std::vector<ocl::Memory> glMemory = { mClBuffer, mClImage };
+	mClCommandQueue.enqueueAcquireGLObjects( &glMemory );
+
+	computeTexture( size, seq );
+	computeBuffer( size, seq );
+
+	// After we're finished processing the objects, we'll need to release the CL objects linked
+	// to OpenGL. Calling enqueue will implicitly wait for any OpenGL operations being performed
+	// on this object.
+	mClCommandQueue.enqueueReleaseGLObjects( &glMemory );
 }
 
 void OpenGLInteropApp::draw()
@@ -232,14 +231,12 @@ void OpenGLInteropApp::draw()
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) );
 	
-//	displayTexture(imWidth,imHeight);
-	gl::ScopedVao scopeVao( mGlVao );
-	gl::ScopedGlslProg scope( mGlGlsl );
-	
+	gl::ScopedMatrices scopeMat;
 	gl::setMatricesWindow( getWindowSize() );
-	gl::setDefaultShaderVars();
-	
-	gl::drawArrays( GL_LINES, 0, getWindowHeight() * 2 );
+	// Draw the texture.
+	gl::draw( mGlTexture );
+	// Draw the line.
+	mGlBatch->draw();
 }
 
 void prepareSettings( App::Settings *settings ) { settings->setWindowSize( 256, 256 ); }

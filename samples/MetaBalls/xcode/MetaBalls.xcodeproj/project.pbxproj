@@ -15,6 +15,9 @@
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		B30CAA341B2C0ACB002DB285 /* Cinder-OpenCL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B30CAA331B2C0ACB002DB285 /* Cinder-OpenCL.cpp */; };
+		B30CAA361B2C7A98002DB285 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B30CAA351B2C7A98002DB285 /* IOKit.framework */; };
+		B30CAA381B2C7A9E002DB285 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B30CAA371B2C7A9E002DB285 /* IOSurface.framework */; };
 		B33EE0BC1967B6C3008D4CD1 /* metaballs.fs in Resources */ = {isa = PBXBuildFile; fileRef = B33EE0B01967B6C3008D4CD1 /* metaballs.fs */; };
 		B33EE0BD1967B6C3008D4CD1 /* metaballs.mat in Resources */ = {isa = PBXBuildFile; fileRef = B33EE0B11967B6C3008D4CD1 /* metaballs.mat */; };
 		B33EE0BE1967B6C3008D4CD1 /* metaballs.vs in Resources */ = {isa = PBXBuildFile; fileRef = B33EE0B21967B6C3008D4CD1 /* metaballs.vs */; };
@@ -26,25 +29,12 @@
 		B3445BAF197ADAD40085228D /* metaballs.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BA7197ADAD40085228D /* metaballs.c */; };
 		B3445BB0197ADAD40085228D /* particles.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BA9197ADAD40085228D /* particles.c */; };
 		B3445BB1197ADAD40085228D /* volume_renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = B3445BAB197ADAD40085228D /* volume_renderer.c */; };
-		B3445BB3197ADAFE0085228D /* Particles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3445BB2197ADAFE0085228D /* Particles.cpp */; };
-		B3445BB7197ADBC90085228D /* MarchingCubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3445BB6197ADBC90085228D /* MarchingCubes.cpp */; };
-		B3445BBA197ADC040085228D /* VolumeRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3445BB9197ADC040085228D /* VolumeRenderer.cpp */; };
 		B3445BBC197ADEAE0085228D /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3445BBB197ADEAE0085228D /* OpenCL.framework */; };
 		B3445BBE197AFD2B0085228D /* basic.vert in Resources */ = {isa = PBXBuildFile; fileRef = B3445BBD197AFD2B0085228D /* basic.vert */; };
 		B3445BC0197AFD400085228D /* basic.frag in Resources */ = {isa = PBXBuildFile; fileRef = B3445BBF197AFD400085228D /* basic.frag */; };
-		B3445BC2197AFE8E0085228D /* particlesProg.cl in Sources */ = {isa = PBXBuildFile; fileRef = B3445BC1197AFE8E0085228D /* particlesProg.cl */; };
 		B3B6639719A860620097005F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B6639619A860620097005F /* AVFoundation.framework */; };
 		B3B6639919A860690097005F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B6639819A860690097005F /* CoreMedia.framework */; };
-		B3B6676319AFFFAD0097005F /* BufferObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6675919AFFFAD0097005F /* BufferObj.cpp */; };
-		B3B6676419AFFFAD0097005F /* Cl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6675A19AFFFAD0097005F /* Cl.cpp */; };
-		B3B6676519AFFFAD0097005F /* CommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6675B19AFFFAD0097005F /* CommandQueue.cpp */; };
-		B3B6676619AFFFAD0097005F /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6675C19AFFFAD0097005F /* Context.cpp */; };
-		B3B6676719AFFFAD0097005F /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6675D19AFFFAD0097005F /* Device.cpp */; };
-		B3B6676819AFFFAD0097005F /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6675E19AFFFAD0097005F /* Event.cpp */; };
-		B3B6676919AFFFAD0097005F /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6675F19AFFFAD0097005F /* Image.cpp */; };
-		B3B6676A19AFFFAD0097005F /* MemoryObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6676019AFFFAD0097005F /* MemoryObj.cpp */; };
-		B3B6676B19AFFFAD0097005F /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6676119AFFFAD0097005F /* Platform.cpp */; };
-		B3B6676C19AFFFAD0097005F /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B6676219AFFFAD0097005F /* Program.cpp */; };
+		B3E100451C48D86200D60349 /* particles.cl in Sources */ = {isa = PBXBuildFile; fileRef = B3E100441C48D86200D60349 /* particles.cl */; };
 		CFE2776C0B5244C1A0273048 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 66615FBC41C84135AC3230C0 /* CinderApp.icns */; };
 		EE64BE15612548199A62E999 /* MetaBallsApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */; };
 /* End PBXBuildFile section */
@@ -65,6 +55,11 @@
 		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		66615FBC41C84135AC3230C0 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* MetaBalls.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaBalls.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B30CAA301B2C0ACB002DB285 /* Cinder-OpenCL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cinder-OpenCL.h"; sourceTree = "<group>"; };
+		B30CAA311B2C0ACB002DB285 /* cl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cl.hpp; sourceTree = "<group>"; };
+		B30CAA331B2C0ACB002DB285 /* Cinder-OpenCL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Cinder-OpenCL.cpp"; sourceTree = "<group>"; };
+		B30CAA351B2C7A98002DB285 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		B30CAA371B2C7A9E002DB285 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
 		B33EE0B01967B6C3008D4CD1 /* metaballs.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = metaballs.fs; sourceTree = "<group>"; };
 		B33EE0B11967B6C3008D4CD1 /* metaballs.mat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = metaballs.mat; sourceTree = "<group>"; };
 		B33EE0B21967B6C3008D4CD1 /* metaballs.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = metaballs.vs; sourceTree = "<group>"; };
@@ -81,39 +76,12 @@
 		B3445BAA197ADAD40085228D /* particles.hc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = particles.hc; sourceTree = "<group>"; };
 		B3445BAB197ADAD40085228D /* volume_renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = volume_renderer.c; sourceTree = "<group>"; };
 		B3445BAC197ADAD40085228D /* volume_renderer.hc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = volume_renderer.hc; sourceTree = "<group>"; };
-		B3445BB2197ADAFE0085228D /* Particles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particles.cpp; path = ../src/Particles.cpp; sourceTree = "<group>"; };
-		B3445BB4197ADB1D0085228D /* Particles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Particles.h; path = ../include/Particles.h; sourceTree = "<group>"; };
-		B3445BB5197ADBB10085228D /* MarchingCubes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MarchingCubes.h; path = ../include/MarchingCubes.h; sourceTree = "<group>"; };
-		B3445BB6197ADBC90085228D /* MarchingCubes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MarchingCubes.cpp; path = ../src/MarchingCubes.cpp; sourceTree = "<group>"; };
-		B3445BB8197ADBF00085228D /* VolumeRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VolumeRenderer.h; path = ../include/VolumeRenderer.h; sourceTree = "<group>"; };
-		B3445BB9197ADC040085228D /* VolumeRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VolumeRenderer.cpp; path = ../src/VolumeRenderer.cpp; sourceTree = "<group>"; };
 		B3445BBB197ADEAE0085228D /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 		B3445BBD197AFD2B0085228D /* basic.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.vert; path = ../assets/basic.vert; sourceTree = "<group>"; };
 		B3445BBF197AFD400085228D /* basic.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.frag; path = ../assets/basic.frag; sourceTree = "<group>"; };
-		B3445BC1197AFE8E0085228D /* particlesProg.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = particlesProg.cl; path = ../assets/particlesProg.cl; sourceTree = "<group>"; };
 		B3B6639619A860620097005F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B3B6639819A860690097005F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		B3B6674D19AFFFAD0097005F /* BufferObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BufferObj.h; sourceTree = "<group>"; };
-		B3B6674E19AFFFAD0097005F /* Cl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cl.h; sourceTree = "<group>"; };
-		B3B6674F19AFFFAD0097005F /* CommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandQueue.h; sourceTree = "<group>"; };
-		B3B6675019AFFFAD0097005F /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Context.h; sourceTree = "<group>"; };
-		B3B6675119AFFFAD0097005F /* Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Device.h; sourceTree = "<group>"; };
-		B3B6675219AFFFAD0097005F /* DeviceInfo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DeviceInfo.hpp; sourceTree = "<group>"; };
-		B3B6675319AFFFAD0097005F /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
-		B3B6675419AFFFAD0097005F /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
-		B3B6675519AFFFAD0097005F /* MemoryObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryObj.h; sourceTree = "<group>"; };
-		B3B6675619AFFFAD0097005F /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
-		B3B6675719AFFFAD0097005F /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
-		B3B6675919AFFFAD0097005F /* BufferObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferObj.cpp; sourceTree = "<group>"; };
-		B3B6675A19AFFFAD0097005F /* Cl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cl.cpp; sourceTree = "<group>"; };
-		B3B6675B19AFFFAD0097005F /* CommandQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandQueue.cpp; sourceTree = "<group>"; };
-		B3B6675C19AFFFAD0097005F /* Context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Context.cpp; sourceTree = "<group>"; };
-		B3B6675D19AFFFAD0097005F /* Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Device.cpp; sourceTree = "<group>"; };
-		B3B6675E19AFFFAD0097005F /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
-		B3B6675F19AFFFAD0097005F /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
-		B3B6676019AFFFAD0097005F /* MemoryObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryObj.cpp; sourceTree = "<group>"; };
-		B3B6676119AFFFAD0097005F /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform.cpp; sourceTree = "<group>"; };
-		B3B6676219AFFFAD0097005F /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Program.cpp; sourceTree = "<group>"; };
+		B3E100441C48D86200D60349 /* particles.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = particles.cl; path = ../assets/Kernels/particles.cl; sourceTree = "<group>"; };
 		CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MetaBallsApp.cpp; path = ../src/MetaBallsApp.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +90,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B30CAA381B2C7A9E002DB285 /* IOSurface.framework in Frameworks */,
+				B30CAA361B2C7A98002DB285 /* IOKit.framework in Frameworks */,
 				B3B6639919A860690097005F /* CoreMedia.framework in Frameworks */,
 				B3B6639719A860620097005F /* AVFoundation.framework in Frameworks */,
 				B3445BBC197ADEAE0085228D /* OpenCL.framework in Frameworks */,
@@ -151,9 +121,6 @@
 			isa = PBXGroup;
 			children = (
 				CFAEE65AC2A443E9ADC2C6A6 /* MetaBallsApp.cpp */,
-				B3445BB2197ADAFE0085228D /* Particles.cpp */,
-				B3445BB6197ADBC90085228D /* MarchingCubes.cpp */,
-				B3445BB9197ADC040085228D /* VolumeRenderer.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -207,11 +174,8 @@
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				27BE53E96BE34E8B8898325E /* Resources.h */,
 				158B6D20AAA440AD96606452 /* MetaBalls_Prefix.pch */,
-				B3445BB4197ADB1D0085228D /* Particles.h */,
-				B3445BB5197ADBB10085228D /* MarchingCubes.h */,
-				B3445BB8197ADBF00085228D /* VolumeRenderer.h */,
+				27BE53E96BE34E8B8898325E /* Resources.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -219,10 +183,10 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B3E100461C48D86C00D60349 /* Kernels */,
 				B33EE0AF1967B6C3008D4CD1 /* Shaders */,
 				66615FBC41C84135AC3230C0 /* CinderApp.icns */,
 				3ACDE57CBA1D4AB388421F06 /* Info.plist */,
-				B3445BC1197AFE8E0085228D /* particlesProg.cl */,
 				B3445BBD197AFD2B0085228D /* basic.vert */,
 				B3445BBF197AFD400085228D /* basic.frag */,
 			);
@@ -232,6 +196,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B30CAA371B2C7A9E002DB285 /* IOSurface.framework */,
+				B30CAA351B2C7A98002DB285 /* IOKit.framework */,
 				B3B6639819A860690097005F /* CoreMedia.framework */,
 				B3B6639619A860620097005F /* AVFoundation.framework */,
 				B3445BBB197ADEAE0085228D /* OpenCL.framework */,
@@ -239,6 +205,25 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B30CAA2F1B2C0ACB002DB285 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				B30CAA301B2C0ACB002DB285 /* Cinder-OpenCL.h */,
+				B30CAA311B2C0ACB002DB285 /* cl.hpp */,
+			);
+			name = include;
+			path = ../../../include;
+			sourceTree = "<group>";
+		};
+		B30CAA321B2C0ACB002DB285 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B30CAA331B2C0ACB002DB285 /* Cinder-OpenCL.cpp */,
+			);
+			name = src;
+			path = ../../../src;
 			sourceTree = "<group>";
 		};
 		B33EE0AF1967B6C3008D4CD1 /* Shaders */ = {
@@ -276,47 +261,18 @@
 		B3B6674B19AFFF8B0097005F /* Cinder-OpenCL */ = {
 			isa = PBXGroup;
 			children = (
-				B3B6674C19AFFFAD0097005F /* include */,
-				B3B6675819AFFFAD0097005F /* src */,
+				B30CAA2F1B2C0ACB002DB285 /* include */,
+				B30CAA321B2C0ACB002DB285 /* src */,
 			);
 			name = "Cinder-OpenCL";
 			sourceTree = "<group>";
 		};
-		B3B6674C19AFFFAD0097005F /* include */ = {
+		B3E100461C48D86C00D60349 /* Kernels */ = {
 			isa = PBXGroup;
 			children = (
-				B3B6674D19AFFFAD0097005F /* BufferObj.h */,
-				B3B6674E19AFFFAD0097005F /* Cl.h */,
-				B3B6674F19AFFFAD0097005F /* CommandQueue.h */,
-				B3B6675019AFFFAD0097005F /* Context.h */,
-				B3B6675119AFFFAD0097005F /* Device.h */,
-				B3B6675219AFFFAD0097005F /* DeviceInfo.hpp */,
-				B3B6675319AFFFAD0097005F /* Event.h */,
-				B3B6675419AFFFAD0097005F /* Image.h */,
-				B3B6675519AFFFAD0097005F /* MemoryObj.h */,
-				B3B6675619AFFFAD0097005F /* Platform.h */,
-				B3B6675719AFFFAD0097005F /* Program.h */,
+				B3E100441C48D86200D60349 /* particles.cl */,
 			);
-			name = include;
-			path = ../../../include;
-			sourceTree = "<group>";
-		};
-		B3B6675819AFFFAD0097005F /* src */ = {
-			isa = PBXGroup;
-			children = (
-				B3B6675919AFFFAD0097005F /* BufferObj.cpp */,
-				B3B6675A19AFFFAD0097005F /* Cl.cpp */,
-				B3B6675B19AFFFAD0097005F /* CommandQueue.cpp */,
-				B3B6675C19AFFFAD0097005F /* Context.cpp */,
-				B3B6675D19AFFFAD0097005F /* Device.cpp */,
-				B3B6675E19AFFFAD0097005F /* Event.cpp */,
-				B3B6675F19AFFFAD0097005F /* Image.cpp */,
-				B3B6676019AFFFAD0097005F /* MemoryObj.cpp */,
-				B3B6676119AFFFAD0097005F /* Platform.cpp */,
-				B3B6676219AFFFAD0097005F /* Program.cpp */,
-			);
-			name = src;
-			path = ../../../src;
+			name = Kernels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -390,25 +346,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3B6676C19AFFFAD0097005F /* Program.cpp in Sources */,
-				B3B6676319AFFFAD0097005F /* BufferObj.cpp in Sources */,
-				B3B6676719AFFFAD0097005F /* Device.cpp in Sources */,
-				B3445BBA197ADC040085228D /* VolumeRenderer.cpp in Sources */,
-				B3B6676419AFFFAD0097005F /* Cl.cpp in Sources */,
-				B3B6676519AFFFAD0097005F /* CommandQueue.cpp in Sources */,
 				B3445BAE197ADAD40085228D /* marching_cubes.c in Sources */,
-				B3B6676619AFFFAD0097005F /* Context.cpp in Sources */,
-				B3445BC2197AFE8E0085228D /* particlesProg.cl in Sources */,
 				B3445BAF197ADAD40085228D /* metaballs.c in Sources */,
+				B30CAA341B2C0ACB002DB285 /* Cinder-OpenCL.cpp in Sources */,
+				B3E100451C48D86200D60349 /* particles.cl in Sources */,
 				B3445BB0197ADAD40085228D /* particles.c in Sources */,
-				B3445BB7197ADBC90085228D /* MarchingCubes.cpp in Sources */,
-				B3445BB3197ADAFE0085228D /* Particles.cpp in Sources */,
-				B3B6676819AFFFAD0097005F /* Event.cpp in Sources */,
-				B3B6676919AFFFAD0097005F /* Image.cpp in Sources */,
-				B3B6676B19AFFFAD0097005F /* Platform.cpp in Sources */,
 				B3445BAD197ADAD40085228D /* kernel.c in Sources */,
 				B3445BB1197ADAD40085228D /* volume_renderer.c in Sources */,
-				B3B6676A19AFFFAD0097005F /* MemoryObj.cpp in Sources */,
 				EE64BE15612548199A62E999 /* MetaBallsApp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,6 +378,7 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
@@ -458,6 +403,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MetaBalls_Prefix.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";

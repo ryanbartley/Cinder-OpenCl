@@ -1,72 +1,81 @@
-int volume_coords(int3 coords, int3 size) {
+/*All source code is licensed under BSD
+ 
+ Copyright (c) 2010, Daniel Holden All rights reserved.
+ 
+ Corange is licensed under a basic BSD license.
+ 
+ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ 
+ Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+static int volume_coords(int3 coords, int3 size)
+{
   return coords.x + coords.y * size.x + coords.z * size.x * size.y;
 }
 
-int3 volume_position(int index, int3 size) {
+static int3 volume_position(int index, int3 size)
+{
   return (int3)( index % size.x, (index / (size.x)) % size.y, index / (size.x * size.y) );
 }
 
-kernel void write_clear(global float* volume) {
+kernel void write_clear(global float* volume)
+{
   volume[get_global_id(0)] = 0.0f;
 }
 
-kernel void write_point(global float* volume, int x, int y, int z, int size_x, int size_y, int size_z, float value) {
-  int pos = volume_coords((int3)(x, y, z), (int3)(size_x, size_y, size_z));
-  volume[pos] = value;
-}
-
-
-float smoothstepmap(float val) {
+static float smoothstepmap(float val)
+{
   return val*val*(3 - 2*val);
 }
 
-kernel void write_metaball(global float* volume,
-                           int3 bottom, int3 top, int3 size,
-                           float x, float y, float z) {
-  
-  const int METABALL_SIZE = 10;
-  
-  int id = get_global_id(0);
-  
-  int3 box_size = top - bottom;
-  int3 pos = bottom + volume_position(id, box_size);
-  
-  /* So this distance function needs to be changed to a deterministic dropoff */
-  float dist = distance((float3)(pos.x, pos.y, pos.z), (float3)(x, y, z)) / METABALL_SIZE;
-  float amount = 1-smoothstepmap( clamp(dist, 0.0f, 1.0f) );
-  
-  int index = volume_coords(pos, size);
-  
-  volume[index] += amount;
-}
+struct Particle {
+	float4 pos;
+	float4 vel;
+	float4 rand_life;
+};
 
-kernel void write_metaballs(global float* volume, int3 size, global float4* metaball_positions, int num_metaballs) {
+struct MarchingVert {
+	float4 pos;
+	float4 norm;
+};
+
+kernel void write_metaballs(global float* volume,
+							global struct Particle* particles,
+							int3 size,
+							int num_metaballs )
+{
+	const int METABALL_SIZE = 1;
   
-  const int METABALL_SIZE = 5;
+	int id = get_global_id(0);
   
-  int id = get_global_id(0);
-  
-  int3 pos = volume_position(id, size);
-  int index = volume_coords(pos, size);
-  
-  for(int i = 0; i < num_metaballs; i++) {
-    float3 metaball_pos = metaball_positions[i].xyz;
-    float dist = distance((float3)(pos.x, pos.y, pos.z), metaball_pos) / METABALL_SIZE;
-    float amount = 1-smoothstepmap( clamp(dist, 0.0f, 1.0f) );
-    
-    volume[index] += amount;
-  }
+	int3 pos = volume_position( id, size );
+	int index = volume_coords( pos, size );
+	
+	float accumulation = 0.0f;
+	
+	for(int i = 0; i < num_metaballs; i++) {
+		float3 metaball_pos = particles[i].pos.xyz;
+		float dist = distance( (float3)(pos.x, pos.y, pos.z), metaball_pos ) / METABALL_SIZE;
+		float amount = 1 - smoothstepmap( clamp( dist, 0.0f, 1.0f) );
+		accumulation += amount;
+	}
+	
+	volume[index] = accumulation;
 
 }
 
-
-
-kernel void write_point_color_back(global float* volume, global float4* point_color) {
+// here, point_color is a pos and vol
+kernel void write_point_color_back( global float* volume, global float4* pos_vol )
+{
   float color = volume[get_global_id(0)];
-  point_color[get_global_id(0)] = (float4)(color, 0, 0, 1);
+  pos_vol[get_global_id(0)].w = color;
 }
 
-float4 vertex_lerp(float threashold, float4 pos1, float4 pos2, float val1, float val2) {
+static float4 vertex_lerp(float threashold, float4 pos1, float4 pos2, float val1, float val2)
+{
   float mu = (threashold - val1) / (val2 - val1);
   float4 ret = pos1 + mu * (pos2 - pos1);
   ret.w = 1;
@@ -77,9 +86,9 @@ float4 vertex_lerp(float threashold, float4 pos1, float4 pos2, float val1, float
 
 kernel void construct_surface(global float* volume,
                               int3 volume_size,
-                              global float4* vertex_buffer,
-                              global int* vertex_index) {
-  
+                              global struct MarchingVert* vertex_buffer,
+                              global int* vertex_index)
+{
   int id = get_global_id(0);
   int3 pos = volume_position(id, volume_size);
   
@@ -92,7 +101,7 @@ kernel void construct_surface(global float* volume,
   float v6 = volume[volume_coords(pos + (int3)(1,1,1), volume_size)];
   float v7 = volume[volume_coords(pos + (int3)(0,1,1), volume_size)];
   
-  const float threashold = 0.5;
+  const float threashold = 0.5f;
   
   unsigned char c0 = v0 > threashold;
   unsigned char c1 = v1 > threashold;
@@ -141,18 +150,18 @@ kernel void construct_surface(global float* volume,
   int index = atomic_add(vertex_index, num_verts);
   
   for(int i = 0; i < num_verts; i++) {
-    vertex_buffer[index + i] = vert_list[triangle_table[hash][i]];
+    vertex_buffer[index + i].pos = vert_list[triangle_table[hash][i]];
   }
-  
+	
 }
 
-kernel void generate_flat_normals(global float4* vertex_positions, global float4* vertex_normals) {
-  
+kernel void generate_flat_normals( global struct MarchingVert* vertex_buffer )
+{
   int id = get_global_id(0);
   
-  float4 pos1 = vertex_positions[id * 3 + 0];
-  float4 pos2 = vertex_positions[id * 3 + 1];
-  float4 pos3 = vertex_positions[id * 3 + 2];
+  float4 pos1 = vertex_buffer[id * 3 + 0].pos;
+  float4 pos2 = vertex_buffer[id * 3 + 1].pos;
+  float4 pos3 = vertex_buffer[id * 3 + 2].pos;
   
   float3 pos12 = pos2.xyz - pos1.xyz;
   float3 pos13 = pos3.xyz - pos1.xyz;
@@ -160,26 +169,28 @@ kernel void generate_flat_normals(global float4* vertex_positions, global float4
   float3 normal = cross(pos12, pos13);
   normal = normalize(normal);
   
-  vertex_normals[id * 3 + 0] = (float4)(normal, 0);
-  vertex_normals[id * 3 + 1] = (float4)(normal, 0);
-  vertex_normals[id * 3 + 2] = (float4)(normal, 0);
+  vertex_buffer[id * 3 + 0].norm = (float4)(normal, 0);
+  vertex_buffer[id * 3 + 1].norm = (float4)(normal, 0);
+  vertex_buffer[id * 3 + 2].norm = (float4)(normal, 0);
 }
 
-kernel void generate_smooth_normals(global float4* vertex_positions, global float4* vertex_normals, global float4* metaball_positions, int num_metaballs) {
+kernel void generate_smooth_normals(global struct MarchingVert* vertex_buffer,
+									global struct Particle* particles,
+									int num_metaballs)
+{  
+	const float METABALL_SIZE = 1;
   
-  const float METABALL_SIZE = 5;
+	int id = get_global_id(0);
+	float3 vert_pos = vertex_buffer[id].pos.xyz;
   
-  int id = get_global_id(0);
+	float3 normal = (float3)(0,0,0);
+	for(int i = 0; i < num_metaballs; i++) {
+		float3 particle_pos = particles[i].pos.xyz;
+		float dist = distance(vert_pos, particle_pos) / METABALL_SIZE;
+		float amount = 1-smoothstepmap( clamp(dist, 0.0f, 1.0f) );
+		normal += (vert_pos - particle_pos) * amount;
+	}
   
-  float3 normal = (float3)(0,0,0);
-  for(int i = 0; i < num_metaballs; i++) {
-  
-  float dist = distance(vertex_positions[id].xyz, metaball_positions[i].xyz) / METABALL_SIZE;
-  float amount = 1-smoothstepmap( clamp(dist, 0.0f, 1.0f) );
-  
-    normal += (vertex_positions[id].xyz - metaball_positions[i].xyz) * amount;
-  }
-  
-  normal = normalize(normal);
-  vertex_normals[id] = (float4)(normal, 0);
+	normal = normalize(normal);
+	vertex_buffer[id].norm = (float4)(normal, 0);
 }
