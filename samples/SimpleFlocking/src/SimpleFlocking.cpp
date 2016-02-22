@@ -63,7 +63,7 @@ void SimpleFlockingApp::setupCl()
 	platforms[0].getDevices( CL_DEVICE_TYPE_GPU, &devices );
 	
 	mContext = ocl::Context( devices[0],
-							ocl::getDefaultSharedGraphicsContextProperties( ),
+							ocl::getDefaultSharedGraphicsContextProperties( platforms[0] ),
 							&SimpleFlockingApp::contextInfo );
 	
 	CI_LOG_I( "Max Compute Units: " << devices[0].getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>() );

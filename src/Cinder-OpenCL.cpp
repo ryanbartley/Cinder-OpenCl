@@ -6,6 +6,7 @@
 //
 //
 
+#include "cinder/gl/gl.h"
 #if defined( CINDER_MAC )
 #include <OpenGL/OpenGL.h>
 #else
@@ -14,9 +15,9 @@
 #endif
 #include "Cinder-OpenCL.h"
 #include "cinder/Utilities.h"
+#include "cinder/Log.h"
 
 using namespace ci;
-using namespace ci::app;
 using namespace std;
 
 
@@ -37,7 +38,7 @@ std::vector<cl::ImageFormat>& getSupportedImageFormats( cl::Context context, cl_
 	ImageFormatCache::iterator imageIt = conIt->second.find( type );
 	if( imageIt == conIt->second.end() ) {
 		std::vector<cl::ImageFormat> imageFormats;
-		context.getSupportedImageFormats( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, type, &imageFormats );
+		context.getSupportedImageFormats( CL_MEM_READ_ONLY, type, &imageFormats );
 		auto createdImageFormat = conIt->second.insert( { type, move( imageFormats ) } );
 		imageIt = createdImageFormat.first;
 	}
@@ -164,16 +165,29 @@ std::string constantToString( cl_int constant )
 void printSupportedImageFormats( const cl::Context &context, cl_mem_object_type type )
 {
 	auto & imageFormats = getSupportedImageFormats( context, type );
-	
+	std::stringstream str;
+	str << "Supported Image Formats: " << endl;
 	for( auto & imageFormat : imageFormats ) {
-		console() << "Channel Order: " << ocl::constantToString( imageFormat.image_channel_order )
+		str << "\tChannel Order: " << ocl::constantToString( imageFormat.image_channel_order )
 		<< " Channel Data Type: " << constantToString( imageFormat.image_channel_data_type ) << std::endl;
 	}
+	CI_LOG_I( str.str() );
 }
 	
 Program createProgram( Context &context, const DataSourceRef &dataSource, bool build )
 {
-	return Program( context, loadString( dataSource ), build );
+	auto ret = Program( context, loadString( dataSource ) );
+	if( build ) {
+		try {
+			ret.build();
+		}
+		catch( const cl::Error &e ) {
+			auto devices = context.getInfo<CL_CONTEXT_DEVICES>();
+			auto buildInfo = ret.getBuildInfo<CL_PROGRAM_BUILD_LOG>( devices[0] );
+			CI_LOG_E( e.what() << " " << ocl::errorToString( e.err() ) << " Log: " << buildInfo );
+		}
+	}
+	return ret;
 }
 	
 cl_context_properties* getDefaultSharedGraphicsContextProperties( const cl::Platform &platform )

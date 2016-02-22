@@ -6,9 +6,9 @@ __kernel void init_vbo_kernel(__global float4 *vbo, int w, int h, int seq)
 	float a = (float)h/4.0f;
 	float b = (float)w/2.0f;
 	
-	linepts.x = float(gid);
+	linepts.x = (float)gid;
 	linepts.y = b + a * sin(3.14f*2.0f*((float)gid/(float)w*f + (float)seq/(float)w));
-	linepts.z = float(gid) + 1.0f;
+	linepts.z = linepts.x + 1.0f;
 	linepts.w = b + a * sin(3.14f*2.0f*((float)(gid+1.0f)/(float)w*f + (float)seq/(float)w));
 	
 	vbo[gid] = linepts;

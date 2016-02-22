@@ -37,8 +37,8 @@ class OpenGLInteropApp : public App {
 	gl::Texture2dRef	mGlTexture;
 	
 	ocl::BufferGL		mClBuffer;
-	ocl::ImageGL			mClImage;
-	ocl::Context			mClContext;
+	ocl::ImageGL		mClImage;
+	ocl::Context		mClContext;
 	ocl::CommandQueue	mClCommandQueue;
 	ocl::Kernel			mVboKernel, mTextureKernel;
 };
@@ -102,11 +102,11 @@ void OpenGLInteropApp::setupCl()
 	// An image is similar to a buffer, a memory object. But it is akin to Textures.
 	// Here we're going to link the gl texture and the cl image.
 	mClImage = ocl::ImageGL( mClContext, CL_MEM_READ_WRITE, mGlTexture->getTarget(), 0, mGlTexture->getId() );
-	
-    // Create program from source. This time we're not going to store it as we only need
+
+	// Create program from source. This time we're not going to store it as we only need
 	// the kernels. By creating the kernels, we're implicitly storing the program.
-	auto program = ocl::createProgram( mClContext, loadAsset( "GlInterop.cl" ) );
-	
+	auto program = ocl::createProgram( mClContext, loadAsset( "GlInterop.cl" ), true );
+
 	auto size = getWindowSize();
 	
     // Create kernel objects...

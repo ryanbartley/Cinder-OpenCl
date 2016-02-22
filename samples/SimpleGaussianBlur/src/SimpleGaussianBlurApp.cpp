@@ -19,7 +19,7 @@ class SimpleGaussianBlurApp : public App {
 	void update() override;
 	void draw() override;
 	
-	static void contextErrorCallback( const char *info, const void *private_info,
+	static void CL_CALLBACK contextErrorCallback( const char *info, const void *private_info,
 									 ::size_t cb, void *user_data)
 	{ CI_LOG_E( info ); }
 	
@@ -53,7 +53,7 @@ void SimpleGaussianBlurApp::setupCl()
 	std::vector<ocl::Device> devices;
 	platforms[0].getDevices( CL_DEVICE_TYPE_GPU, &devices );
 	
-	mClContext = ocl::Context( devices,
+	mClContext = ocl::Context( devices[0],
 							  ocl::getDefaultSharedGraphicsContextProperties( platforms[0] ),
 							  &SimpleGaussianBlurApp::contextErrorCallback );
 
@@ -72,7 +72,7 @@ void SimpleGaussianBlurApp::setupGlTextureClImages()
 		
 		// Allocate an empty texture which will be the placeholder for the result.
 		mGlTextureResult = gl::Texture2d::create( mImageSize.x, mImageSize.y,
-												 gl::Texture2d::Format().internalFormat( GL_RGB8 ) );
+												 gl::Texture2d::Format().internalFormat( GL_RGBA8 ) );
 		
 		// Create a shared image to bridge for the result.
 		mClInteropResult = ocl::createImageGL( mGlTextureResult, mClContext, CL_MEM_WRITE_ONLY );

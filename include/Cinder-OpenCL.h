@@ -12,12 +12,18 @@
 #include "cl.hpp"
 #include "cinder/ImageIo.h"
 
+namespace cinder {
+namespace gl {
+using Texture2dRef = std::shared_ptr<class Texture2d>;
+}
+}
+
 namespace cinder { namespace ocl {
 	
 using namespace cl;
 using ImageFormats = std::vector<ImageFormat>;
 
-cl_context_properties* getDefaultSharedGraphicsContextProperties( const Platform &platform = Platform() );
+cl_context_properties* getDefaultSharedGraphicsContextProperties( const cl::Platform &platform = cl::Platform() );
 	
 cl_float2	toCl( const vec2 &val );
 cl_float3	toCl( const vec3 &val );
@@ -45,7 +51,7 @@ cl::ImageFormat		getImageFormat( ImageIo::ChannelOrder channelOrder, ImageIo::Da
 Image2D				createImage2D( const ImageSourceRef &imageSource,
 								   cl::Context context,
 								   cl_mem_flags flags = CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR );
-ImageGL				createImageGL( const gl::Texture2dRef &texture, cl::Context context, cl_mem_flags flags );
+cl::ImageGL			createImageGL( const gl::Texture2dRef &texture, cl::Context context, cl_mem_flags flags );
 cl::Buffer			createBuffer( const ImageSourceRef &imageSource,
 								  cl::Context context,
 								  cl_mem_flags flags = CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR );
