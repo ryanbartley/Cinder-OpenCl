@@ -13,37 +13,10 @@ kernel void write_clear(global float* volume)
   volume[get_global_id(0)] = 0.0f;
 }
 
-kernel void write_point(global float* volume, int x, int y, int z, int size_x, int size_y, int size_z, float value)
-{
-  int pos = volume_coords((int3)(x, y, z), (int3)(size_x, size_y, size_z));
-  volume[pos] = value;
-}
-
-
 static float smoothstepmap(float val)
 {
   return val*val*(3 - 2*val);
 }
-
-//kernel void write_metaball(global float* volume,
-//                           int3 bottom, int3 top, int3 size,
-//                           float x, float y, float z) {
-//  
-//  const int METABALL_SIZE = 10;
-//  
-//  int id = get_global_id(0);
-//  
-//  int3 box_size = top - bottom;
-//  int3 pos = bottom + volume_position(id, box_size);
-//  
-//  /* So this distance function needs to be changed to a deterministic dropoff */
-//  float dist = distance((float3)(pos.x, pos.y, pos.z), (float3)(x, y, z)) / METABALL_SIZE;
-//  float amount = 1-smoothstepmap( clamp(dist, 0.0f, 1.0f) );
-//  
-//  int index = volume_coords(pos, size);
-//  
-//  volume[index] += amount;
-//}
 
 struct Particle {
 	float4 pos;
@@ -61,7 +34,7 @@ kernel void write_metaballs(global float* volume,
 							int3 size,
 							int num_metaballs )
 {
-	const int METABALL_SIZE = 5;
+	const int METABALL_SIZE = 1;
   
 	int id = get_global_id(0);
   
@@ -192,7 +165,7 @@ kernel void generate_smooth_normals(global struct MarchingVert* vertex_buffer,
 									global struct Particle* particles,
 									int num_metaballs)
 {  
-	const float METABALL_SIZE = 5;
+	const float METABALL_SIZE = 1;
   
 	int id = get_global_id(0);
 	float3 vert_pos = vertex_buffer[id].pos.xyz;

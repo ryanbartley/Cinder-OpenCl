@@ -19,7 +19,7 @@ const int VOLUME_DEPTH			= 64;
 const size_t VOLUME_SIZE		= VOLUME_WIDTH * VOLUME_HEIGHT * VOLUME_DEPTH;
 
 const int MAX_MARCHING_VERTS	= 100000;
-const int NUM_PARTICLES			= 1000;
+const int NUM_PARTICLES			= 200;
 
 class MetaBallsApp : public App {
   public:
@@ -267,15 +267,23 @@ void MetaBallsApp::updateParticles()
 void MetaBallsApp::updateMarching()
 {
 	static const cl_int3 size{ VOLUME_WIDTH, VOLUME_HEIGHT, VOLUME_DEPTH };
-	mClCommandQueue.enqueueNDRangeKernel( mKernWriteClear, cl::NullRange, cl::NDRange( VOLUME_SIZE ) );
+	mClCommandQueue.enqueueNDRangeKernel( mKernWriteClear,
+										  cl::NullRange,
+										  cl::NDRange( VOLUME_SIZE ) );
 	/* Update volumes */
-	mClCommandQueue.enqueueNDRangeKernel( mKernWriteMetaballs, cl::NullRange, cl::NDRange(  VOLUME_SIZE ) );
+	mClCommandQueue.enqueueNDRangeKernel( mKernWriteMetaballs,
+										  cl::NullRange,
+										  cl::NDRange(  VOLUME_SIZE ) );
 	/* End */
 	int zero = 0;
+	auto kernelRange = (size.s[0]-1) * (size.s[1]-1) * (size.s[2]-1);
 	mClCommandQueue.enqueueWriteBuffer( mClVertIndex, true, 0, sizeof(int), &zero );
-	mClCommandQueue.enqueueNDRangeKernel( mKernConstructSurface, cl::NullRange,
-										 cl::NDRange( (size.s[0]-1) * (size.s[1]-1) * (size.s[2]-1) ) );
-	mClCommandQueue.enqueueReadBuffer( mClVertIndex, true, 0, sizeof(cl_int), &mMarchingVertsWritten );
+	mClCommandQueue.enqueueNDRangeKernel( mKernConstructSurface,
+										  cl::NullRange,
+										  cl::NDRange( kernelRange ) );
+	mClCommandQueue.enqueueReadBuffer( mClVertIndex,
+									  true, 0, sizeof(cl_int),
+									  &mMarchingVertsWritten );
 	
 	/* Generate Normals */
 	if (mMarchingVertsWritten > 0) {
