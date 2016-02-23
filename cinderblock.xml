@@ -11,10 +11,16 @@
 	<supports os="msw" />
 	
 	<headerPattern>include/*.h</headerPattern>
+	<headerPattern>include/*.hpp</headerPattern>
 	<sourcePattern>src/*.cpp</sourcePattern>
 	<includePath>src/</includePath>
 	<includePath>include/</includePath>
-	<framework sdk="true">OpenCL.framework</framework>
+	<platform os="macosx">
+		<framework sdk="true">OpenCL.framework</framework>
+	</platform>
+	<platform os="msw">
+		<staticLibrary>lib/msw/OpenCL.lib</staticLibrary>
+	</platform>
 	
 </block>
 </cinder>
